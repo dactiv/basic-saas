@@ -1,0 +1,51 @@
+mybatis-plus:
+  type-aliases-package: com.github.dactiv.saas.config.domain.entity
+  configuration:
+    call-setters-on-nulls: on
+    default-enum-type-handler: com.github.dactiv.framework.mybatis.handler.NameValueEnumTypeHandler
+  global-config:
+    db-config:
+      id-type: auto
+    banner: "off"
+
+info:
+  version: @version@
+  name: @name@
+  artifact-id: ${spring.application.name}
+  group-id: @groupId@
+
+dactiv:
+  spring:
+    web:
+      mvc:
+        filter-view-base-packages: com.github.dactiv.saas.config.domain.domain
+  idempotent:
+    ignore-classes: org.springframework.security.core.context.SecurityContext
+  authentication:
+    plugin:
+      base-packages: com.github.dactiv.saas.config.controller
+      generate-sources:
+        - "CONSOLE"
+        - "ALL"
+        - "SYSTEM"
+      parent:
+        basic:
+          name: "基础配置"
+          icon: "icon-enum-major-o"
+          sources:
+            - "CONSOLE"
+            - "TEACHER"
+    permit-uri-ant-matchers:
+      - "/actuator/**"
+      - "/config/queryDataDictionaries/**"
+      - "/config/findGroupDataDictionaries/**"
+      - "/config/findDataDictionaries/**"
+      - "/config/getServiceEnumerate/**"
+      - "/config/getServiceEnumerates/**"
+      - "/carousel/findByFrontEnd/**"
+  enumerate:
+    base-packages:
+      - com.github.dactiv.saas.config.enumerate
+      - com.github.dactiv.framework.commons.enumerate
+      - com.github.dactiv.framework.security.enumerate
+      - com.github.dactiv.saas.config.commons.enumeration
