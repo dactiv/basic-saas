@@ -5,9 +5,10 @@ import com.github.dactiv.framework.commons.TimeProperties;
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
 import com.github.dactiv.framework.spring.security.authentication.handler.JsonAuthenticationFailureResponse;
 import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
-import com.github.dactiv.saas.authentication.enumerate.LoginTypeEnum;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
+import com.github.dactiv.saas.authentication.enumerate.LoginTypeEnum;
 import com.github.dactiv.saas.commons.feign.CaptchaServiceFeignClient;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RedissonClient;
@@ -15,7 +16,6 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Objects;
 

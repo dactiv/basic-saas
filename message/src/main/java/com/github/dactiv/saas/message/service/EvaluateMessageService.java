@@ -8,12 +8,12 @@ import com.github.dactiv.framework.mybatis.plus.service.BasicService;
 import com.github.dactiv.framework.security.entity.BasicUserDetails;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
-import com.github.dactiv.saas.message.enumerate.EvaluateMessageTypeEnum;
-import com.github.dactiv.saas.message.resolver.EvaluateMessageResolver;
 import com.github.dactiv.saas.message.dao.EvaluateMessageDao;
 import com.github.dactiv.saas.message.domain.body.evaluate.EvaluateAppendRequestBody;
 import com.github.dactiv.saas.message.domain.entity.EvaluateMessageEntity;
 import com.github.dactiv.saas.message.domain.meta.EvaluateMessageAppendMeta;
+import com.github.dactiv.saas.message.enumerate.EvaluateMessageTypeEnum;
+import com.github.dactiv.saas.message.resolver.EvaluateMessageResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.ObjectProvider;
@@ -72,11 +72,11 @@ public class EvaluateMessageService extends BasicService<EvaluateMessageDao, Eva
                 .stream()
                 .filter(r -> r.isSupport(entity.getTargetType()))
                 .filter(c -> c.preSave(entity))
-                .collect(Collectors.toList());
+                .toList();
 
         int result = super.save(entity);
 
-        List<Map<String, Object>> mapList = resolvers.stream().map(r -> r.postSave(entity)).collect(Collectors.toList());
+        List<Map<String, Object>> mapList = resolvers.stream().map(r -> r.postSave(entity)).toList();
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override

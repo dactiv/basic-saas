@@ -1,8 +1,8 @@
 package com.github.dactiv.saas.message.config.site;
 
 import com.github.dactiv.framework.idempotent.ConcurrentConfig;
-import com.github.dactiv.saas.message.config.site.wechat.SiteWechatConfig;
 import com.github.dactiv.saas.message.config.site.umeng.SiteUmengConfig;
+import com.github.dactiv.saas.message.config.site.wechat.SiteWechatConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;

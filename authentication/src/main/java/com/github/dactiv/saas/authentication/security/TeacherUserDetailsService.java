@@ -8,23 +8,23 @@ import com.github.dactiv.framework.spring.security.authentication.config.Authent
 import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
 import com.github.dactiv.framework.spring.security.authentication.token.RequestAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
-import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.config.AccessTokenConfig;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
 import com.github.dactiv.saas.authentication.domain.entity.TeacherEntity;
+import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.authentication.service.TeacherService;
 import com.github.dactiv.saas.commons.config.SchoolProperties;
 import com.github.dactiv.saas.commons.domain.meta.SimpleWechatUserDetailsMeta;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import com.github.dactiv.saas.commons.service.WechatService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**

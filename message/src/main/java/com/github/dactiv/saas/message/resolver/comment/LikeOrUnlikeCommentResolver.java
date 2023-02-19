@@ -1,10 +1,10 @@
 package com.github.dactiv.saas.message.resolver.comment;
 
 import com.github.dactiv.framework.commons.enumerate.support.YesOrNo;
-import com.github.dactiv.saas.message.enumerate.LikeOrUnlikeTargetTypeEnum;
-import com.github.dactiv.saas.message.resolver.LikeOrUnlikeResolver;
 import com.github.dactiv.saas.message.domain.entity.CommentMessageEntity;
 import com.github.dactiv.saas.message.domain.entity.LikeOrUnlikeEntity;
+import com.github.dactiv.saas.message.enumerate.LikeOrUnlikeTargetTypeEnum;
+import com.github.dactiv.saas.message.resolver.LikeOrUnlikeResolver;
 import com.github.dactiv.saas.message.service.CommentMessageService;
 import org.springframework.stereotype.Component;
 

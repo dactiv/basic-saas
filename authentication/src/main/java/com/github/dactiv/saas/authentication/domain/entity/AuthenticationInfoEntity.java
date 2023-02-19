@@ -7,11 +7,11 @@ import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
 import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.framework.mybatis.plus.baisc.VersionEntity;
 import com.github.dactiv.framework.security.entity.BasicUserDetails;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.util.Date;
 import java.util.Map;

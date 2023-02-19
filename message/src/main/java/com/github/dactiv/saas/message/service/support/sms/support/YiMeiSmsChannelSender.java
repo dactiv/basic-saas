@@ -3,11 +3,11 @@ package com.github.dactiv.saas.message.service.support.sms.support;
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.exception.ErrorCodeException;
-import com.github.dactiv.saas.message.service.support.sms.SmsChannelSender;
 import com.github.dactiv.saas.message.config.sms.YiMeiSmsConfig;
 import com.github.dactiv.saas.message.domain.entity.SmsMessageEntity;
 import com.github.dactiv.saas.message.domain.meta.SmsBalanceMeta;
-import org.apache.commons.collections.MapUtils;
+import com.github.dactiv.saas.message.service.support.sms.SmsChannelSender;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -98,7 +98,7 @@ public class YiMeiSmsChannelSender implements SmsChannelSender {
 
                 if (data.containsKey(config.getSuccessFieldName()) && data.get(config.getSuccessFieldName()).equals(config.getSuccessFieldValue())) {
                     return new RestResult<>(
-                            r.getStatusCode().getReasonPhrase(),
+                            HttpStatus.valueOf(r.getStatusCode().value()).getReasonPhrase(),
                             r.getStatusCode().value(),
                             String.valueOf(r.getStatusCode().value()),
                             Casts.cast(data.get(config.getResponseDataField())));
@@ -113,7 +113,7 @@ public class YiMeiSmsChannelSender implements SmsChannelSender {
             } else {
 
                 return RestResult.of(
-                        r.getStatusCode().getReasonPhrase(),
+                        HttpStatus.valueOf(r.getStatusCode().value()).getReasonPhrase(),
                         r.getStatusCode().value(),
                         String.valueOf(r.getStatusCode().value())
                 );

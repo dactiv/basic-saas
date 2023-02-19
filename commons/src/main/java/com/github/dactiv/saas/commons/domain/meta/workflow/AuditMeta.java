@@ -2,12 +2,12 @@ package com.github.dactiv.saas.commons.domain.meta.workflow;
 
 import com.github.dactiv.framework.security.entity.BasicUserDetails;
 import com.github.dactiv.saas.commons.enumeration.FormApprovalTypeEnum;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.LinkedList;
 import java.util.List;

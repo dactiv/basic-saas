@@ -7,13 +7,13 @@ import com.github.dactiv.saas.config.service.captcha.BuildToken;
 import com.github.dactiv.saas.config.service.captcha.CaptchaService;
 import com.github.dactiv.saas.config.service.captcha.DelegateCaptchaService;
 import com.github.dactiv.saas.config.service.captcha.intercept.Interceptor;
+import jakarta.servlet.http.HttpServletRequest;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
 

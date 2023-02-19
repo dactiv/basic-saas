@@ -14,7 +14,7 @@ import com.github.dactiv.saas.message.domain.entity.BasicMessageEntity;
 import com.github.dactiv.saas.message.domain.entity.SiteMessageEntity;
 import com.github.dactiv.saas.message.service.attachment.AttachmentResolver;
 import com.github.dactiv.saas.message.service.support.SiteMessageSender;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

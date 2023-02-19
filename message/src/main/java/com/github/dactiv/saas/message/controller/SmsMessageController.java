@@ -14,12 +14,12 @@ import com.github.dactiv.saas.message.domain.entity.SmsMessageEntity;
 import com.github.dactiv.saas.message.domain.meta.SmsBalanceMeta;
 import com.github.dactiv.saas.message.service.SmsMessageService;
 import com.github.dactiv.saas.message.service.support.sms.SmsChannelSender;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 

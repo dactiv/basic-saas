@@ -37,11 +37,11 @@ dactiv:
             - "TEACHER"
     permit-uri-ant-matchers:
       - "/actuator/**"
-      - "/config/queryDataDictionaries/**"
-      - "/config/findGroupDataDictionaries/**"
-      - "/config/findDataDictionaries/**"
-      - "/config/getServiceEnumerate/**"
-      - "/config/getServiceEnumerates/**"
+      - "/queryDataDictionaries/**"
+      - "/findGroupDataDictionaries/**"
+      - "/findDataDictionaries/**"
+      - "/getServiceEnumerate/**"
+      - "/getServiceEnumerates/**"
       - "/carousel/findByFrontEnd/**"
   enumerate:
     base-packages:

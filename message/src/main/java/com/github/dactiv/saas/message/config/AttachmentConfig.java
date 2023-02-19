@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @EqualsAndHashCode
 @NoArgsConstructor
-@ConfigurationProperties("dactiv.saas.message.attachment")
+@ConfigurationProperties("dactiv.saas.app.message.attachment")
 public class AttachmentConfig {
 
     /**

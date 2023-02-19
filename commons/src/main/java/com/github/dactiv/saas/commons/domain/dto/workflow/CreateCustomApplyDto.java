@@ -3,12 +3,12 @@ package com.github.dactiv.saas.commons.domain.dto.workflow;
 import com.github.dactiv.framework.commons.id.BasicIdentification;
 import com.github.dactiv.saas.commons.domain.meta.workflow.AuditMeta;
 import com.github.dactiv.saas.commons.enumeration.ApplyFormTypeEnum;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.LinkedHashMap;
 import java.util.Map;

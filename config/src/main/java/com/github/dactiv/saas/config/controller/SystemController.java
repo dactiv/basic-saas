@@ -42,8 +42,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RefreshScope
 @RestController
-@RequestMapping("config")
-public class ConfigController {
+public class SystemController {
 
     public static final String DEFAULT_EVN_URI = "actuator/env";
 
@@ -57,7 +56,7 @@ public class ConfigController {
 
     private final RestTemplate restTemplate;
 
-    public ConfigController(DictionaryService dictionaryService,
+    public SystemController(DictionaryService dictionaryService,
                             EnumerateResourceService enumerateResourceService,
                             DiscoveryClient discoveryClient,
                             ApplicationConfig applicationConfig,

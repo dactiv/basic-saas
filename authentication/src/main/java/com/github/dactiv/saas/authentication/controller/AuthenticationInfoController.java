@@ -11,10 +11,9 @@ import com.github.dactiv.framework.security.plugin.Plugin;
 import com.github.dactiv.saas.authentication.domain.entity.AuthenticationInfoEntity;
 import com.github.dactiv.saas.authentication.service.AuthenticationInfoService;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 认证信息控制器

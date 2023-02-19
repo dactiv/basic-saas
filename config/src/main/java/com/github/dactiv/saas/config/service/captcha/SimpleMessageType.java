@@ -1,10 +1,9 @@
 package com.github.dactiv.saas.config.service.captcha;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 简单的消息类型实体实现

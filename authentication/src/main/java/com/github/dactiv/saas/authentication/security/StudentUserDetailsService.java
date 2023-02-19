@@ -8,11 +8,11 @@ import com.github.dactiv.framework.spring.security.authentication.config.Authent
 import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
 import com.github.dactiv.framework.spring.security.authentication.token.RequestAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
-import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.config.AccessTokenConfig;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.domain.entity.StudentEntity;
 import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
+import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.authentication.service.StudentService;
 import com.github.dactiv.saas.commons.config.SchoolProperties;

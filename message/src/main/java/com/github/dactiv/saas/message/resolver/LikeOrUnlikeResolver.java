@@ -1,7 +1,7 @@
 package com.github.dactiv.saas.message.resolver;
 
-import com.github.dactiv.saas.message.enumerate.LikeOrUnlikeTargetTypeEnum;
 import com.github.dactiv.saas.message.domain.entity.LikeOrUnlikeEntity;
+import com.github.dactiv.saas.message.enumerate.LikeOrUnlikeTargetTypeEnum;
 
 import java.util.Map;
 

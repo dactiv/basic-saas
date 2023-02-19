@@ -9,11 +9,11 @@ import com.github.dactiv.saas.commons.domain.WechatUserDetails;
 import com.github.dactiv.saas.commons.domain.meta.SimpleWechatUserDetailsMeta;
 import com.github.dactiv.saas.commons.domain.meta.wechat.TemplateMessageMeta;
 import com.github.dactiv.saas.commons.feign.AuthenticationServiceFeignClient;
-import com.github.dactiv.saas.message.service.support.site.WechatMessageTemplateSender;
 import com.github.dactiv.saas.message.config.site.SiteConfig;
 import com.github.dactiv.saas.message.domain.entity.SiteMessageEntity;
 import com.github.dactiv.saas.message.service.support.site.SiteMessageChannelSender;
-import org.apache.commons.collections.CollectionUtils;
+import com.github.dactiv.saas.message.service.support.site.WechatMessageTemplateSender;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.http.HttpStatus;
@@ -94,7 +94,7 @@ public class WechatSiteMessageService implements SiteMessageChannelSender {
         List<WechatMessageTemplateSender> senders = messageTemplateSenders
                 .stream()
                 .filter(s -> ids.stream().anyMatch(id -> s.isSupport(id.toString())))
-                .collect(Collectors.toList());
+                .toList();
 
         Map<String, RestResult<Map<String, Object>>> restResults = new LinkedHashMap<>();
 

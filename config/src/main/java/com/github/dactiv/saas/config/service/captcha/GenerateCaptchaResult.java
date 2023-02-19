@@ -1,9 +1,9 @@
 package com.github.dactiv.saas.config.service.captcha;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 

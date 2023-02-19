@@ -2,9 +2,9 @@ package com.github.dactiv.saas.config.service.captcha;
 
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.exception.ServiceException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

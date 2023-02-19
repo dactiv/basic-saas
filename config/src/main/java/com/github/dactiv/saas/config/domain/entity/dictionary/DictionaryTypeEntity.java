@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.tree.Tree;
 import com.github.dactiv.framework.mybatis.plus.baisc.support.IntegerVersionEntity;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.util.LinkedList;
 import java.util.List;

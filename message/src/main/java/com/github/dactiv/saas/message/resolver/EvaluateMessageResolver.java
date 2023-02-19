@@ -1,7 +1,7 @@
 package com.github.dactiv.saas.message.resolver;
 
-import com.github.dactiv.saas.message.enumerate.EvaluateMessageTypeEnum;
 import com.github.dactiv.saas.message.domain.entity.EvaluateMessageEntity;
+import com.github.dactiv.saas.message.enumerate.EvaluateMessageTypeEnum;
 
 import java.util.Map;
 

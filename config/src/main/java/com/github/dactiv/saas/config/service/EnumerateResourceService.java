@@ -2,7 +2,6 @@ package com.github.dactiv.saas.config.service;
 
 
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.alibaba.nacos.common.utils.MapUtils;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.github.dactiv.framework.commons.Casts;
@@ -13,7 +12,8 @@ import com.github.dactiv.framework.nacos.event.NacosSpringEventManager;
 import com.github.dactiv.framework.security.plugin.PluginInfo;
 import com.github.dactiv.framework.spring.web.endpoint.EnumerateEndpoint;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

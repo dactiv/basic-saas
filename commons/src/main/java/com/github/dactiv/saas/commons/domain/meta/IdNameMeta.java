@@ -4,11 +4,11 @@ import com.github.dactiv.framework.commons.ReflectionUtils;
 import com.github.dactiv.framework.commons.enumerate.NameEnum;
 import com.github.dactiv.framework.commons.id.BasicIdentification;
 import com.github.dactiv.framework.commons.id.IdEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.Objects;
 

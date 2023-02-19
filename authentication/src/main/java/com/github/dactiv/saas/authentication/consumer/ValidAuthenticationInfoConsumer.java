@@ -1,13 +1,13 @@
 package com.github.dactiv.saas.authentication.consumer;
 
 import com.github.dactiv.framework.commons.Casts;
-import com.github.dactiv.saas.authentication.security.ip.IpResolver;
-import com.github.dactiv.saas.authentication.service.AuthenticationInfoService;
-import com.rabbitmq.client.Channel;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.domain.entity.AuthenticationInfoEntity;
 import com.github.dactiv.saas.authentication.domain.meta.IpRegionMeta;
+import com.github.dactiv.saas.authentication.security.ip.IpResolver;
+import com.github.dactiv.saas.authentication.service.AuthenticationInfoService;
 import com.github.dactiv.saas.commons.SystemConstants;
+import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;

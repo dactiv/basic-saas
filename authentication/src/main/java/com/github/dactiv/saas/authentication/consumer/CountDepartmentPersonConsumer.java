@@ -1,11 +1,11 @@
 package com.github.dactiv.saas.authentication.consumer;
 
 import com.github.dactiv.framework.idempotent.annotation.Concurrent;
-import com.rabbitmq.client.Channel;
 import com.github.dactiv.saas.authentication.domain.entity.DepartmentEntity;
 import com.github.dactiv.saas.authentication.resolver.DepartmentResolver;
 import com.github.dactiv.saas.authentication.service.DepartmentService;
 import com.github.dactiv.saas.commons.SystemConstants;
+import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;

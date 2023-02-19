@@ -1,7 +1,6 @@
 package com.github.dactiv.saas.authentication.plugin;
 
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.alibaba.nacos.common.utils.MapUtils;
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.retry.Retryable;
 import com.github.dactiv.framework.nacos.event.NacosService;
@@ -9,6 +8,7 @@ import com.github.dactiv.framework.nacos.event.NacosServiceListenerValidator;
 import com.github.dactiv.framework.nacos.task.annotation.NacosCronScheduled;
 import com.github.dactiv.framework.spring.security.plugin.PluginEndpoint;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;

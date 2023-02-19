@@ -21,12 +21,12 @@ import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.authentication.service.TeacherService;
 import com.github.dactiv.saas.commons.domain.meta.TeacherClassGradesMeta;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 

@@ -1,8 +1,8 @@
 package com.github.dactiv.saas.authentication.domain.meta;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.io.Serializable;
 

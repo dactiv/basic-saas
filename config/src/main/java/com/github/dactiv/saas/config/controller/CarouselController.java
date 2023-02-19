@@ -13,11 +13,11 @@ import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import com.github.dactiv.saas.config.config.ApplicationConfig;
 import com.github.dactiv.saas.config.domain.entity.CarouselEntity;
 import com.github.dactiv.saas.config.service.CarouselService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 

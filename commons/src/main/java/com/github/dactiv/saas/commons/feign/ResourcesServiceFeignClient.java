@@ -2,26 +2,18 @@ package com.github.dactiv.saas.commons.feign;
 
 
 import com.github.dactiv.framework.commons.RestResult;
-import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
 import com.github.dactiv.framework.spring.security.authentication.service.feign.FeignAuthenticationConfiguration;
 import com.github.dactiv.saas.commons.SystemConstants;
 import feign.RequestInterceptor;
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.io.IOUtils;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 /**
@@ -69,7 +61,7 @@ public interface ResourcesServiceFeignClient {
 
         public static final String FILE_FIELD_NAME = "file";
 
-        public static MultipartFile createMultipartFile(InputStream is, String filename, String mediaType) {
+        /*public static MultipartFile createMultipartFile(InputStream is, String filename, String mediaType) {
             return createMultipartFile(is, ResourcesServiceFeignClient.Config.FILE_FIELD_NAME, filename, mediaType);
         }
 
@@ -83,10 +75,11 @@ public interface ResourcesServiceFeignClient {
             } catch (Exception e) {
                 throw new SystemException("创建 multipart file 失败", e);
             } finally {
-                IOUtils.closeQuietly(is, os);
+                IOUtils.closeQuietly(is);
+                IOUtils.closeQuietly(os);
             }
             return new CommonsMultipartFile(item);
-        }
+        }*/
 
         @Bean
         public RequestInterceptor feignAuthRequestInterceptor(AuthenticationProperties properties) {

@@ -1,12 +1,12 @@
 package com.github.dactiv.saas.config.domain.meta;
 
 import com.github.dactiv.saas.config.enumerate.dictionary.ValueTypeEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 

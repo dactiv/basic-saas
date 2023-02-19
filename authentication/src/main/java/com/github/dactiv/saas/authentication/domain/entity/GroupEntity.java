@@ -12,14 +12,14 @@ import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.framework.mybatis.plus.baisc.support.IntegerVersionEntity;
 import com.github.dactiv.framework.security.plugin.Plugin;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.*;
 

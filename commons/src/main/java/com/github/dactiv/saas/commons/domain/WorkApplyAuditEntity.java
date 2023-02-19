@@ -1,8 +1,8 @@
 package com.github.dactiv.saas.commons.domain;
 
 import com.github.dactiv.framework.commons.id.BasicIdentification;
-import com.github.dactiv.saas.commons.enumeration.DataRecordStatusEnum;
 import com.github.dactiv.saas.commons.enumeration.ApplyStatusEnum;
+import com.github.dactiv.saas.commons.enumeration.DataRecordStatusEnum;
 
 import java.util.Date;
 

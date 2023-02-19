@@ -12,11 +12,13 @@ import com.github.dactiv.framework.spring.security.entity.MobileUserDetails;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.framework.spring.web.device.DeviceUtils;
 import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
-import com.github.dactiv.saas.authentication.enumerate.LoginTypeEnum;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
+import com.github.dactiv.saas.authentication.enumerate.LoginTypeEnum;
 import com.github.dactiv.saas.authentication.plugin.PluginResourceService;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.commons.config.SchoolProperties;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBucket;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -30,8 +32,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.interceptor.RuleBasedTransactionAttribute;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;

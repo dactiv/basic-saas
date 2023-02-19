@@ -7,13 +7,13 @@ import com.github.dactiv.framework.commons.id.IdEntity;
 import com.github.dactiv.framework.commons.tree.Tree;
 import com.github.dactiv.framework.security.enumerate.ResourceType;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;

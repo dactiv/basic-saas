@@ -8,12 +8,12 @@ import com.github.dactiv.framework.commons.tree.Tree;
 import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.framework.mybatis.plus.baisc.VersionEntity;
 import com.github.dactiv.saas.commons.domain.BasicAnonymousUser;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.*;
 

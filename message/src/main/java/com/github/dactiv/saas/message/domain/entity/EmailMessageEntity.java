@@ -8,12 +8,12 @@ import com.github.dactiv.framework.commons.retry.Retryable;
 import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.saas.commons.domain.meta.AttachmentMeta;
 import com.github.dactiv.saas.message.domain.AttachmentMessage;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Date;

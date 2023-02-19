@@ -6,14 +6,14 @@ import com.github.dactiv.framework.commons.annotation.JsonCollectionGenericType;
 import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.framework.mybatis.plus.baisc.VersionEntity;
 import com.github.dactiv.saas.commons.domain.BasicAnonymousUser;
-import com.github.dactiv.saas.message.enumerate.EvaluateMessageTypeEnum;
 import com.github.dactiv.saas.message.domain.meta.EvaluateMessageAppendMeta;
+import com.github.dactiv.saas.message.enumerate.EvaluateMessageTypeEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.Date;
 import java.util.LinkedList;

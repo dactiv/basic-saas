@@ -3,11 +3,11 @@ package com.github.dactiv.saas.commons.domain.dto.workflow;
 import com.github.dactiv.framework.commons.id.IdEntity;
 import com.github.dactiv.saas.commons.enumeration.ApplyFormTypeEnum;
 import com.github.dactiv.saas.commons.enumeration.AuditOperationTypeEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.Date;
 

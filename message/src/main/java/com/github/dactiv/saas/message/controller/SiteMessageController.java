@@ -15,12 +15,12 @@ import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import com.github.dactiv.saas.message.domain.entity.SiteMessageEntity;
 import com.github.dactiv.saas.message.service.SiteMessageService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 

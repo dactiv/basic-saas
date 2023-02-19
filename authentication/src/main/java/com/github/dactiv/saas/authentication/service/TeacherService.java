@@ -14,12 +14,12 @@ import com.github.dactiv.framework.crypto.algorithm.cipher.RsaCipherService;
 import com.github.dactiv.framework.mybatis.plus.MybatisPlusQueryGenerator;
 import com.github.dactiv.framework.mybatis.plus.service.BasicService;
 import com.github.dactiv.saas.authentication.consumer.CountDepartmentPersonConsumer;
-import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
-import com.github.dactiv.saas.authentication.enumerate.InviteTargetEnum;
-import com.github.dactiv.saas.authentication.security.handler.JsonLogoutSuccessHandler;
 import com.github.dactiv.saas.authentication.dao.TeacherDao;
+import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
 import com.github.dactiv.saas.authentication.domain.entity.TeacherEntity;
 import com.github.dactiv.saas.authentication.domain.meta.ClassGradesMeta;
+import com.github.dactiv.saas.authentication.enumerate.InviteTargetEnum;
+import com.github.dactiv.saas.authentication.security.handler.JsonLogoutSuccessHandler;
 import com.github.dactiv.saas.commons.SystemConstants;
 import com.github.dactiv.saas.commons.config.SchoolProperties;
 import com.github.dactiv.saas.commons.domain.meta.IdNameMeta;
@@ -93,7 +93,7 @@ public class TeacherService extends BasicService<TeacherDao, TeacherEntity> impl
                         .map(IdEntity::getId)
                         .forEach(syncDepartments::add);
             } else if (CollectionUtils.isNotEmpty(entity.getDepartmentsInfo())) {
-                syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).collect(Collectors.toList()));
+                syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
             }
         } else {
             String password = authorizationService
@@ -107,7 +107,7 @@ public class TeacherService extends BasicService<TeacherDao, TeacherEntity> impl
                 throw new ServiceException("教师工号 [" + entity.getNumber() + "] 已存在");
             }
 
-            syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).collect(Collectors.toList()));
+            syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
         }
 
         if (CollectionUtils.isNotEmpty(syncDepartments)) {

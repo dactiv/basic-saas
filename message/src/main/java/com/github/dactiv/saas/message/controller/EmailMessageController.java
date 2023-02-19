@@ -14,12 +14,12 @@ import com.github.dactiv.saas.message.domain.body.email.EmailMessageBody;
 import com.github.dactiv.saas.message.domain.entity.EmailMessageEntity;
 import com.github.dactiv.saas.message.service.EmailMessageService;
 import com.github.dactiv.saas.message.service.support.EmailMessageSender;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

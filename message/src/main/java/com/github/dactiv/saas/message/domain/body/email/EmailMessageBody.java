@@ -3,11 +3,11 @@ package com.github.dactiv.saas.message.domain.body.email;
 import com.github.dactiv.saas.commons.domain.meta.AttachmentMeta;
 import com.github.dactiv.saas.message.domain.AttachmentMessage;
 import com.github.dactiv.saas.message.domain.entity.BasicMessageEntity;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.LinkedList;

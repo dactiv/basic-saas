@@ -2,11 +2,11 @@ package com.github.dactiv.saas.message.domain.body.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.dactiv.saas.message.domain.entity.BasicMessageEntity;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.util.LinkedList;
 import java.util.List;

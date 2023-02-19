@@ -7,8 +7,9 @@ import com.github.dactiv.framework.commons.TimeProperties;
 import com.github.dactiv.framework.commons.exception.ErrorCodeException;
 import com.github.dactiv.framework.commons.exception.ServiceException;
 import com.github.dactiv.saas.config.config.CaptchaConfig;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -20,7 +21,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;

@@ -16,6 +16,7 @@ import com.github.dactiv.saas.authentication.domain.entity.AuthenticationInfoEnt
 import com.github.dactiv.saas.authentication.domain.meta.IpRegionMeta;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.SystemConstants;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import nl.basjes.parse.useragent.UserAgent;
 import org.apache.commons.collections4.MapUtils;
@@ -27,7 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;

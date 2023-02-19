@@ -1,11 +1,11 @@
 package com.github.dactiv.saas.message.domain.meta;
 
 import com.github.dactiv.framework.commons.id.StringIdEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.Date;
 

@@ -14,7 +14,7 @@ import com.github.dactiv.framework.crypto.algorithm.cipher.AbstractBlockCipherSe
 import com.github.dactiv.framework.crypto.algorithm.exception.CryptoException;
 import com.github.dactiv.saas.gateway.config.ApplicationConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cloud.gateway.handler.predicate.RoutePredicateFactory;
@@ -164,7 +164,7 @@ public abstract class AbstractAccessCryptoResolver implements AccessCryptoResolv
 
             return Casts.castRequestBodyMap(plaintext);
 
-        }).collect(Collectors.toList()).forEach(newRequestBody::putAll);
+        }).toList().forEach(newRequestBody::putAll);
         // 获取原始的请求 body map
         MultiValueMap<String, String> originalBody = Casts.castRequestBodyMap(body);
         // 删除密文阐述

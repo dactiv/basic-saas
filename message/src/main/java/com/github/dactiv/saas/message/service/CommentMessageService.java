@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.framework.idempotent.annotation.Concurrent;
 import com.github.dactiv.framework.mybatis.plus.service.BasicService;
-import com.github.dactiv.saas.message.resolver.CommentMessageResolver;
 import com.github.dactiv.saas.message.dao.CommentMessageDao;
 import com.github.dactiv.saas.message.domain.entity.CommentMessageEntity;
+import com.github.dactiv.saas.message.resolver.CommentMessageResolver;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
@@ -90,7 +90,7 @@ public class CommentMessageService extends BasicService<CommentMessageDao, Comme
                 .stream()
                 .filter(c -> c.isSupport(entity.getTargetType()))
                 .filter(c -> c.preDelete(entity))
-                .collect(Collectors.toList());
+                .toList();
 
         int result = super.deleteByEntity(entity);
 
@@ -120,11 +120,11 @@ public class CommentMessageService extends BasicService<CommentMessageDao, Comme
                 .stream()
                 .filter(c -> c.isSupport(entity.getTargetType()))
                 .filter(c -> c.preSave(entity))
-                .collect(Collectors.toList());
+                .toList();
 
         int result = super.save(entity);
 
-        List<Map<String, Object>> mapList = resolvers.stream().map(r -> r.postSave(entity)).collect(Collectors.toList());
+        List<Map<String, Object>> mapList = resolvers.stream().map(r -> r.postSave(entity)).toList();
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override

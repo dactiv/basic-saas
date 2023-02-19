@@ -10,12 +10,12 @@ import com.github.dactiv.framework.commons.retry.Retryable;
 import com.github.dactiv.framework.minio.MinioTemplate;
 import com.github.dactiv.saas.commons.domain.meta.AttachmentMeta;
 import com.github.dactiv.saas.commons.feign.AuthenticationServiceFeignClient;
+import com.github.dactiv.saas.message.config.AttachmentConfig;
+import com.github.dactiv.saas.message.domain.AttachmentMessage;
 import com.github.dactiv.saas.message.domain.entity.BasicMessageEntity;
 import com.github.dactiv.saas.message.domain.entity.BatchMessageEntity;
 import com.github.dactiv.saas.message.enumerate.AttachmentTypeEnum;
 import com.github.dactiv.saas.message.service.BatchMessageService;
-import com.github.dactiv.saas.message.config.AttachmentConfig;
-import com.github.dactiv.saas.message.domain.AttachmentMessage;
 import io.minio.GetObjectResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -203,7 +203,7 @@ public abstract class BatchMessageSender<T extends BasicMessageEntity, S extends
                 .map(t -> Casts.cast(t, AttachmentMessage.class))
                 .flatMap(t -> t.getAttachmentList().stream())
                 .filter(a -> !map.containsKey(a.getName()))
-                .collect(Collectors.toList());
+                .toList();
 
         for (AttachmentMeta a : attachments) {
             FileObject fileObject = FileObject.of(attachmentConfig.getBucketName(getMessageType()), a.getName());

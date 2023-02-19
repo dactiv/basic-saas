@@ -2,9 +2,9 @@ package com.github.dactiv.saas.config.service.captcha;
 
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.exception.ServiceException;
-import com.github.dactiv.saas.config.config.CaptchaConfig;
 import com.github.dactiv.saas.commons.feign.AdminServiceFeignClient;
 import com.github.dactiv.saas.commons.feign.MessageServiceFeignClient;
+import com.github.dactiv.saas.config.config.CaptchaConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpStatus;

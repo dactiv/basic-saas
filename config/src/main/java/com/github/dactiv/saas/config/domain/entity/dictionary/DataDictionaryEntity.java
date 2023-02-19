@@ -7,14 +7,14 @@ import com.github.dactiv.framework.commons.enumerate.support.DisabledOrEnabled;
 import com.github.dactiv.framework.commons.tree.Tree;
 import com.github.dactiv.framework.mybatis.plus.baisc.VersionEntity;
 import com.github.dactiv.saas.config.domain.meta.DataDictionaryMeta;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.Date;
 import java.util.LinkedList;

@@ -4,12 +4,12 @@ import com.github.dactiv.framework.commons.id.StringIdEntity;
 import com.github.dactiv.saas.commons.SystemConstants;
 import com.github.dactiv.saas.commons.enumeration.FileConvertTypeEnum;
 import com.github.dactiv.saas.commons.enumeration.FileFromTypeEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.List;
 import java.util.Map;

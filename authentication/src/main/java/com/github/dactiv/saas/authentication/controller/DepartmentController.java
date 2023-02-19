@@ -12,12 +12,12 @@ import com.github.dactiv.framework.security.plugin.Plugin;
 import com.github.dactiv.saas.authentication.domain.entity.DepartmentEntity;
 import com.github.dactiv.saas.authentication.service.DepartmentService;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**

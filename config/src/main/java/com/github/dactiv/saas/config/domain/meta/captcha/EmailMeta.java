@@ -1,11 +1,11 @@
 package com.github.dactiv.saas.config.domain.meta.captcha;
 
 import com.github.dactiv.saas.config.service.captcha.SimpleMessageType;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 

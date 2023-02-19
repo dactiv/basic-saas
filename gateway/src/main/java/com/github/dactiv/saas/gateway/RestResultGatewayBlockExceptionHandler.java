@@ -49,13 +49,12 @@ public class RestResultGatewayBlockExceptionHandler implements WebExceptionHandl
             exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
             exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-            ServerHttpResponse response = exchange.getResponse();
-            HttpStatus status = response.getStatusCode();
-
             String message = applicationConfig.getDefaultReasonPhrase();
             int statusValue = HttpStatus.INTERNAL_SERVER_ERROR.value();
 
-            if (Objects.nonNull(status)) {
+            ServerHttpResponse response = exchange.getResponse();
+            if (Objects.nonNull(response.getStatusCode())) {
+                HttpStatus status = HttpStatus.valueOf(response.getStatusCode().value());
                 message = status.getReasonPhrase();
                 statusValue = status.value();
             }

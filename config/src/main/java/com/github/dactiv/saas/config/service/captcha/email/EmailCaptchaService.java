@@ -1,14 +1,14 @@
 package com.github.dactiv.saas.config.service.captcha.email;
 
 import com.github.dactiv.framework.commons.TimeProperties;
-import com.github.dactiv.saas.config.service.captcha.AbstractMessageCaptchaService;
-import com.github.dactiv.saas.config.service.captcha.ReusableCaptcha;
-import com.github.dactiv.saas.config.config.CaptchaConfig;
-import com.github.dactiv.saas.config.config.EmailCaptchaConfig;
-import com.github.dactiv.saas.config.domain.meta.captcha.EmailMeta;
 import com.github.dactiv.saas.commons.domain.meta.IdNameMeta;
 import com.github.dactiv.saas.commons.feign.AdminServiceFeignClient;
 import com.github.dactiv.saas.commons.feign.MessageServiceFeignClient;
+import com.github.dactiv.saas.config.config.CaptchaConfig;
+import com.github.dactiv.saas.config.config.EmailCaptchaConfig;
+import com.github.dactiv.saas.config.domain.meta.captcha.EmailMeta;
+import com.github.dactiv.saas.config.service.captcha.AbstractMessageCaptchaService;
+import com.github.dactiv.saas.config.service.captcha.ReusableCaptcha;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;

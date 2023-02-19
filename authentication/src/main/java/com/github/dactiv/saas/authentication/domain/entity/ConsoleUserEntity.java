@@ -8,6 +8,8 @@ import com.github.dactiv.saas.authentication.domain.PhoneNumberUserDetails;
 import com.github.dactiv.saas.authentication.security.ConsoleUserDetailsService;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.domain.meta.IdNameMeta;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,8 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import java.io.Serial;
 import java.util.List;
 import java.util.Map;

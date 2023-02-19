@@ -12,16 +12,20 @@ import com.github.dactiv.saas.authentication.security.CaptchaAuthenticationFilte
 import com.github.dactiv.saas.authentication.security.JsonSessionInformationExpiredStrategy;
 import com.github.dactiv.saas.authentication.security.handler.CaptchaAuthenticationFailureResponse;
 import com.github.dactiv.saas.authentication.security.handler.JsonLogoutSuccessHandler;
+import org.redisson.api.RedissonClient;
+import org.redisson.spring.data.connection.RedissonConnectionFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
+import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
@@ -34,7 +38,7 @@ import java.util.stream.Collectors;
  * @author maurice.chen
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true)
 @AutoConfigureAfter({SpringSecurityAutoConfiguration.class, RedisHttpSessionConfiguration.class})
 public class SpringSecurityConfig<S extends Session> implements WebSecurityConfigurerAfterAdapter {
 
@@ -92,7 +96,7 @@ public class SpringSecurityConfig<S extends Session> implements WebSecurityConfi
     }
 
     @Override
-    public void configure(HttpSecurity httpSecurity) throws Exception {
+    public void configure(HttpSecurity httpSecurity) {
 
         CaptchaAuthenticationFilter filter = new CaptchaAuthenticationFilter(
                 properties,
@@ -107,21 +111,37 @@ public class SpringSecurityConfig<S extends Session> implements WebSecurityConfi
         filter.setAuthenticationFailureHandler(jsonAuthenticationFailureHandler);
         filter.setRememberMeServices(rememberMeServices);
 
-        httpSecurity
-                .addFilter(filter)
-                .logout()
-                .logoutUrl(applicationConfig.getLogoutUrl())
-                .logoutSuccessHandler(jsonLogoutSuccessHandler)
-                .and()
-                .sessionManagement()
-                .maximumSessions(Integer.MAX_VALUE)
-                .sessionRegistry(sessionBackedSessionRegistry)
-                .expiredSessionStrategy(jsonSessionInformationExpiredStrategy);
+        try {
+            httpSecurity
+                    .addFilter(filter)
+                    .logout()
+                    .logoutUrl(applicationConfig.getLogoutUrl())
+                    .logoutSuccessHandler(jsonLogoutSuccessHandler)
+                    .and()
+                    .sessionManagement()
+                    .maximumSessions(Integer.MAX_VALUE)
+                    .sessionRegistry(sessionBackedSessionRegistry)
+                    .expiredSessionStrategy(jsonSessionInformationExpiredStrategy);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Bean
-    public SpringSessionBackedSessionRegistry<S> springSessionBackedSessionRegistry(FindByIndexNameSessionRepository<S> sessionRepository) {
-        sessionBackedSessionRegistry = new SpringSessionBackedSessionRegistry<>(sessionRepository);
+    public RedisTemplate<String, Object> redisTemplate(RedissonClient redissonClient) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(new RedissonConnectionFactory(redissonClient));
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisIndexedSessionRepository redisIndexedSessionRepository(RedisTemplate<String, Object> redisTemplate) {
+        return new RedisIndexedSessionRepository(redisTemplate);
+    }
+
+    @Bean
+    public SpringSessionBackedSessionRegistry<S> springSessionBackedSessionRegistry(FindByIndexNameSessionRepository<S> redisIndexedSessionRepository) {
+        sessionBackedSessionRegistry = new SpringSessionBackedSessionRegistry<>(redisIndexedSessionRepository);
         return sessionBackedSessionRegistry;
     }
 

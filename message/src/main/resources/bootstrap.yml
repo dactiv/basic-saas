@@ -17,7 +17,9 @@ spring:
           group-id: ${info.group-id}
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        group: SAAS
         file-extension: yml
         extension-configs:
           - data-id: application.${spring.cloud.nacos.config.file-extension}
             refresh: true
+            group: SAAS

@@ -7,9 +7,9 @@ import com.github.dactiv.framework.commons.exception.ServiceException;
 import com.github.dactiv.framework.commons.id.IdEntity;
 import com.github.dactiv.framework.mybatis.plus.service.BasicService;
 import com.github.dactiv.saas.authentication.consumer.CountDepartmentPersonConsumer;
-import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
 import com.github.dactiv.saas.authentication.dao.StudentDao;
 import com.github.dactiv.saas.authentication.domain.entity.StudentEntity;
+import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
 import com.github.dactiv.saas.commons.SystemConstants;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import com.github.dactiv.saas.commons.feign.AdminServiceFeignClient;
@@ -81,7 +81,7 @@ public class StudentService extends BasicService<StudentDao, StudentEntity> impl
                         .map(IdEntity::getId)
                         .forEach(syncDepartments::add);
             } else if (CollectionUtils.isNotEmpty(entity.getDepartmentsInfo())) {
-                syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).collect(Collectors.toList()));
+                syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
             }
         } else {
             String password = authorizationService
@@ -95,7 +95,7 @@ public class StudentService extends BasicService<StudentDao, StudentEntity> impl
                 throw new ServiceException("学生学号 [" + entity.getNumber() + "] 已存在");
             }
 
-            syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).collect(Collectors.toList()));
+            syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
         }
 
         if (CollectionUtils.isNotEmpty(syncDepartments)) {

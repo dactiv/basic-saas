@@ -11,8 +11,6 @@ import com.github.dactiv.framework.commons.minio.Bucket;
 import com.github.dactiv.framework.idempotent.ConcurrentConfig;
 import com.github.dactiv.framework.idempotent.advisor.concurrent.ConcurrentInterceptor;
 import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
-import com.github.dactiv.saas.message.service.SiteMessageService;
-import com.rabbitmq.client.Channel;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.SystemConstants;
 import com.github.dactiv.saas.commons.domain.meta.TypeIdNameMeta;
@@ -22,10 +20,12 @@ import com.github.dactiv.saas.message.domain.AttachmentMessage;
 import com.github.dactiv.saas.message.domain.body.site.SiteMessageBody;
 import com.github.dactiv.saas.message.domain.entity.BasicMessageEntity;
 import com.github.dactiv.saas.message.domain.entity.SiteMessageEntity;
+import com.github.dactiv.saas.message.service.SiteMessageService;
 import com.github.dactiv.saas.message.service.basic.BatchMessageSender;
 import com.github.dactiv.saas.message.service.support.site.SiteMessageChannelSender;
+import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.Exchange;
@@ -154,7 +154,7 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
                         .stream()
                         .filter(e -> e.getValue().getStatus() != HttpStatus.OK.value())
                         .map(e -> e.getKey() + CacheProperties.DEFAULT_SEPARATOR + e.getValue().getMessage())
-                        .collect(Collectors.toList());
+                        .toList();
                 ExecuteStatus.failure(entity, StringUtils.join(messages, SpringMvcUtils.COMMA_STRING));
             }
 

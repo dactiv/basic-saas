@@ -3,11 +3,11 @@ package com.github.dactiv.saas.config.controller;
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
+import com.github.dactiv.saas.config.service.captcha.BuildToken;
 import com.github.dactiv.saas.config.service.captcha.DelegateCaptchaService;
 import com.github.dactiv.saas.config.service.captcha.SimpleBuildToken;
-import com.github.dactiv.saas.config.service.captcha.BuildToken;
 import com.github.dactiv.saas.config.service.captcha.intercept.Interceptor;
-import com.github.dactiv.saas.config.service.captcha.intercept.support.RedisInterceptor;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**

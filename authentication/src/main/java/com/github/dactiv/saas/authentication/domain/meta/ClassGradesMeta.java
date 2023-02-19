@@ -2,11 +2,11 @@ package com.github.dactiv.saas.authentication.domain.meta;
 
 import com.github.dactiv.saas.commons.domain.meta.IdNameMeta;
 import com.github.dactiv.saas.commons.enumeration.TeacherTypeEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 
 /**

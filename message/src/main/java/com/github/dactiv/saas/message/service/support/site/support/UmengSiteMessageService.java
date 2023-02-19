@@ -5,7 +5,6 @@ import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.exception.ErrorCodeException;
 import com.github.dactiv.framework.security.entity.BasicUserDetails;
 import com.github.dactiv.saas.commons.feign.AuthenticationServiceFeignClient;
-import com.github.dactiv.saas.message.enumerate.site.ument.UmengMessageTypeEnum;
 import com.github.dactiv.saas.message.config.site.SiteConfig;
 import com.github.dactiv.saas.message.config.site.umeng.Android;
 import com.github.dactiv.saas.message.config.site.umeng.Ios;
@@ -19,10 +18,11 @@ import com.github.dactiv.saas.message.domain.meta.site.umeng.android.AndroidPoli
 import com.github.dactiv.saas.message.domain.meta.site.umeng.ios.IosPayloadApsAlertMeta;
 import com.github.dactiv.saas.message.domain.meta.site.umeng.ios.IosPayloadApsMeta;
 import com.github.dactiv.saas.message.domain.meta.site.umeng.ios.IosPayloadMeta;
+import com.github.dactiv.saas.message.enumerate.site.ument.UmengMessageTypeEnum;
 import com.github.dactiv.saas.message.service.support.site.SiteMessageChannelSender;
 import nl.basjes.parse.useragent.UserAgent;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -136,14 +136,14 @@ public class UmengSiteMessageService implements SiteMessageChannelSender {
             if (DEFAULT_SUCCESS_MESSAGE.equals(resultBody.get(DEFAULT_RESULT_FIELD))) {
                 return RestResult.of(
                         "id 为[" + message.getId() + "] 记录推送消息给 [" + message.getUserId() + "] 的用户成功",
-                        result.getStatusCodeValue(),
-                        String.valueOf(result.getStatusCodeValue()),
+                        result.getStatusCode().value(),
+                        String.valueOf(result.getStatusCode().value()),
                         data
                 );
             } else {
                 return RestResult.of(
                         resultBody.get(DEFAULT_RESULT_FIELD).toString(),
-                        result.getStatusCodeValue(),
+                        result.getStatusCode().value(),
                         ErrorCodeException.DEFAULT_EXCEPTION_CODE,
                         data
                 );
@@ -151,8 +151,8 @@ public class UmengSiteMessageService implements SiteMessageChannelSender {
         }
 
         return RestResult.of(
-                result.getStatusCode().getReasonPhrase(),
-                result.getStatusCodeValue(),
+                HttpStatus.valueOf(result.getStatusCode().value()).getReasonPhrase(),
+                result.getStatusCode().value(),
                 ErrorCodeException.DEFAULT_EXCEPTION_CODE
         );
     }

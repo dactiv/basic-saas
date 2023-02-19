@@ -63,8 +63,8 @@ public class RestResultErrorAttributes extends DefaultErrorAttributes {
     }
 
     private HttpStatus determineHttpStatus(Throwable error, MergedAnnotation<ResponseStatus> responseStatusAnnotation) {
-        if (error instanceof ResponseStatusException) {
-            return ((ResponseStatusException) error).getStatus();
+        if (error instanceof ResponseStatusException status) {
+            return HttpStatus.valueOf(status.getStatusCode().value());
         }
         return responseStatusAnnotation.getValue("code", HttpStatus.class).orElse(HttpStatus.INTERNAL_SERVER_ERROR);
     }
