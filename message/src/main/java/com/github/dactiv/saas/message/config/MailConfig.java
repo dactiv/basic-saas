@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Data
 @Component
-@ConfigurationProperties("dactiv.saas.app.message.mail")
+@ConfigurationProperties("dactiv.saas.message.app.mail")
 public class MailConfig {
 
     /**

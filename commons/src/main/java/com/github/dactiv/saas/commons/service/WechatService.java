@@ -240,6 +240,10 @@ public class WechatService implements InitializingBean {
             return false;
         }
 
+        if (result.getBody().containsKey(wechatProperties.getStatusCodeFieldName())) {
+            return false;
+        }
+
         return !result.getBody().containsKey(wechatProperties.getStatusCodeFieldName()) || !result.getBody().get(wechatProperties.getStatusCodeFieldName()).equals(wechatProperties.getSuccessCodeValue());
     }
 

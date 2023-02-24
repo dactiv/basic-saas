@@ -3,6 +3,7 @@ package com.github.dactiv.saas.authentication.config;
 import com.github.dactiv.framework.spring.security.SpringSecurityAutoConfiguration;
 import com.github.dactiv.framework.spring.security.WebSecurityConfigurerAfterAdapter;
 import com.github.dactiv.framework.spring.security.authentication.AuthenticationTypeTokenResolver;
+import com.github.dactiv.framework.spring.security.authentication.DeviceIdContextRepository;
 import com.github.dactiv.framework.spring.security.authentication.UserDetailsService;
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
 import com.github.dactiv.framework.spring.security.authentication.handler.JsonAuthenticationFailureHandler;
@@ -68,6 +69,8 @@ public class SpringSecurityConfig<S extends Session> implements WebSecurityConfi
 
     private SpringSessionBackedSessionRegistry<S> sessionBackedSessionRegistry;
 
+    private final DeviceIdContextRepository deviceIdContextRepository;
+
     public SpringSecurityConfig(AuthenticationProperties properties,
                                 CookieRememberService rememberMeServices,
                                 JsonLogoutSuccessHandler jsonLogoutSuccessHandler,
@@ -79,7 +82,8 @@ public class SpringSecurityConfig<S extends Session> implements WebSecurityConfi
                                 ApplicationEventPublisher eventPublisher,
                                 AuthenticationManager authenticationManager,
                                 ObjectProvider<AuthenticationTypeTokenResolver> authenticationTypeTokenResolver,
-                                ObjectProvider<UserDetailsService<?>> userDetailsServices) {
+                                ObjectProvider<UserDetailsService<?>> userDetailsServices,
+                                DeviceIdContextRepository deviceIdContextRepository) {
 
         this.properties = properties;
         this.rememberMeServices = rememberMeServices;
@@ -93,6 +97,7 @@ public class SpringSecurityConfig<S extends Session> implements WebSecurityConfi
         this.authenticationManager = authenticationManager;
         this.authenticationTypeTokenResolvers = authenticationTypeTokenResolver.orderedStream().collect(Collectors.toList());
         this.userDetailsServices = userDetailsServices.orderedStream().collect(Collectors.toList());
+        this.deviceIdContextRepository = deviceIdContextRepository;
     }
 
     @Override
@@ -110,6 +115,7 @@ public class SpringSecurityConfig<S extends Session> implements WebSecurityConfi
         filter.setAuthenticationSuccessHandler(jsonAuthenticationSuccessHandler);
         filter.setAuthenticationFailureHandler(jsonAuthenticationFailureHandler);
         filter.setRememberMeServices(rememberMeServices);
+        filter.setSecurityContextRepository(deviceIdContextRepository);
 
         try {
             httpSecurity

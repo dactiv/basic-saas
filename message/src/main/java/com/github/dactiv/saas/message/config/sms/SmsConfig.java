@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "dactiv.saas.message.sms")
+@ConfigurationProperties(prefix = "dactiv.saas.message.app.sms")
 public class SmsConfig {
     /**
      * 渠道商

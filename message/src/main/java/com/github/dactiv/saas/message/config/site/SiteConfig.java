@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Data
 @Component
-@ConfigurationProperties("dactiv.saas.message.site")
+@ConfigurationProperties("dactiv.saas.message.app.site")
 public class SiteConfig {
 
     /**

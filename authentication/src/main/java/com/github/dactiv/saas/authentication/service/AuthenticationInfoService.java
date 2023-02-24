@@ -68,13 +68,17 @@ public class AuthenticationInfoService extends BasicService<AuthenticationInfoDa
 
         Iterator<AuthenticationInfoEntity> iterator = page.getElements().iterator();
 
-        AuthenticationInfoEntity authenticationInfo = iterator.hasNext() ? iterator.next() : null;
+        AuthenticationInfoEntity last = iterator.hasNext() ? iterator.next() : null;
 
-        if (Objects.isNull(authenticationInfo)) {
+        if (Objects.isNull(last)) {
             return;
         }
 
-        if (authenticationInfo.getIpRegion().get(IpRegionMeta.IP_ADDRESS_NAME).equals(info.getIpRegion().get(IpRegionMeta.IP_ADDRESS_NAME))) {
+        if (Objects.isNull(info.getIpRegion()) || Objects.isNull(last.getIpRegion())) {
+            return ;
+        }
+
+        if (last.getIpRegion().get(IpRegionMeta.IP_ADDRESS_NAME).equals(info.getIpRegion().get(IpRegionMeta.IP_ADDRESS_NAME))) {
             return;
         }
 
