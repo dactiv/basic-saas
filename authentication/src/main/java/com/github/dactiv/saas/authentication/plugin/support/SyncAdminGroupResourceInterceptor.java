@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 同步超级管理员组资源的拦截器实现
@@ -47,7 +46,7 @@ public class SyncAdminGroupResourceInterceptor implements PluginResourceIntercep
                 .stream()
                 .filter(r -> r.getSources().stream().anyMatch(s -> group.getSources().contains(s)))
                 .map(IdEntity::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         if (MapUtils.isEmpty(group.getResourceMap())) {
             group.setResourceMap(new LinkedHashMap<>());

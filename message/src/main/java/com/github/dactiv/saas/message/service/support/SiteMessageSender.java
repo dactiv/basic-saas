@@ -41,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -171,7 +170,7 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
         return siteMessageChannelSenderList
                 .stream()
                 .filter(s -> channel.contains(s.getType()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -265,13 +264,13 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
 
         return RestResult.ofSuccess(
                 "发送 " + entities.size() + " 条站内信消息完成",
-                entities.stream().map(BasicMessageEntity::getId).collect(Collectors.toList())
+                entities.stream().map(BasicMessageEntity::getId).toList()
         );
     }
 
     @Override
     protected List<SiteMessageEntity> getBatchMessageBodyContent(List<SiteMessageBody> result) {
-        return result.stream().flatMap(this::createSiteMessage).collect(Collectors.toList());
+        return result.stream().flatMap(this::createSiteMessage).toList();
     }
 
     @Override

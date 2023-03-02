@@ -90,7 +90,7 @@ public class ApplyService extends BasicService<ApplyDao, ApplyEntity> {
         this.concurrentInterceptor = concurrentInterceptor;
         this.workService = workService;
         this.formService = formService;
-        this.formApprovalTypeResolvers = formApprovalTypeResolvers.orderedStream().collect(Collectors.toList());
+        this.formApprovalTypeResolvers = formApprovalTypeResolvers.orderedStream().toList();
     }
 
     /**

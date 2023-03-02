@@ -30,7 +30,6 @@ import org.springframework.stereotype.Component;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 顺序流程审批解析器实现，先一个通过，在到下一个审批。如果中间有一个不通过，全部不通过。
@@ -61,7 +60,7 @@ public class SequenceFormApprovalTypeResolver extends AbstractFormApprovalTypeRe
                 .map(m -> ApplyApprovalEntity.of(m, body.getId()))
                 .peek(a -> a.setStatus(ApplyApprovalStatusEnum.WAITING))
                 .sorted(Comparator.comparing(ApplyApprovalEntity::getSort))
-                .collect(Collectors.toList());
+                .toList();
 
         result.iterator().next().setStatus(ApplyApprovalStatusEnum.PROCESSING);
 

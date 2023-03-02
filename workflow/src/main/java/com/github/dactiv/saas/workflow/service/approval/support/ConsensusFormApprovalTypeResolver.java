@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 会签流程审批解析器实现，需要全部通过才能通过。
@@ -53,7 +52,7 @@ public class ConsensusFormApprovalTypeResolver extends AbstractFormApprovalTypeR
                 .map(m -> ApplyApprovalEntity.of(m, body.getId()))
                 .peek(a -> a.setStatus(ApplyApprovalStatusEnum.PROCESSING))
                 .sorted(Comparator.comparing(ApplyApprovalEntity::getSort))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

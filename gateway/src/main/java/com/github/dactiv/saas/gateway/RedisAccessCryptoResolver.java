@@ -43,7 +43,7 @@ public class RedisAccessCryptoResolver extends AbstractAccessCryptoResolver impl
                                      ObjectProvider<CipherAlgorithmService> cipherAlgorithmService,
                                      RedissonReactiveClient redissonClient,
                                      ApplicationConfig applicationConfig) {
-        super(config, predicates.stream().collect(Collectors.toList()), cipherAlgorithmService);
+        super(config, predicates.stream().toList(), cipherAlgorithmService);
         this.redissonClient = redissonClient;
         this.applicationConfig = applicationConfig;
     }
@@ -61,7 +61,7 @@ public class RedisAccessCryptoResolver extends AbstractAccessCryptoResolver impl
 
     @Override
     @NacosCronScheduled(cron = "${dactiv.saas.gateway.crypto.access.sync-cron:0 0/3 * * * ?}")
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         RListReactive<AccessCrypto> accessTokens = redissonClient
                 .getList(applicationConfig.getAccessCryptoCache().getName());
         accessTokens.iterator().next().subscribe(this::addAccessCryptoCache);
@@ -72,7 +72,7 @@ public class RedisAccessCryptoResolver extends AbstractAccessCryptoResolver impl
                 .getPredicates()
                 .stream()
                 .map(p -> MessageFormat.format("name = {0}, value={1} ", p.getName(), p.getValue()))
-                .collect(Collectors.toList());
+                .toList();
 
         log.info(
                 "[name={},type={}}]:{} = [{}]",

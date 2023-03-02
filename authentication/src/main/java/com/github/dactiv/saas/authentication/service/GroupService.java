@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * tb_group 的业务逻辑
@@ -51,7 +50,7 @@ public class GroupService extends BasicService<GroupDao, GroupEntity> {
                 .distinct()
                 .flatMap(r -> r.getSources().stream().filter(s -> !entity.getSources().contains(s)))
                 .map(ResourceSourceEnum::getName)
-                .collect(Collectors.toList());
+                .toList();
 
         if (!noneMatchSources.isEmpty()) {
 
@@ -59,7 +58,7 @@ public class GroupService extends BasicService<GroupDao, GroupEntity> {
                     .getSources()
                     .stream()
                     .map(ResourceSourceEnum::getName)
-                    .collect(Collectors.toList());
+                    .toList();
 
             throw new ServiceException("组来源 " + sourceNames + " 不能保存属于 " + noneMatchSources + " 的资源");
         }
@@ -105,7 +104,7 @@ public class GroupService extends BasicService<GroupDao, GroupEntity> {
         List<GroupEntity> unRemovables = groups
                 .stream()
                 .filter(g -> YesOrNo.No.equals(g.getRemovable()))
-                .collect(Collectors.toList());
+                .toList();
 
         if (CollectionUtils.isNotEmpty(unRemovables)) {
             throw new ServiceException("用户组 " + unRemovables.stream().map(GroupEntity::getName) + " 不可删除");

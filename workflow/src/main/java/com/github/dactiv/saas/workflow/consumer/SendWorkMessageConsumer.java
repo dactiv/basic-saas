@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 发送代办工作消息
@@ -68,7 +67,7 @@ public class SendWorkMessageConsumer extends AbstractSendSiteMessageConsumer{
                 .eq(ApplyApprovalEntity::getStatus, ApplyApprovalStatusEnum.PROCESSING.getValue())
                 .list();
 
-        List<TypeIdNameMeta> users = list.stream().map(TypeIdNameMeta::ofUserDetails).collect(Collectors.toList());
+        List<TypeIdNameMeta> users = list.stream().map(TypeIdNameMeta::ofUserDetails).toList();
 
         String title = MessageFormat.format(applicationConfig.getPendingWorkTitle(), apply.getFormName());
         String content = MessageFormat.format(applicationConfig.getPendingWorkContent(), apply.getUsername(), apply.getCreationTime(), apply.getFormName());

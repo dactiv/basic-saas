@@ -11,6 +11,7 @@ import com.github.dactiv.framework.nacos.event.NacosServiceSubscribeEvent;
 import com.github.dactiv.framework.nacos.event.NacosSpringEventManager;
 import com.github.dactiv.framework.security.plugin.PluginInfo;
 import com.github.dactiv.framework.spring.web.endpoint.EnumerateEndpoint;
+import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -200,7 +201,7 @@ public class EnumerateResourceService {
     @SuppressWarnings("unchecked")
     public Map<String, Object> getInstanceEnumerate(Instance instance) {
 
-        String http = StringUtils.prependIfMissing(instance.toInetAddr(), "http://");
+        String http = StringUtils.prependIfMissing(instance.toInetAddr(), SpringMvcUtils.HTTP_PROTOCOL_PREFIX);
         String url = StringUtils.appendIfMissing(http, DEFAULT_ENUMERATE_INFO_URL);
 
         return restTemplate.getForObject(url, Map.class);

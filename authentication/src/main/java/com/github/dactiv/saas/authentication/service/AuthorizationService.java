@@ -61,7 +61,7 @@ public class AuthorizationService {
                                 PluginResourceService pluginResourceService,
                                 GroupService groupService,
                                 SpringSessionBackedSessionRegistry<? extends Session> sessionBackedSessionRegistry) {
-        this.userDetailsServices = userDetailsServices.stream().collect(Collectors.toList());
+        this.userDetailsServices = userDetailsServices.stream().toList();
         this.redissonClient = redissonClient;
         this.pluginResourceService = pluginResourceService;
         this.groupService = groupService;
@@ -144,7 +144,7 @@ public class AuthorizationService {
             List<ResourceMeta> findResources = resources
                     .stream()
                     .filter(r -> entry.getValue().contains(r.getId()))
-                    .collect(Collectors.toList());
+                    .toList();
 
             result.addAll(findResources);
         }
@@ -167,7 +167,7 @@ public class AuthorizationService {
         List<PrincipalAuthenticationToken> tokens = sources
                 .stream()
                 .map(s -> new PrincipalAuthenticationToken("*", s.toString(), false))
-                .collect(Collectors.toList());
+                .toList();
 
         for (PrincipalAuthenticationToken token : tokens) {
             UserDetailsService<?> userDetailsService = getUserDetailsService(ResourceSourceEnum.CONSOLE);
@@ -196,7 +196,7 @@ public class AuthorizationService {
             stream = stream.filter(r -> r.getSources().stream().anyMatch(sourceList::contains));
         }
 
-        return stream.sorted(Comparator.comparing(ResourceMeta::getSort).reversed()).collect(Collectors.toList());
+        return stream.sorted(Comparator.comparing(ResourceMeta::getSort).reversed()).toList();
     }
 
     public void deleteSystemUserAuthenticationCache(SystemUserEntity entity) {
@@ -299,7 +299,7 @@ public class AuthorizationService {
             List<ResourceAuthority> resourceAuthorities = userResource
                     .stream()
                     .flatMap(this::createResourceAuthoritiesStream)
-                    .collect(Collectors.toList());
+                    .toList();
 
             userDetails.getResourceAuthorities().addAll(resourceAuthorities);
         }
@@ -324,7 +324,7 @@ public class AuthorizationService {
         List<Integer> groupIds = roleAuthorities
                 .stream()
                 .map(IdRoleAuthorityMeta::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         if (CollectionUtils.isEmpty(groupIds)) {
             return userResource;
@@ -337,16 +337,16 @@ public class AuthorizationService {
                 .stream()
                 .flatMap(g -> g.getSources().stream())
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
 
         // 构造用户的组资源
         userResource = groups
                 .stream()
                 .flatMap(g -> getResourcesStream(g.getResourceMap(), groupSources))
-                .collect(Collectors.toList());
+                .toList();
 
         // 构造用户的独立资源
-        userResource.addAll(getResourcesStream(user.getResourceMap(), groupSources).distinct().collect(Collectors.toList()));
+        userResource.addAll(getResourcesStream(user.getResourceMap(), groupSources).distinct().toList());
 
         return userResource;
     }
@@ -366,7 +366,7 @@ public class AuthorizationService {
                     .stream()
                     .filter(r -> entry.getValue().contains(r.getId()))
                     .filter(r -> r.getSources().stream().anyMatch(sources::contains))
-                    .collect(Collectors.toList());
+                    .toList();
 
             result.addAll(findResources);
         }

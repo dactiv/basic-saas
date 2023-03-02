@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * tb_access_crypto 的业务逻辑
@@ -81,13 +80,13 @@ public class AccessCryptoService extends BasicService<AccessCryptoDao, AccessCry
                 .list()
                 .stream()
                 .peek(this::loadAccessCryptoPredicate)
-                .collect(Collectors.toList());
+                .toList();
 
         accessCryptoEntities.addAllAsync(result);
 
         TimeProperties expiresTime = config.getAccessCryptoCache().getExpiresTime();
         if (Objects.nonNull(expiresTime)) {
-            accessCryptoEntities.expireAsync(expiresTime.getValue(), expiresTime.getUnit());
+            accessCryptoEntities.expireAsync(expiresTime.toDuration());
         }
 
         return result;
@@ -164,7 +163,7 @@ public class AccessCryptoService extends BasicService<AccessCryptoDao, AccessCry
         List<AccessCryptoEntity> removeObjs = accessCryptos
                 .stream()
                 .filter(p -> ids.contains(p.getId()))
-                .collect(Collectors.toList());
+                .toList();
         accessCryptos.removeAllAsync(removeObjs);
 
         return super.deleteById(ids, errorThrow);

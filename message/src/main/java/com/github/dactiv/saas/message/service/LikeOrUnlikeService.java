@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * tb_like_or_unlike 的业务逻辑
@@ -39,7 +38,7 @@ public class LikeOrUnlikeService extends BasicService<LikeOrUnlikeDao, LikeOrUnl
 
     public LikeOrUnlikeService(ObjectProvider<LikeOrUnlikeResolver> likeOrUnlikeResolver,
                                AmqpTemplate amqpTemplate) {
-        this.likeOrUnlikeResolver = likeOrUnlikeResolver.orderedStream().collect(Collectors.toList());
+        this.likeOrUnlikeResolver = likeOrUnlikeResolver.orderedStream().toList();
         this.amqpTemplate = amqpTemplate;
     }
 

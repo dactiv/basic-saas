@@ -48,7 +48,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -98,13 +97,13 @@ public class EmailMessageSender extends BatchMessageSender<EmailMessageBody, Ema
 
         return RestResult.ofSuccess(
                 "发送 " + entities.size() + " 条邮件消息完成",
-                entities.stream().map(BasicMessageEntity::getId).collect(Collectors.toList())
+                entities.stream().map(BasicMessageEntity::getId).toList()
         );
     }
 
     @Override
     protected List<EmailMessageEntity> getBatchMessageBodyContent(List<EmailMessageBody> result) {
-        return result.stream().flatMap(this::createEmailMessageEntity).collect(Collectors.toList());
+        return result.stream().flatMap(this::createEmailMessageEntity).toList();
     }
 
     /**

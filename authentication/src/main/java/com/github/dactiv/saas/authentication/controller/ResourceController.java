@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 资源控制器
@@ -69,7 +68,7 @@ public class ResourceController {
             resourceSources = sources
                     .stream()
                     .map(s -> NameEnumUtils.parse(s, ResourceSourceEnum.class))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         List<ResourceMeta> resourceList = authorizationService.getResources(
@@ -95,7 +94,7 @@ public class ResourceController {
     public List<String> getConsoleUserResources(@RequestParam Integer userId) {
         ConsoleUserEntity systemUser = consoleUserService.get(userId);
         Set<Map.Entry<String, List<String>>> entrySet = systemUser.getResourceMap().entrySet();
-        return entrySet.stream().flatMap(e -> e.getValue().stream()).collect(Collectors.toList());
+        return entrySet.stream().flatMap(e -> e.getValue().stream()).toList();
     }
 
     /**
@@ -132,7 +131,7 @@ public class ResourceController {
         List<ResourceMeta> result = resourceList
                 .stream()
                 .sorted(Comparator.comparing(ResourceMeta::getSort).reversed())
-                .collect(Collectors.toList());
+                .toList();
 
         if (mergeTree) {
             return TreeUtils.buildGenericTree(result);

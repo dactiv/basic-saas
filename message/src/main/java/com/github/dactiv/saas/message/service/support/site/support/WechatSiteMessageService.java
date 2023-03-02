@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 抽象的微信站内信服务实现，用于构造一些基本信息提供给 {@link WechatMessageTemplateSender} 使用。
@@ -44,7 +43,7 @@ public class WechatSiteMessageService implements SiteMessageChannelSender {
                                     AuthenticationServiceFeignClient authenticationServiceFeignClient) {
         this.siteConfig = siteConfig;
         this.authenticationServiceFeignClient = authenticationServiceFeignClient;
-        this.messageTemplateSenders = messageTemplateSenders.orderedStream().collect(Collectors.toList());
+        this.messageTemplateSenders = messageTemplateSenders.orderedStream().toList();
     }
 
     /**
@@ -80,7 +79,7 @@ public class WechatSiteMessageService implements SiteMessageChannelSender {
                 .getSupportIdFieldName()
                 .stream().map(s -> message.getMeta().get(s))
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
 
         if (CollectionUtils.isEmpty(ids)) {
             return RestResult.of(
@@ -112,7 +111,7 @@ public class WechatSiteMessageService implements SiteMessageChannelSender {
                 .values()
                 .stream()
                 .map(RestResult::getMessage)
-                .collect(Collectors.toList());
+                .toList();
 
         int status = HttpStatus.OK.value();
         String executeCode = RestResult.SUCCESS_EXECUTE_CODE;

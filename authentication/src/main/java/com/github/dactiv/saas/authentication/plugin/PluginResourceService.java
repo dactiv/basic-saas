@@ -17,6 +17,7 @@ import com.github.dactiv.framework.nacos.event.NacosSpringEventManager;
 import com.github.dactiv.framework.security.enumerate.ResourceType;
 import com.github.dactiv.framework.security.plugin.PluginInfo;
 import com.github.dactiv.framework.spring.security.plugin.PluginEndpoint;
+import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.domain.meta.ResourceMeta;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
@@ -98,7 +99,7 @@ public class PluginResourceService {
     @SuppressWarnings("unchecked")
     public Map<String, Object> getInstanceInfo(Instance instance) {
 
-        String http = StringUtils.prependIfMissing(instance.toInetAddr(), "http://");
+        String http = StringUtils.prependIfMissing(instance.toInetAddr(), SpringMvcUtils.HTTP_PROTOCOL_PREFIX);
         String url = StringUtils.appendIfMissing(http, DEFAULT_PLUGIN_INFO_URL);
 
         return restTemplate.getForObject(url, Map.class);
@@ -206,7 +207,7 @@ public class PluginResourceService {
         List<ResourceMeta> newResourceList = pluginList
                 .stream()
                 .map(p -> createResource(p, instance, null))
-                .collect(Collectors.toList());
+                .toList();
 
         List<ResourceMeta> unmergeResourceList = TreeUtils.unBuildGenericTree(newResourceList);
 
@@ -294,7 +295,7 @@ public class PluginResourceService {
                 .getSources()
                 .stream()
                 .map(s -> NameEnumUtils.parse(s, ResourceSourceEnum.class))
-                .collect(Collectors.toList());
+                .toList();
 
         target.setSources(sources);
         target.setType(NameEnumUtils.parse(plugin.getType(), ResourceType.class));
@@ -350,7 +351,7 @@ public class PluginResourceService {
                 .filter(r -> r.getApplicationName().equals(nacosService.getName()))
                 .flatMap(r -> r.getSources().stream())
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
 
         resources.removeIf(r -> r.getApplicationName().equals(nacosService.getName()));
         // 查询所有符合条件的资源,并设置为禁用状态
@@ -415,7 +416,7 @@ public class PluginResourceService {
                 .resources
                 .stream()
                 .map(r -> Casts.of(r, ResourceMeta.class, PluginInfo.DEFAULT_CHILDREN_NAME))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

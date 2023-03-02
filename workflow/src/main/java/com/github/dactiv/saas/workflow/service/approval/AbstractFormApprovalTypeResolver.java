@@ -32,7 +32,6 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 抽象的表单审批类型解析器实现
@@ -77,7 +76,7 @@ public abstract class AbstractFormApprovalTypeResolver implements FormApprovalTy
                 .map(m -> ApplyCopyEntity.of(m, body.getId()))
                 .peek(a -> a.setStatus(ApplyCopyStatusEnum.WAITING))
                 .sorted(Comparator.comparing(ApplyCopyEntity::getSort))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

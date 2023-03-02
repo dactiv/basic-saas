@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * tb_department 的业务逻辑
@@ -38,7 +37,7 @@ public class DepartmentService extends BasicService<DepartmentDao, DepartmentEnt
     private final List<DepartmentResolver> departmentResolvers;
 
     public DepartmentService(ObjectProvider<DepartmentResolver> departmentResolvers) {
-        this.departmentResolvers = departmentResolvers.orderedStream().collect(Collectors.toList());
+        this.departmentResolvers = departmentResolvers.orderedStream().toList();
     }
 
     @Override

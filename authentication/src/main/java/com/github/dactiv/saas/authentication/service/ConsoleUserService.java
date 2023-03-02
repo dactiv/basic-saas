@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * tb_console_user 的业务逻辑
@@ -95,7 +94,7 @@ public class ConsoleUserService extends BasicService<ConsoleUserDao, ConsoleUser
                     .getPasswordEncoder();
 
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-            syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).collect(Collectors.toList()));
+            syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
         } else {
             ConsoleUserEntity ormEntity = Objects.requireNonNull(get(entity.getId()), "找不到 ID 为 [" + entity.getId() + "] 的后台用户信息");
             if (CollectionUtils.isNotEmpty(ormEntity.getDepartmentsInfo())) {
@@ -106,7 +105,7 @@ public class ConsoleUserService extends BasicService<ConsoleUserDao, ConsoleUser
                         .map(IdEntity::getId)
                         .forEach(syncDepartments::add);
             } else if (CollectionUtils.isNotEmpty(entity.getDepartmentsInfo())) {
-                syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).collect(Collectors.toList()));
+                syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
             }
         }
 

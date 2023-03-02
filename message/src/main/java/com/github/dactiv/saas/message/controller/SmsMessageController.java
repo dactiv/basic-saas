@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>短信消息控制器</p>
@@ -108,7 +107,7 @@ public class SmsMessageController {
     @PreAuthorize("hasAuthority('perms[sms:balance]')")
     @Plugin(name = "查看短信余额", sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE)
     public List<SmsBalanceMeta> balance() {
-        return smsChannelSenders.stream().map(SmsChannelSender::getBalance).collect(Collectors.toList());
+        return smsChannelSenders.stream().map(SmsChannelSender::getBalance).toList();
     }
 
 }

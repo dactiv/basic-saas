@@ -17,7 +17,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 后台用户解析器实现
@@ -47,7 +46,7 @@ public class ConsoleUserDepartmentResolver implements DepartmentResolver {
         return entities
                 .stream()
                 .map(e -> BasicUserDetails.of(e.getId(), e.getRealName(), ResourceSourceEnum.CONSOLE_SOURCE_VALUE))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

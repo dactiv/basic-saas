@@ -29,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * tb_schedule 的业务逻辑
@@ -89,7 +88,7 @@ public class ScheduleService extends BasicService<ScheduleDao, ScheduleEntity> {
                     .stream()
                     .map(ScheduleParticipantEntity::getId)
                     .filter(id -> !currentIds.contains(id))
-                    .collect(Collectors.toList());
+                    .toList();
 
             if (CollectionUtils.isNotEmpty(deleteIds)) {
                 scheduleParticipantService.deleteById(deleteIds);

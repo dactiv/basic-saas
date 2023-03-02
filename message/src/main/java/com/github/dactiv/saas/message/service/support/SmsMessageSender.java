@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -75,7 +74,7 @@ public class SmsMessageSender extends BatchMessageSender<SmsMessageBody, SmsMess
      * @param id      短信实体 id
      * @param channel 频道信息
      * @param tag     ack 值
-     * @throws Exception 发送失败或确认 ack 错误时抛出。
+     * @throws IOException 发送失败或确认 ack 错误时抛出。
      */
     @RabbitListener(
             bindings = @QueueBinding(
@@ -173,13 +172,13 @@ public class SmsMessageSender extends BatchMessageSender<SmsMessageBody, SmsMess
 
         return RestResult.ofSuccess(
                 "发送 " + entities.size() + " 条短信消息完成",
-                entities.stream().map(BasicMessageEntity::getId).collect(Collectors.toList())
+                entities.stream().map(BasicMessageEntity::getId).toList()
         );
     }
 
     @Override
     protected List<SmsMessageEntity> getBatchMessageBodyContent(List<SmsMessageBody> result) {
-        return result.stream().flatMap(this::createSmsMessageEntity).collect(Collectors.toList());
+        return result.stream().flatMap(this::createSmsMessageEntity).toList();
     }
 
     /**

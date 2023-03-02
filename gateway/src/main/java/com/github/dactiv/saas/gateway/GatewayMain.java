@@ -40,7 +40,7 @@ public class GatewayMain {
 
     @Bean
     public HttpMessageConverters httpMessageConverters(ObjectProvider<HttpMessageConverter<?>> messageConverters) {
-        return new HttpMessageConverters(messageConverters.orderedStream().collect(Collectors.toList()));
+        return new HttpMessageConverters(messageConverters.orderedStream().toList());
     }
 
     @Bean

@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 或签流程审批解析器实现，只有有一个拒绝或同意，整个流程解释。
@@ -53,7 +52,7 @@ public class UnanimousFormApprovalTypeResolver extends AbstractFormApprovalTypeR
                 .map(m -> ApplyApprovalEntity.of(m, body.getId()))
                 .peek(a -> a.setStatus(ApplyApprovalStatusEnum.PROCESSING))
                 .sorted(Comparator.comparing(ApplyApprovalEntity::getSort))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

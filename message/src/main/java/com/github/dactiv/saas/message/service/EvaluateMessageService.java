@@ -23,7 +23,6 @@ import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * tb_evaluate_message 的业务逻辑
@@ -44,7 +43,7 @@ public class EvaluateMessageService extends BasicService<EvaluateMessageDao, Eva
 
     public EvaluateMessageService(ObjectProvider<EvaluateMessageResolver> evaluateMessageResolvers,
                                   AmqpTemplate amqpTemplate) {
-        this.evaluateMessageResolvers = evaluateMessageResolvers.orderedStream().collect(Collectors.toList());
+        this.evaluateMessageResolvers = evaluateMessageResolvers.orderedStream().toList();
         this.amqpTemplate = amqpTemplate;
     }
 

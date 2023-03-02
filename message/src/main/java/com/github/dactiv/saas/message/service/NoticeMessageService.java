@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * tb_notice_message 的业务逻辑
@@ -66,7 +65,7 @@ public class NoticeMessageService extends BasicService<NoticeMessageDao, NoticeM
                 .peek(n -> n.setPublishTime(new Date()))
                 .peek(this::updateById)
                 .map(NoticeMessageEntity::getId)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public int save(NoticeMessageEntity entity, Boolean publish) {

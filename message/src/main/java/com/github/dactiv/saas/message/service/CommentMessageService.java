@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * tb_comment_message 的业务逻辑
@@ -38,7 +37,7 @@ public class CommentMessageService extends BasicService<CommentMessageDao, Comme
 
     public CommentMessageService(ObjectProvider<CommentMessageResolver> commentMessageResolvers,
                                  AmqpTemplate amqpTemplate) {
-        this.commentMessageResolvers = commentMessageResolvers.orderedStream().collect(Collectors.toList());
+        this.commentMessageResolvers = commentMessageResolvers.orderedStream().toList();
         this.amqpTemplate = amqpTemplate;
     }
 

@@ -31,7 +31,6 @@ import org.springframework.session.data.redis.config.annotation.web.http.RedisHt
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 自定义 spring security 的配置
@@ -95,8 +94,8 @@ public class SpringSecurityConfig<S extends Session> implements WebSecurityConfi
         this.captchaAuthenticationFailureResponse = captchaAuthenticationFailureResponse;
         this.eventPublisher = eventPublisher;
         this.authenticationManager = authenticationManager;
-        this.authenticationTypeTokenResolvers = authenticationTypeTokenResolver.orderedStream().collect(Collectors.toList());
-        this.userDetailsServices = userDetailsServices.orderedStream().collect(Collectors.toList());
+        this.authenticationTypeTokenResolvers = authenticationTypeTokenResolver.orderedStream().toList();
+        this.userDetailsServices = userDetailsServices.orderedStream().toList();
         this.deviceIdContextRepository = deviceIdContextRepository;
     }
 

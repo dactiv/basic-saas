@@ -22,8 +22,8 @@ import com.github.dactiv.saas.authentication.security.handler.CaptchaAuthenticat
 import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
-import com.github.dactiv.saas.commons.domain.meta.wechat.SimpleWechatUserDetailsMeta;
 import com.github.dactiv.saas.commons.domain.meta.wechat.PhoneInfoMeta;
+import com.github.dactiv.saas.commons.domain.meta.wechat.SimpleWechatUserDetailsMeta;
 import com.github.dactiv.saas.commons.domain.meta.wechat.WechatAccountMeta;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import com.github.dactiv.saas.commons.service.WechatService;

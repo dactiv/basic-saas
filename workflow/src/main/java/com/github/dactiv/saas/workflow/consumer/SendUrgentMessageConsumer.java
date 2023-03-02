@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 加急流程申请消息消费者实现
@@ -68,7 +67,7 @@ public class SendUrgentMessageConsumer extends AbstractSendSiteMessageConsumer{
                 .eq(ApplyApprovalEntity::getStatus, ApplyApprovalStatusEnum.PROCESSING.getValue())
                 .list();
 
-        List<TypeIdNameMeta> users = list.stream().map(TypeIdNameMeta::ofUserDetails).collect(Collectors.toList());
+        List<TypeIdNameMeta> users = list.stream().map(TypeIdNameMeta::ofUserDetails).toList();
 
         String title = MessageFormat.format(applicationConfig.getUrgentTitle(), apply.getFormName());
         String content = MessageFormat.format(applicationConfig.getUrgentContent(), apply.getUsername(), apply.getCreationTime(), apply.getFormName());

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 流程申请请求体
@@ -45,7 +44,7 @@ public class ApplyRequestBody extends ApplyEntity {
         body.setFormType(dto.getType());
         body.setFormContent(dto.getContentMeta());
 
-        body.setParticipantList(dto.getParticipantList().stream().map(p -> Casts.of(p, AuditParticipantMeta.class)).collect(Collectors.toList()));
+        body.setParticipantList(dto.getParticipantList().stream().map(p -> Casts.of(p, AuditParticipantMeta.class)).toList());
 
         return body;
     }

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 授权控制器
@@ -39,7 +38,7 @@ public class SecurityController {
     public SecurityController(JsonLogoutSuccessHandler jsonLogoutSuccessHandler,
                               ObjectProvider<UserDetailsService<?>> userDetailsServices) {
         this.jsonLogoutSuccessHandler = jsonLogoutSuccessHandler;
-        this.userDetailsServices = userDetailsServices.orderedStream().collect(Collectors.toList());
+        this.userDetailsServices = userDetailsServices.orderedStream().toList();
     }
 
     /**

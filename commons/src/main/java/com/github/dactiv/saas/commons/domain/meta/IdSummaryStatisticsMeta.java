@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * 带 id 的统计元数据信息
@@ -48,7 +47,7 @@ public class IdSummaryStatisticsMeta<I, T extends Number, S extends Number> exte
         return statisticsMetas
                 .stream()
                 .sorted(Comparator.comparing(SummaryStatisticsMeta::getSum))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static <PK> List<IdSummaryStatisticsMeta<PK, Double, Double>> sortDoubleSummaryStatistics(Map<PK, DoubleSummaryStatistics> summaryStatisticsMap) {
@@ -58,7 +57,7 @@ public class IdSummaryStatisticsMeta<I, T extends Number, S extends Number> exte
         return statisticsMetas
                 .stream()
                 .sorted(Comparator.comparing(SummaryStatisticsMeta::getSum))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static <PK> List<IdSummaryStatisticsMeta<PK, Long, Long>> sortLongSummaryStatistics(Map<PK, LongSummaryStatistics> summaryStatisticsMap) {
@@ -68,7 +67,7 @@ public class IdSummaryStatisticsMeta<I, T extends Number, S extends Number> exte
         return statisticsMetas
                 .stream()
                 .sorted(Comparator.comparing(SummaryStatisticsMeta::getSum))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static <PK> void generateDoubleSummaryStatisticsRanking(Map<PK, DoubleSummaryStatistics> summaryStatisticsMap,

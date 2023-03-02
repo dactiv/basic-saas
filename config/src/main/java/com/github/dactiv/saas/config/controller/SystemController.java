@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 配置管理控制器
@@ -119,7 +118,7 @@ public class SystemController {
                 .map(e -> Casts.of(e, DataDictionaryMeta.class))
                 .peek(e -> e.setValue(Casts.cast(e.getValue(), e.getValueType().getClassType())))
                 .peek(e -> e.setValueType(null))
-                .collect(Collectors.toList());
+                .toList();
 
     }
 

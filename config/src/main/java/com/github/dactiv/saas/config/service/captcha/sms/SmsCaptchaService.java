@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 短信验证码服务
@@ -49,7 +48,7 @@ public class SmsCaptchaService extends AbstractMessageCaptchaService<SmsMeta, Re
                              ObjectProvider<ChannelMessageParamCreator> channelMessageParamCreators,
                              SmsCaptchaConfig smsCaptchaConfig) {
         super(redissonClient, captchaConfig, validator, configServiceFeignClient, messageServiceFeignClient);
-        this.messageParamCreators = channelMessageParamCreators.orderedStream().collect(Collectors.toList());
+        this.messageParamCreators = channelMessageParamCreators.orderedStream().toList();
         this.smsCaptchaConfig = smsCaptchaConfig;
     }
 

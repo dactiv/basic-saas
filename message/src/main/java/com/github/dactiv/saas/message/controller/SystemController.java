@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 消息发送控制器
@@ -37,8 +36,8 @@ public class SystemController {
 
     public SystemController(ObjectProvider<MessageSender> messageSenders,
                             ObjectProvider<AttachmentResolver> attachmentResolvers) {
-        this.messageSenders = messageSenders.orderedStream().collect(Collectors.toList());
-        this.attachmentResolvers = attachmentResolvers.orderedStream().collect(Collectors.toList());
+        this.messageSenders = messageSenders.orderedStream().toList();
+        this.attachmentResolvers = attachmentResolvers.orderedStream().toList();
     }
 
     /**

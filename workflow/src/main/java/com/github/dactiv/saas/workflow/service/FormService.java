@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * tb_form 的业务逻辑
@@ -78,7 +77,7 @@ public class FormService extends BasicService<FormDao, FormEntity> {
                         .getParticipantList()
                         .stream()
                         .map(m -> FormParticipantEntity.of(m, body.getId()))
-                        .collect(Collectors.toList());
+                        .toList();
 
                 result += formParticipantList.size();
                 formParticipantService.save(formParticipantList);
@@ -105,7 +104,7 @@ public class FormService extends BasicService<FormDao, FormEntity> {
                     .lambdaQuery()
                     .eq(FormParticipantEntity::getFormId, entity.getId())
                     .list();
-            body.setParticipantList(participantList.stream().map(FormService::of).collect(Collectors.toList()));
+            body.setParticipantList(participantList.stream().map(FormService::of).toList());
         }
 
         return body;
@@ -183,7 +182,7 @@ public class FormService extends BasicService<FormDao, FormEntity> {
         List<ApplyEntity> list = applyService
                 .lambdaQuery()
                 .eq(ApplyEntity::getFormId, entity.getId())
-                .in(ApplyEntity::getStatus, ApplyStatusEnum.SUBMIT_STATUS.stream().map(ApplyStatusEnum::getValue).collect(Collectors.toList()))
+                .in(ApplyEntity::getStatus, ApplyStatusEnum.SUBMIT_STATUS.stream().map(ApplyStatusEnum::getValue).toList())
                 .list();
         applyService.deleteByEntity(list);
         return super.deleteByEntity(entity);
