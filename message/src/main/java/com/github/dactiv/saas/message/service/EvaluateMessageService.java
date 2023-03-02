@@ -172,7 +172,7 @@ public class EvaluateMessageService extends BasicService<EvaluateMessageDao, Eva
 
     public int deleteByEntity(EvaluateMessageEntity entity, SecurityUserDetails userDetails) {
 
-        if (ResourceSourceEnum.STUDENT_SOURCE_VALUE.equals(userDetails.getType()) && !userDetails.getId().equals(entity.getUserId())) {
+        if (ResourceSourceEnum.MEMBER.getValue().contains(userDetails.getType()) && !userDetails.getId().equals(entity.getUserId())) {
             throw new SystemException("ID 为 [" + entity.getId() + "] 的评价不属于 ID 为 [" + userDetails.getId() + "] 的用户");
         }
 
@@ -180,7 +180,7 @@ public class EvaluateMessageService extends BasicService<EvaluateMessageDao, Eva
                 .stream()
                 .filter(c -> c.isSupport(entity.getTargetType()))
                 .filter(c -> c.preDelete(entity))
-                .collect(Collectors.toList());
+                .toList();
 
         int result = super.deleteByEntity(entity);
 

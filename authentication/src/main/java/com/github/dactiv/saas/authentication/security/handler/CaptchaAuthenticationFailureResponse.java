@@ -7,7 +7,7 @@ import com.github.dactiv.framework.spring.security.authentication.handler.JsonAu
 import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.enumerate.LoginTypeEnum;
-import com.github.dactiv.saas.commons.feign.CaptchaServiceFeignClient;
+import com.github.dactiv.saas.commons.feign.ConfigServiceFeignClient;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -39,17 +39,17 @@ public class CaptchaAuthenticationFailureResponse implements JsonAuthenticationF
     private final AuthenticationProperties properties;
 
     @Getter
-    private final CaptchaServiceFeignClient captchaServiceFeignClient;
+    private final ConfigServiceFeignClient configServiceFeignClient;
 
     private final RedissonClient redissonClient;
 
     public CaptchaAuthenticationFailureResponse(ApplicationConfig applicationConfig,
                                                 AuthenticationProperties properties,
-                                                CaptchaServiceFeignClient captchaServiceFeignClient,
+                                                ConfigServiceFeignClient configServiceFeignClient,
                                                 RedissonClient redissonClient) {
         this.applicationConfig = applicationConfig;
         this.properties = properties;
-        this.captchaServiceFeignClient = captchaServiceFeignClient;
+        this.configServiceFeignClient = configServiceFeignClient;
         this.redissonClient = redissonClient;
     }
 
@@ -90,7 +90,7 @@ public class CaptchaAuthenticationFailureResponse implements JsonAuthenticationF
             String token = request.getParameter(applicationConfig.getSmsCaptchaParamName());
 
             if (StringUtils.isNotBlank(token)) {
-                Map<String, Object> buildToken = captchaServiceFeignClient.createGenerateCaptchaIntercept(
+                Map<String, Object> buildToken = configServiceFeignClient.createGenerateCaptchaIntercept(
                         token,
                         applicationConfig.getMobileFailureCaptchaType(),
                         DEFAULT_MOBILE_CAPTCHA_TYPE
@@ -100,7 +100,7 @@ public class CaptchaAuthenticationFailureResponse implements JsonAuthenticationF
             }
 
         } else {
-            Map<String, Object> buildToken = captchaServiceFeignClient.generateToken(
+            Map<String, Object> buildToken = configServiceFeignClient.generateToken(
                     applicationConfig.getUsernameFailureCaptchaType(),
                     identified
             );

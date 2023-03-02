@@ -30,7 +30,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 系统用户明细服务实现
+ * 系统用户明细认证授权服务实现
  *
  * @author maurice.chen
  */

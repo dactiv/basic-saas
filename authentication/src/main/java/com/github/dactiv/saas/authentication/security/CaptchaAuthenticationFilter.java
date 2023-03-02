@@ -58,7 +58,7 @@ public class CaptchaAuthenticationFilter extends RequestAuthenticationFilter imp
             });
 
             try {
-                RestResult<Map<String, Object>> restResult = handler.getCaptchaServiceFeignClient().verifyCaptcha(params);
+                RestResult<Map<String, Object>> restResult = handler.getConfigServiceFeignClient().verifyCaptcha(params);
 
                 if (restResult.getStatus() != HttpStatus.OK.value()) {
                     throw new BadCredentialsException(restResult.getMessage());

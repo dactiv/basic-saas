@@ -23,19 +23,13 @@ import java.util.List;
 public enum ResourceSourceEnum implements NameValueEnum<List<String>> {
 
     /**
-     * 管理后台
+     * 管理后台用户
      */
-    CONSOLE("系统用户", List.of(ResourceSourceEnum.CONSOLE_SOURCE_VALUE)),
+    CONSOLE("管理后台用户", List.of(ResourceSourceEnum.CONSOLE_SOURCE_VALUE)),
     /**
-     * 教师
+     * 会员用户
      */
-    TEACHER("教师", List.of(ResourceSourceEnum.WECHAT_TEACHER_SOURCE_VALUE, ResourceSourceEnum.MOBILE_TEACHER_SOURCE_VALUE, ResourceSourceEnum.WAKE_UP_SOURCE_VALUE, ResourceSourceEnum.TEACHER_SOURCE_VALUE)),
-
-    /**
-     * 学生
-     */
-    STUDENT("学生", List.of(ResourceSourceEnum.WECHAT_STUDENT_SOURCE_VALUE, ResourceSourceEnum.MOBILE_STUDENT_SOURCE_VALUE, ResourceSourceEnum.WAKE_UP_SOURCE_VALUE, ResourceSourceEnum.STUDENT_SOURCE_VALUE)),
-
+    MEMBER("会员用户", List.of(ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WAKE_UP_SOURCE_VALUE)),
     /**
      * 系统
      */
@@ -72,34 +66,14 @@ public enum ResourceSourceEnum implements NameValueEnum<List<String>> {
     public static final String SYSTEM_SOURCE_VALUE = "SYSTEM";
 
     /**
-     * 教师应用来源值
-     */
-    public static final String TEACHER_SOURCE_VALUE = "TEACHER";
-
-    /**
-     * 学生应用来源值
-     */
-    public static final String STUDENT_SOURCE_VALUE = "STUDENT";
-
-    /**
      * 移动端教师应用来源值
      */
-    public static final String MOBILE_TEACHER_SOURCE_VALUE = "MOBILE_TEACHER";
-
-    /**
-     * 移动端学生应用来源值
-     */
-    public static final String MOBILE_STUDENT_SOURCE_VALUE = "MOBILE_STUDENT";
+    public static final String MOBILE_MEMBER_SOURCE_VALUE = "MOBILE_MEMBER";
 
     /**
      * 微信端教师应用来源值
      */
-    public static final String WECHAT_TEACHER_SOURCE_VALUE = "WECHAT_TEACHER";
-
-    /**
-     * 微信端学生应用来源值
-     */
-    public static final String WECHAT_STUDENT_SOURCE_VALUE = "WECHAT_STUDENT";
+    public static final String WECHAT_MEMBER_SOURCE_VALUE = "WECHAT_MEMBER";
 
     /**
      * 呼醒应用来源值

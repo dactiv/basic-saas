@@ -6,7 +6,7 @@ import com.github.dactiv.framework.security.entity.BasicUserDetails;
 import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.domain.WechatUserDetails;
-import com.github.dactiv.saas.commons.domain.meta.SimpleWechatUserDetailsMeta;
+import com.github.dactiv.saas.commons.domain.meta.wechat.SimpleWechatUserDetailsMeta;
 import com.github.dactiv.saas.commons.domain.meta.wechat.TemplateMessageMeta;
 import com.github.dactiv.saas.commons.feign.AuthenticationServiceFeignClient;
 import com.github.dactiv.saas.message.config.site.SiteConfig;

@@ -233,8 +233,7 @@ public class EmailMessageSender extends BatchMessageSender<EmailMessageBody, Ema
             filter.put("filter_[email_nen]", "true");
             filter.put("filter_[status_eq]", DisabledOrEnabled.Enabled.getValue());
 
-            List<Map<String, Object>> users = authenticationServiceFeignClient.findTeacher(filter);
-            users.addAll(authenticationServiceFeignClient.findStudent(filter));
+            List<Map<String, Object>> users = authenticationServiceFeignClient.findMemberUser(filter);
             users.forEach(u -> body.getToEmails().add(u.get(SecurityUserDetailsConstants.SECURITY_DETAILS_EMAIL_KEY).toString()));
 
         }

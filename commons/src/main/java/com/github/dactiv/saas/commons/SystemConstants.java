@@ -11,11 +11,6 @@ import com.github.dactiv.framework.commons.minio.Bucket;
 public interface SystemConstants {
 
     /**
-     * 默认 rabbitmq 的延迟交换机名称
-     */
-    String RABBITMQ_DELAY_EXCHANGE = "dactiv.saas.delay.exchange";
-
-    /**
      * 默认 rabbitmq 交换机名称
      */
     String RABBITMQ_EXCHANGE = "dactiv.saas.exchange";
@@ -33,7 +28,7 @@ public interface SystemConstants {
     /**
      * 管理系统名称
      */
-    String SYS_ADMIN_NAME = "admin";
+    String SYS_CONFIG_NAME = "config";
 
     /**
      * 配置系统名称
@@ -41,19 +36,9 @@ public interface SystemConstants {
     String SYS_GATEWAY_NAME = "gateway";
 
     /**
-     * 验证码系统名称
-     */
-    String SYS_CAPTCHA_NAME = "captcha";
-
-    /**
      * 工作流系统名称
      */
     String SYS_WORKFLOW_NAME = "workflow";
-
-    /**
-     * 资源系统名称
-     */
-    String SYS_RESOURCES_NAME = "resources";
 
     /**
      * 中间件系统名称
@@ -64,11 +49,6 @@ public interface SystemConstants {
      * 工作流系统的默认 rabbitmq 交换机名称
      */
     String SYS_WORKFLOW_RABBITMQ_EXCHANGE = SYS_WORKFLOW_NAME + Casts.DEFAULT_DOT_SYMBOL + RABBITMQ_EXCHANGE;
-
-    /**
-     * 资源系统的默认 rabbitmq 交换机名称
-     */
-    String SYS_RESOURCES_RABBITMQ_EXCHANGE = SYS_RESOURCES_NAME + Casts.DEFAULT_DOT_SYMBOL + RABBITMQ_EXCHANGE;
 
     /**
      * 权限系统的默认 rabbitmq 交换机名称
@@ -83,7 +63,7 @@ public interface SystemConstants {
     /**
      * 管理系统的默认 rabbitmq 交换机名称
      */
-    String SYS_ADMIN_RABBITMQ_EXCHANGE = SYS_ADMIN_NAME + Casts.DEFAULT_DOT_SYMBOL + RABBITMQ_EXCHANGE;
+    String SYS_CONFIG_RABBITMQ_EXCHANGE = SYS_CONFIG_NAME + Casts.DEFAULT_DOT_SYMBOL + RABBITMQ_EXCHANGE;
 
     /**
      * 消息系统的默认 rabbitmq 交换机名称
@@ -118,7 +98,7 @@ public interface SystemConstants {
     /**
      * 导出的桶信息
      */
-    Bucket EXPORT_BUCKET = Bucket.of("resources.basic.export");
+    Bucket EXPORT_BUCKET = Bucket.of("config.data.export");
 
     /**
      * 替换 HTML 标签正则表达式

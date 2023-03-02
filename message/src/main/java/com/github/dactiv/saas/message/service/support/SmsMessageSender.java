@@ -204,8 +204,8 @@ public class SmsMessageSender extends BatchMessageSender<SmsMessageBody, SmsMess
             filter.put("filter_[phone_number_nen]", "true");
             filter.put("filter_[status_eq]", "1");
 
-            List<Map<String, Object>> users = authenticationServiceFeignClient.findTeacher(filter);
-            users.addAll(authenticationServiceFeignClient.findStudent(filter));
+            List<Map<String, Object>> users = authenticationServiceFeignClient.findMemberUser(filter);
+
 
             for (Map<String, Object> user : users) {
 

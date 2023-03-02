@@ -2,7 +2,7 @@ package com.github.dactiv.saas.config.service.captcha.sms;
 
 import com.github.dactiv.framework.commons.TimeProperties;
 import com.github.dactiv.framework.commons.exception.ServiceException;
-import com.github.dactiv.saas.commons.feign.AdminServiceFeignClient;
+import com.github.dactiv.saas.commons.feign.ConfigServiceFeignClient;
 import com.github.dactiv.saas.commons.feign.MessageServiceFeignClient;
 import com.github.dactiv.saas.config.config.CaptchaConfig;
 import com.github.dactiv.saas.config.config.SmsCaptchaConfig;
@@ -43,12 +43,12 @@ public class SmsCaptchaService extends AbstractMessageCaptchaService<SmsMeta, Re
 
     public SmsCaptchaService(RedissonClient redissonClient,
                              @Qualifier("mvcValidator") @Autowired(required = false) Validator validator,
-                             AdminServiceFeignClient adminServiceFeignClient,
+                             ConfigServiceFeignClient configServiceFeignClient,
                              MessageServiceFeignClient messageServiceFeignClient,
                              CaptchaConfig captchaConfig,
                              ObjectProvider<ChannelMessageParamCreator> channelMessageParamCreators,
                              SmsCaptchaConfig smsCaptchaConfig) {
-        super(redissonClient, captchaConfig, validator, adminServiceFeignClient, messageServiceFeignClient);
+        super(redissonClient, captchaConfig, validator, configServiceFeignClient, messageServiceFeignClient);
         this.messageParamCreators = channelMessageParamCreators.orderedStream().collect(Collectors.toList());
         this.smsCaptchaConfig = smsCaptchaConfig;
     }

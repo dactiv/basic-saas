@@ -31,8 +31,8 @@ public class ApplicationConfig {
 
     public static final List<String> DEFAULT_CAPTCHA_AUTHENTICATION_TYPES = Arrays.asList(
             ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-            ResourceSourceEnum.STUDENT_SOURCE_VALUE,
-            ResourceSourceEnum.TEACHER_SOURCE_VALUE,
+            ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE,
+            ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
             DefaultUserDetailsService.DEFAULT_TYPES
     );
 
@@ -94,7 +94,7 @@ public class ApplicationConfig {
     /**
      * 忽略的插件服务集合
      */
-    private List<String> ignorePluginService = List.of(SystemConstants.SYS_GATEWAY_NAME, SystemConstants.SYS_CAPTCHA_NAME);
+    private List<String> ignorePluginService = List.of(SystemConstants.SYS_GATEWAY_NAME);
 
     /**
      * 忽略当前用户的插件集合

@@ -19,11 +19,6 @@ import org.springframework.stereotype.Component;
 public class ApplicationConfig {
 
     /**
-     * api 名称
-     */
-    private String apiName = "com/github/dactiv/saas/workflow";
-
-    /**
      * 代办工作站内信标题
      */
     private String pendingWorkTitle = "您有一个新的{0}审批需要处理";

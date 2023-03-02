@@ -1,7 +1,7 @@
 package com.github.dactiv.saas.authentication.security.token;
 
 import com.github.dactiv.framework.spring.security.authentication.token.RequestAuthenticationToken;
-import com.github.dactiv.saas.commons.domain.meta.SimpleWechatUserDetailsMeta;
+import com.github.dactiv.saas.commons.domain.meta.wechat.SimpleWechatUserDetailsMeta;
 import com.github.dactiv.saas.commons.domain.meta.wechat.PhoneInfoMeta;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

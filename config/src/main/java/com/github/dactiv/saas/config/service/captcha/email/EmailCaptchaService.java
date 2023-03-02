@@ -2,7 +2,7 @@ package com.github.dactiv.saas.config.service.captcha.email;
 
 import com.github.dactiv.framework.commons.TimeProperties;
 import com.github.dactiv.saas.commons.domain.meta.IdNameMeta;
-import com.github.dactiv.saas.commons.feign.AdminServiceFeignClient;
+import com.github.dactiv.saas.commons.feign.ConfigServiceFeignClient;
 import com.github.dactiv.saas.commons.feign.MessageServiceFeignClient;
 import com.github.dactiv.saas.config.config.CaptchaConfig;
 import com.github.dactiv.saas.config.config.EmailCaptchaConfig;
@@ -38,10 +38,10 @@ public class EmailCaptchaService extends AbstractMessageCaptchaService<EmailMeta
     public EmailCaptchaService(RedissonClient redissonClient,
                                CaptchaConfig captchaConfig,
                                @Qualifier("mvcValidator") @Autowired(required = false) Validator validator,
-                               AdminServiceFeignClient adminServiceFeignClient,
+                               ConfigServiceFeignClient configServiceFeignClient,
                                MessageServiceFeignClient messageServiceFeignClient,
                                EmailCaptchaConfig properties) {
-        super(redissonClient, captchaConfig, validator, adminServiceFeignClient, messageServiceFeignClient);
+        super(redissonClient, captchaConfig, validator, configServiceFeignClient, messageServiceFeignClient);
         this.properties = properties;
     }
 

@@ -53,7 +53,11 @@ import java.util.Objects;
         parent = "message",
         type = ResourceType.Menu,
         icon = "icon-excellent",
-        sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE, ResourceSourceEnum.STUDENT_SOURCE_VALUE}
+        sources = {
+                ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
+                ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+        }
 )
 public class EvaluateMessageController {
 
@@ -132,7 +136,7 @@ public class EvaluateMessageController {
             if (Objects.isNull(userDetails)) {
                 return new Page<>();
             }
-            if (ResourceSourceEnum.STUDENT_SOURCE_VALUE.equals(userDetails.getType())) {
+            if (ResourceSourceEnum.MEMBER.getValue().contains(userDetails.getType())) {
                 Integer userId = Casts.cast(userDetails.getId());
                 lambdaQuery.eq(EvaluateMessageEntity::getUserId, userId);
             } else {

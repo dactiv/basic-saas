@@ -62,10 +62,11 @@ public class WorkController {
     @PreAuthorize("hasAuthority('perms[work:get]')")
     @Plugin(
             name = "查看工作内容信息",
-            parent = "com/github/dactiv/saas/workflow",
+            parent = "workflow",
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.TEACHER_SOURCE_VALUE
+                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
             }
     )
     public WorkEntity get(@RequestParam Integer id) {
@@ -83,13 +84,14 @@ public class WorkController {
     @PostMapping("myCreate")
     @Plugin(
             name = "我创建的",
-            parent = "com/github/dactiv/saas/workflow",
+            parent = "workflow",
             sort = 101,
             type = ResourceType.Menu,
             icon = "icon-history",
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.TEACHER_SOURCE_VALUE
+                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[apply:my_create]')")
@@ -122,13 +124,14 @@ public class WorkController {
     @PostMapping("mySubmit")
     @Plugin(
             name = "我提交的",
-            parent = "com/github/dactiv/saas/workflow",
+            parent = "workflow",
             sort = 100,
             icon = "icon-complete",
             type = ResourceType.Menu,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.TEACHER_SOURCE_VALUE
+                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:my_submit]')")
@@ -151,13 +154,14 @@ public class WorkController {
     @PostMapping("copyMe")
     @Plugin(
             name = "我收到的",
-            parent = "com/github/dactiv/saas/workflow",
+            parent = "workflow",
             icon = "icon-share",
             sort = 97,
             type = ResourceType.Menu,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.TEACHER_SOURCE_VALUE
+                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:copy_me]')")
@@ -178,13 +182,14 @@ public class WorkController {
     @PostMapping("myPending")
     @Plugin(
             name = "我的待办",
-            parent = "com/github/dactiv/saas/workflow",
+            parent = "workflow",
             type = ResourceType.Menu,
             icon = "icon-more",
             sort = 99,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.TEACHER_SOURCE_VALUE
+                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:my_pending]')")
@@ -226,13 +231,14 @@ public class WorkController {
     @PostMapping("myProcessed")
     @Plugin(
             name = "我的经办",
-            parent = "com/github/dactiv/saas/workflow",
+            parent = "workflow",
             type = ResourceType.Menu,
             icon = "icon-enum-major-o",
             sort = 98,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.TEACHER_SOURCE_VALUE
+                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:my_processed]')")

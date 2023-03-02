@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.validator.constraints.Length;
@@ -76,6 +77,10 @@ public class ConsoleUserEntity extends SystemUserEntity implements PhoneNumberUs
 
         if (StringUtils.isNotBlank(realName)) {
             result.put(SecurityUserDetailsConstants.SECURITY_DETAILS_REAL_NAME_KEY, realName);
+        }
+
+        if (CollectionUtils.isNotEmpty(departmentsInfo)) {
+            result.put(SecurityUserDetailsConstants.SECURITY_DETAILS_DEPARTMENT_KEY, departmentsInfo);
         }
         return result;
     }

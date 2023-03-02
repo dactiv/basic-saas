@@ -31,17 +31,7 @@ public interface SecurityUserDetailsConstants {
 
     String SECURITY_DETAILS_DEPARTMENT_KEY = "departmentsInfo";
 
-    String SECURITY_DETAILS_SUBJECT_KEY = "subjectsInfo";
-
     String SECURITY_DETAILS_GENDER_KEY = "gender";
-
-    String SECURITY_DETAILS_CLASS_GRADES_INFO_KEY = "classGradesInfo";
-
-    String SECURITY_DETAILS_RESOURCE_PUBLISH_RESOURCE_KEY = "publishResource";
-
-    String SECURITY_DETAILS_STUDENT_CODE_KEY = "code";
-
-    String SECURITY_DETAILS_NUMBER_KEY = "number";
 
     String SECURITY_DETAILS_WECHAT_KEY = "wechatDetails";
 

@@ -203,11 +203,8 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
                 Map<String, Object> filter = new LinkedHashMap<>();
                 filter.put("filter_[status_eq]", DisabledOrEnabled.Enabled.getValue());
 
-                List<Map<String, Object>> teachers = authenticationServiceFeignClient.findTeacher(filter);
-                List<TypeIdNameMeta> users = convertTypeIdNameMeta(teachers, ResourceSourceEnum.TEACHER_SOURCE_VALUE);
-
-                List<Map<String, Object>> students = authenticationServiceFeignClient.findTeacher(filter);
-                users.addAll(convertTypeIdNameMeta(students, ResourceSourceEnum.STUDENT_SOURCE_VALUE));
+                List<Map<String, Object>> teachers = authenticationServiceFeignClient.findMemberUser(filter);
+                List<TypeIdNameMeta> users = convertTypeIdNameMeta(teachers, ResourceSourceEnum.MEMBER.toString());
 
                 body.setToUsers(users);
             }

@@ -1,4 +1,4 @@
-package com.github.dactiv.saas.commons.domain.meta;
+package com.github.dactiv.saas.commons.domain.meta.wechat;
 
 import com.github.dactiv.saas.commons.domain.WechatUserDetails;
 import lombok.Data;

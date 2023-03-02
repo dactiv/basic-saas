@@ -2,7 +2,7 @@ package com.github.dactiv.saas.config.service.captcha;
 
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.exception.ServiceException;
-import com.github.dactiv.saas.commons.feign.AdminServiceFeignClient;
+import com.github.dactiv.saas.commons.feign.ConfigServiceFeignClient;
 import com.github.dactiv.saas.commons.feign.MessageServiceFeignClient;
 import com.github.dactiv.saas.config.config.CaptchaConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public abstract class AbstractMessageCaptchaService<T extends MessageType, C ext
     /**
      * 配置管理服务
      */
-    private final AdminServiceFeignClient adminServiceFeignClient;
+    private final ConfigServiceFeignClient configServiceFeignClient;
 
     /**
      * 消息服务
@@ -37,17 +37,17 @@ public abstract class AbstractMessageCaptchaService<T extends MessageType, C ext
     public AbstractMessageCaptchaService(RedissonClient redissonClient,
                                          CaptchaConfig captchaConfig,
                                          Validator validator,
-                                         AdminServiceFeignClient adminServiceFeignClient,
+                                         ConfigServiceFeignClient configServiceFeignClient,
                                          MessageServiceFeignClient messageServiceFeignClient) {
         super(redissonClient, captchaConfig, validator);
-        this.adminServiceFeignClient = adminServiceFeignClient;
+        this.configServiceFeignClient = configServiceFeignClient;
         this.messageServiceFeignClient = messageServiceFeignClient;
     }
 
     @Override
     protected GenerateCaptchaResult generateCaptcha(BuildToken buildToken, T entity) {
 
-        List<Map<String, Object>> dicList = adminServiceFeignClient.findDataDictionaries(entity.getMessageType());
+        List<Map<String, Object>> dicList = configServiceFeignClient.findDataDictionaries(entity.getMessageType());
 
         if (dicList.isEmpty()) {
             throw new ServiceException("找不到类型为:" + entity.getMessageType() + "的消息模板");

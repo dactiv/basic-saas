@@ -3,7 +3,6 @@ package com.github.dactiv.saas.commons.feign;
 import com.github.dactiv.framework.security.entity.BasicUserDetails;
 import com.github.dactiv.framework.spring.security.authentication.service.feign.FeignAuthenticationConfiguration;
 import com.github.dactiv.saas.commons.SystemConstants;
-import com.github.dactiv.saas.commons.domain.meta.TeacherClassGradesMeta;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,33 +41,6 @@ public interface AuthenticationServiceFeignClient {
     Map<String, Object> getSystemUser(@RequestBody BasicUserDetails<Integer> userDetails);
 
     /**
-     * 查找教师信息
-     *
-     * @param filter 过滤条件
-     * @return 教师信息集合
-     */
-    @PostMapping("teacher/find")
-    List<Map<String, Object>> findTeacher(@RequestBody Map<String, Object> filter);
-
-    /**
-     * 查找学生信息
-     *
-     * @param filter 过滤条件
-     * @return 学生信息集合
-     */
-    @PostMapping("student/find")
-    List<Map<String, Object>> findStudent(@RequestBody Map<String, Object> filter);
-
-    /**
-     * 更新教师班级信息
-     *
-     * @param meta 基础班级元数据信息
-     * @return 响应结果
-     */
-    @PostMapping("teacher/updateTeacherClassGradesInfo")
-    Map<String, Object> updateTeacherClassGradesInfo(@RequestBody TeacherClassGradesMeta meta);
-
-    /**
      * 获取系统用户信息
      *
      * @param id 用户 id
@@ -76,4 +48,14 @@ public interface AuthenticationServiceFeignClient {
      */
     @GetMapping("console/user/get")
     Map<String, Object> getConsoleUser(@RequestParam("id") Integer id);
+
+    /**
+     * 查找会员用户集合
+     *
+     * @param filter 过滤条件
+     *
+     * @return 会员用户集合
+     */
+    @PostMapping("member/user/find")
+    List<Map<String, Object>> findMemberUser(Map<String, Object> filter);
 }

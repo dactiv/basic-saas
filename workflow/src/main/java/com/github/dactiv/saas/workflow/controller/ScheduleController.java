@@ -40,11 +40,12 @@ import java.util.Map;
 @Plugin(
         name = "日程管理",
         id = "schedule",
-        parent = "com/github/dactiv/saas/workflow",
+        parent = "workflow",
         type = ResourceType.Menu,
         sources = {
                 ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                ResourceSourceEnum.TEACHER_SOURCE_VALUE
+                ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+                ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
         }
 )
 public class ScheduleController {

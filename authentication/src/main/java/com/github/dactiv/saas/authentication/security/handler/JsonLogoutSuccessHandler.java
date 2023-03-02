@@ -257,7 +257,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
         if (LoginTypeEnum.Mobile.toString().equals(type)) {
 
             Map<String, Object> buildToken = failureHandler
-                    .getCaptchaServiceFeignClient()
+                    .getConfigServiceFeignClient()
                     .generateToken(
                             CaptchaAuthenticationFailureResponse.DEFAULT_MOBILE_CAPTCHA_TYPE,
                             identified
@@ -268,7 +268,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
             String captchaType = applicationConfig.getMobileFailureCaptchaType();
 
             Map<String, Object> interceptToken = failureHandler
-                    .getCaptchaServiceFeignClient()
+                    .getConfigServiceFeignClient()
                     .createGenerateCaptchaIntercept(
                             buildToken.get(DEFAULT_TOKEN_NAME).toString(),
                             captchaType,
@@ -282,7 +282,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
             String captchaType = applicationConfig.getUsernameFailureCaptchaType();
 
             Map<String, Object> buildToken = failureHandler
-                    .getCaptchaServiceFeignClient()
+                    .getConfigServiceFeignClient()
                     .generateToken(captchaType, identified);
 
             result.getData().putAll(buildToken);
