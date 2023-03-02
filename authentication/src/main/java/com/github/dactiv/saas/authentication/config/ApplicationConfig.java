@@ -115,5 +115,9 @@ public class ApplicationConfig {
     );
 
     private int randomPasswordCount = 10;
+    
+    private String mobileAuthenticationSecretKey = "";
+
+    private String aliYunIpResolverAppCode = "";
 
 }

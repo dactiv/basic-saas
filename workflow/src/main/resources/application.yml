@@ -1,0 +1,47 @@
+mybatis-plus:
+  type-aliases-package: com.github.dactiv.saas.workflow.domain.entity
+  configuration:
+    call-setters-on-nulls: on
+    default-enum-type-handler: com.github.dactiv.framework.mybatis.handler.NameValueEnumTypeHandler
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    banner: "off"
+
+info:
+  version: @version@
+  name: @name@
+  artifact-id: ${spring.application.name}
+  group-id: @groupId@
+
+dactiv:
+  spring:
+    web:
+      mvc:
+        filter-view-base-packages: com.github.dactiv.saas.workflow.domain
+  idempotent:
+    ignore-classes: org.springframework.security.core.context.SecurityContext
+  authentication:
+    plugin:
+      base-packages: com.github.dactiv.saas.workflow.controller
+      generate-sources:
+        - "CONSOLE"
+        - "ALL"
+        - "SYSTEM"
+      parent:
+        workflow:
+          name: "审批管理"
+          icon: "icon-survey"
+          sources:
+            - "CONSOLE"
+            - "TEACHER"
+    permit-uri-ant-matchers:
+      - "/prepare/**"
+      - "/login/**"
+      - "/logout/**"
+      - "/actuator/**"
+  enumerate:
+    base-packages:
+      - com.github.dactiv.saas.workflow.enumerate

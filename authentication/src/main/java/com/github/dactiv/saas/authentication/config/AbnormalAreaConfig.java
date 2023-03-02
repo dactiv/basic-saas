@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * 异地登陆配置
+ *
+ * @author maurice.chen
+ */
 @Data
 @Component
 @NoArgsConstructor

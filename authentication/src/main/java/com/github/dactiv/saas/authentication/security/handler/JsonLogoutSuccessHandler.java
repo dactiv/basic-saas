@@ -16,7 +16,6 @@ import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.enumerate.LoginTypeEnum;
 import com.github.dactiv.saas.authentication.plugin.PluginResourceService;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
-import com.github.dactiv.saas.commons.config.SchoolProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +29,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.interceptor.RuleBasedTransactionAttribute;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -55,16 +53,6 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
      * 当前运行的服务信息
      */
     private final static String DEFAULT_SERVICES_NAME = "services";
-
-    /**
-     * 学校名称
-     */
-    private final static String DEFAULT_SCHOOL_NAME = "schoolName";
-
-    /**
-     * 学期结束名称
-     */
-    private final static String DEFAULT_SEMESTER_COMPLETE_NAME = "semesterComplete";
 
     /**
      * 当前插件的服务信息
@@ -92,8 +80,6 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final PluginResourceService pluginResourceService;
 
-    private final SchoolProperties schoolProperties;
-
     public JsonLogoutSuccessHandler(ApplicationConfig applicationConfig,
                                     CaptchaAuthenticationFailureResponse failureHandler,
                                     AuthorizationService authorizationService,
@@ -101,7 +87,6 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
                                     CookieRememberService cookieRememberService,
                                     DeviceIdContextRepository deviceIdContextRepository,
                                     DiscoveryClient discoveryClient,
-                                    SchoolProperties schoolProperties,
                                     PluginResourceService pluginResourceService) {
         this.applicationConfig = applicationConfig;
         this.failureHandler = failureHandler;
@@ -110,7 +95,6 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
         this.cookieRememberService = cookieRememberService;
         this.deviceIdContextRepository = deviceIdContextRepository;
         this.discoveryClient = discoveryClient;
-        this.schoolProperties = schoolProperties;
         this.pluginResourceService = pluginResourceService;
     }
 
@@ -192,8 +176,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
 
         result.getData().put(DEFAULT_SERVICES_NAME, discoveryClient.getServices());
         result.getData().put(DEFAULT_PLUGIN_NAME, pluginResourceService.getPluginServerNames());
-        result.getData().put(DEFAULT_SCHOOL_NAME, schoolProperties.getName());
-        result.getData().put(DEFAULT_SEMESTER_COMPLETE_NAME, schoolProperties.getSemesterCompleteMonthDay().getMonthValue() + RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE + schoolProperties.getSemesterCompleteMonthDay().getDayOfMonth());
+
         return result;
     }
 

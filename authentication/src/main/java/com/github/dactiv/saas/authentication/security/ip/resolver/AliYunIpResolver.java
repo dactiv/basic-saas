@@ -1,12 +1,12 @@
 package com.github.dactiv.saas.authentication.security.ip.resolver;
 
 import com.github.dactiv.framework.commons.Casts;
+import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.domain.meta.IpRegionMeta;
 import com.github.dactiv.saas.authentication.security.ip.IpResolver;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,24 +25,26 @@ import java.util.Objects;
  * @author maurice.chen
  */
 @Component
-@ConfigurationProperties("dactiv.saas.authentication.app.ali-yun-ip")
 public class AliYunIpResolver implements IpResolver {
 
     public static final String DEFAULT_TYPE = "aliYun";
 
     public static final String DEFAULT_URL = "https://zjip.market.alicloudapi.com/lifeservice/QueryIpAddr/query";
 
-    private String appCode;
     private final RestTemplate restTemplate;
 
-    public AliYunIpResolver(RestTemplate restTemplate) {
+    private final ApplicationConfig applicationConfig;
+
+    public AliYunIpResolver(RestTemplate restTemplate,
+                            ApplicationConfig applicationConfig) {
         this.restTemplate = restTemplate;
+        this.applicationConfig = applicationConfig;
     }
 
     @Override
     public IpRegionMeta getIpRegionMeta(String ipAddress) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "APPCODE " + appCode);
+        headers.add("Authorization", "APPCODE " + applicationConfig.getAliYunIpResolverAppCode());
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(DEFAULT_URL + "?ip=" + ipAddress, HttpMethod.GET, httpEntity, String.class);
@@ -59,14 +61,6 @@ public class AliYunIpResolver implements IpResolver {
     @Override
     public boolean isSupport(String type) {
         return DEFAULT_TYPE.equals(type);
-    }
-
-    public String getAppCode() {
-        return appCode;
-    }
-
-    public void setAppCode(String appCode) {
-        this.appCode = appCode;
     }
 
     /**

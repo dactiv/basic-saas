@@ -119,6 +119,7 @@
         <module>config</module>
         <module>message</module>
         <module>gateway</module>
+        <module>workflow</module>
     </modules>
 
 </project>

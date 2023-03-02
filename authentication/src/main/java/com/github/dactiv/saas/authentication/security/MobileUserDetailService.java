@@ -16,15 +16,12 @@ import com.github.dactiv.framework.spring.security.authentication.token.RequestA
 import com.github.dactiv.framework.spring.security.entity.MobileUserDetails;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.framework.spring.web.device.DeviceUtils;
-import com.github.dactiv.saas.authentication.config.AccessTokenConfig;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
 import com.github.dactiv.saas.authentication.security.handler.CaptchaAuthenticationSuccessResponse;
-import com.github.dactiv.saas.authentication.security.token.SchoolSourceAuthenticationToken;
 import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
-import com.github.dactiv.saas.commons.config.SchoolProperties;
 import com.github.dactiv.saas.commons.domain.meta.SimpleWechatUserDetailsMeta;
 import com.github.dactiv.saas.commons.domain.meta.wechat.PhoneInfoMeta;
 import com.github.dactiv.saas.commons.domain.meta.wechat.WechatAccountMeta;
@@ -35,13 +32,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import nl.basjes.parse.useragent.UserAgent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.redisson.api.RBucket;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,16 +44,11 @@ import org.springframework.util.Assert;
 
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public abstract class MobileUserDetailService extends AbstractUserDetailsService<SystemUserEntity> {
-
-    public static final String DEFAULT_CODE_PARAM_NAME = "schoolId";
-
-    private final SchoolProperties schoolProperties;
 
     private final ApplicationConfig applicationConfig;
 
@@ -70,29 +58,23 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
 
     private final AuthenticationProperties authenticationProperties;
 
-    private final AccessTokenConfig accessTokenConfig;
-
     private final WechatService wechatService;
 
     private final DeviceIdContextRepository deviceIdContextRepository;
 
-    public MobileUserDetailService(SchoolProperties schoolProperties,
-                                   ApplicationConfig applicationConfig,
+    public MobileUserDetailService(ApplicationConfig applicationConfig,
                                    PasswordEncoder passwordEncoder,
                                    AuthorizationService authorizationService,
                                    AuthenticationProperties authenticationProperties,
                                    DeviceIdContextRepository deviceIdContextRepository,
-                                   WechatService wechatService,
-                                   AccessTokenConfig accessTokenConfig) {
+                                   WechatService wechatService) {
         super(authenticationProperties);
-        this.schoolProperties = schoolProperties;
         this.applicationConfig = applicationConfig;
         this.passwordEncoder = passwordEncoder;
         this.authorizationService = authorizationService;
         this.authenticationProperties = authenticationProperties;
         this.deviceIdContextRepository = deviceIdContextRepository;
         this.wechatService = wechatService;
-        this.accessTokenConfig = accessTokenConfig;
     }
 
     public abstract List<String> getMobileType();
@@ -101,18 +83,10 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
 
     @Override
     public Authentication createToken(HttpServletRequest request, HttpServletResponse response, String type) {
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
 
-        username = StringUtils.defaultString(username, StringUtils.EMPTY).trim();
-        password = StringUtils.defaultString(password, StringUtils.EMPTY);
-
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
-        if (getMobileType().contains(type)) {
-            String code = request.getParameter(DEFAULT_CODE_PARAM_NAME);
-            return new SchoolSourceAuthenticationToken(request, response, token, type, code);
-        } else if (getWechatType().contains(type)) {
+        if (getWechatType().contains(type)) {
+            String username = obtainUsername(request);
+            username = StringUtils.defaultString(username, StringUtils.EMPTY).trim();
             SimpleWechatUserDetailsMeta meta = wechatAppletLogin(wechatService.getWechatProperties().getApplet(), username);
             WechatAuthenticationToken result = new WechatAuthenticationToken(request, response, type, meta);
             String phoneNumberCode = request.getParameter(wechatService.getWechatProperties().getPhoneNumberCodeParamName());
@@ -207,35 +181,19 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
         SystemUserEntity user;
         String password = StringUtils.EMPTY;
 
+        if (StringUtils.isBlank(deviceId)) {
+            throw new BadCredentialsException("移动端登陆没有找到唯一识别");
+        }
+
         if (getMobileType().contains(type)) {
 
-            if (StringUtils.isBlank(deviceId)) {
-                throw new BadCredentialsException("移动端登陆没有找到唯一识别");
-            }
-
-            SchoolSourceAuthenticationToken schoolSourceAuthenticationToken = Casts.cast(token);
-            if (!schoolProperties.getId().toString().equals(schoolSourceAuthenticationToken.getCode())) {
-                throw new UsernameNotFoundException("用户名或密码错误");
-            }
-
-            user = getSchoolSourceTypeSystemUser(token);
-
+            user = getBasicAuthenticationSystemUser(token);
             if (Objects.isNull(user)) {
                 throw new UsernameNotFoundException("用户名或密码错误");
             }
-
-            if (UserDetailsAccessToken.class.isAssignableFrom(user.getClass())) {
-                UserDetailsAccessToken tokenUserDetails = Casts.cast(user);
-                password = tokenUserDetails.getAccessToken();
-            } else {
-                password = user.getPassword();
-            }
+            password = user.getPassword();
 
         } else if (getWechatType().contains(type)) {
-
-            if (StringUtils.isBlank(deviceId)) {
-                throw new BadCredentialsException("移动端登陆没有找到唯一识别");
-            }
 
             WechatAuthenticationToken wechatAuthenticationToken = Casts.cast(token);
 
@@ -245,11 +203,7 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
                 throw new AuthenticationCredentialsNotFoundException("通过微信信息找不到用户数据，请重新使用用户名密码登陆。");
             }
         } else {
-            user = getBasicAuthenticationSystemUser(token);
-            if (Objects.isNull(user)) {
-                throw new UsernameNotFoundException("用户名或密码错误");
-            }
-            password = user.getPassword();
+            throw new InsufficientAuthenticationException("MobileUserDetailService 认证不支持 [" + type + "] 的认证过程。");
         }
 
         if (UserStatus.Disabled.equals(user.getStatus())) {
@@ -322,14 +276,6 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
     protected abstract SystemUserEntity getBasicAuthenticationSystemUser(RequestAuthenticationToken token);
 
     /**
-     * 获取符合学校来源类型的系统用户
-     *
-     * @param token 请求认证 token
-     * @return 系统用户
-     */
-    protected abstract SystemUserEntity getSchoolSourceTypeSystemUser(RequestAuthenticationToken token);
-
-    /**
      * 获取微信来源类型的系统用户
      *
      * @param token 请求认证 token
@@ -343,34 +289,13 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
                                    SecurityUserDetails userDetails) {
 
         String type = token.getHttpServletRequest().getHeader(AuthenticationProperties.SECURITY_FORM_TYPE_HEADER_NAME);
-        if (getMobileType().contains(type)) {
-            ByteSource byteSource = deviceIdContextRepository
-                    .getCipherAlgorithmService()
-                    .getCipherService(CipherAlgorithmService.AES_ALGORITHM)
-                    .decrypt(Base64.decode(presentedPassword), Base64.decode(schoolProperties.getAccessKey()));
-
-            String decryptPresentedPassword = new String(byteSource.obtainBytes(), StandardCharsets.UTF_8);
-            String timeValue = StringUtils.substringAfter(decryptPresentedPassword, accessTokenConfig.getSeparator());
-
-            if (StringUtils.isBlank(timeValue)) {
-                return false;
-            }
-
-            long time = NumberUtils.toLong(timeValue);
-            long useTime = accessTokenConfig.getExpirationTime().getUnit().toChronoUnit().between(Instant.ofEpochMilli(time), Instant.now());
-            if (useTime > accessTokenConfig.getExpirationTime().getValue()) {
-                return false;
-            }
-
-            String password = StringUtils.substringBefore(decryptPresentedPassword, accessTokenConfig.getSeparator());
-            return StringUtils.equals(password, userDetails.getPassword());
-        } else if (getWechatType().contains(type)) {
+        if (getWechatType().contains(type)) {
             return true;
         } else if (ResourceSourceEnum.WAKE_UP_SOURCE_VALUE.equals(type)) {
             ByteSource byteSource = deviceIdContextRepository
                     .getCipherAlgorithmService()
                     .getCipherService(CipherAlgorithmService.AES_ALGORITHM)
-                    .decrypt(presentedPassword.getBytes(StandardCharsets.UTF_8), schoolProperties.getAccessKey().getBytes(StandardCharsets.UTF_8));
+                    .decrypt(presentedPassword.getBytes(StandardCharsets.UTF_8), applicationConfig.getMobileAuthenticationSecretKey().getBytes(StandardCharsets.UTF_8));
 
             String text = Base64.decodeToString(byteSource.getBase64());
             String deviceIdentified = StringUtils.substringBetween(text, CacheProperties.DEFAULT_SEPARATOR, CacheProperties.DEFAULT_SEPARATOR);
