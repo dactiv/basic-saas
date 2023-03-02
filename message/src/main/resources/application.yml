@@ -20,7 +20,6 @@ dactiv:
       base-packages: com.github.dactiv.saas.message.controller
       generate-sources:
         - "CONSOLE"
-        - "ALL"
         - "SYSTEM"
       parent:
         message:
@@ -28,7 +27,6 @@ dactiv:
           icon: 'icon-message'
           sources:
             - "CONSOLE"
-            - "TEACHER"
     permit-uri-ant-matchers:
       - "/actuator/**"
       - "/notice/page/**"

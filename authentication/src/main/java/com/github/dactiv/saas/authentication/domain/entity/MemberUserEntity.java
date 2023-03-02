@@ -1,7 +1,10 @@
 package com.github.dactiv.saas.authentication.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.saas.authentication.domain.PhoneNumberUserDetails;
+import com.github.dactiv.saas.authentication.domain.meta.MemberUserInitializationMeta;
 import com.github.dactiv.saas.authentication.security.ConsoleUserDetailsService;
 import com.github.dactiv.saas.commons.domain.WechatUserDetails;
 import jakarta.validation.constraints.NotNull;
@@ -53,4 +56,10 @@ public class MemberUserEntity extends SystemUserEntity implements PhoneNumberUse
      * 用户在开放平台的唯一标识符
      */
     private String unionId;
+
+    /**
+     * 用户初始化
+     */
+    @TableField(typeHandler = JacksonJsonTypeHandler.class)
+    private MemberUserInitializationMeta initializationMeta;
 }

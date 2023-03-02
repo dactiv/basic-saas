@@ -31,6 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import nl.basjes.parse.useragent.UserAgent;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBucket;
 import org.springframework.http.ResponseEntity;
@@ -340,5 +341,21 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
     @Override
     public PasswordEncoder getPasswordEncoder() {
         return passwordEncoder;
+    }
+
+    @Override
+    public List<String> getType() {
+        List<String> result = new LinkedList<>();
+        result.add(ResourceSourceEnum.WAKE_UP_SOURCE_VALUE);
+
+        if (CollectionUtils.isNotEmpty(getWechatType())) {
+            CollectionUtils.addAll(result, getWechatType());
+        }
+
+        if (CollectionUtils.isNotEmpty(getMobileType())) {
+            CollectionUtils.addAll(result, getMobileType());
+        }
+
+        return result;
     }
 }
