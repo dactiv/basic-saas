@@ -3,7 +3,6 @@ package com.github.dactiv.saas.message.domain.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
-import com.github.dactiv.framework.commons.retry.Retryable;
 import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.saas.message.domain.meta.AliYunSmsMeta;
 import lombok.Data;
@@ -26,7 +25,7 @@ import java.util.Date;
 @Alias("smsMessage")
 @TableName(value = "tb_sms_message", autoResultMap = true)
 @EqualsAndHashCode(callSuper = true)
-public class SmsMessageEntity extends BasicMessageEntity implements Retryable, ExecuteStatus.Body, BatchMessageEntity.Body {
+public class SmsMessageEntity extends BasicMessageEntity implements ExecuteStatus.Body, BatchMessageEntity.Body {
 
     @Serial
     private static final long serialVersionUID = 3229810529789017287L;

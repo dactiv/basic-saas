@@ -19,8 +19,6 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
@@ -76,14 +74,7 @@ public class EvaluateMessageService extends BasicService<EvaluateMessageDao, Eva
 
         int result = super.save(entity);
 
-        List<Map<String, Object>> mapList = resolvers.stream().map(r -> r.postSave(entity)).toList();
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                mapList.forEach(map -> MessageSender.sendAmqpMessage(amqpTemplate, map, entity.getId()));
-            }
-        });
+        MessageSender.postSaveAndSendAmqpMessage(amqpTemplate, new LinkedList<>(resolvers), entity);
 
         return result;
     }

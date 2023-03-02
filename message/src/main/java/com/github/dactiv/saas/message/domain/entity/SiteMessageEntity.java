@@ -3,9 +3,7 @@ package com.github.dactiv.saas.message.domain.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.dactiv.framework.commons.annotation.JsonCollectionGenericType;
-import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
 import com.github.dactiv.framework.commons.enumerate.support.YesOrNo;
-import com.github.dactiv.framework.commons.retry.Retryable;
 import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.framework.security.entity.TypeUserDetails;
 import com.github.dactiv.saas.commons.domain.meta.AttachmentMeta;
@@ -33,7 +31,7 @@ import java.util.Map;
 @Alias("siteMessage")
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "tb_site_message", autoResultMap = true)
-public class SiteMessageEntity extends BasicMessageEntity implements AttachmentMessage, Retryable, ExecuteStatus.Body, BatchMessageEntity.Body, TypeUserDetails<Integer> {
+public class SiteMessageEntity extends BasicMessageEntity implements AttachmentMessage, BatchMessageEntity.Body, TypeUserDetails<Integer> {
 
     @Serial
     private static final long serialVersionUID = 2037280001998945900L;
@@ -79,41 +77,15 @@ public class SiteMessageEntity extends BasicMessageEntity implements AttachmentM
     private Date readTime;
 
     /**
-     * 状态：0.执行中、1.执行成功，2.重试中，99.执行失败
-     *
-     * @see ExecuteStatus
-     */
-    private ExecuteStatus executeStatus = ExecuteStatus.Processing;
-
-    /**
      * 数据
      */
     @TableField(typeHandler = JacksonJsonTypeHandler.class)
     private Map<String, Object> meta;
-    /**
-     * 重试次数
-     */
-    private Integer retryCount = 0;
-
-    /**
-     * 最大重试次数
-     */
-    private Integer maxRetryCount = 0;
 
     /**
      * 最后发送时间
      */
     private Date lastSendTime;
-
-    /**
-     * 异常信息
-     */
-    private String exception;
-
-    /**
-     * 发送成功时间
-     */
-    private Date successTime;
 
     /**
      * 批量消息 id

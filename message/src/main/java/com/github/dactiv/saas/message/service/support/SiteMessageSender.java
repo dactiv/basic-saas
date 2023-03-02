@@ -5,7 +5,6 @@ import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.enumerate.support.DisabledOrEnabled;
 import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
-import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.framework.commons.id.IdEntity;
 import com.github.dactiv.framework.commons.minio.Bucket;
 import com.github.dactiv.framework.idempotent.ConcurrentConfig;
@@ -40,6 +39,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -91,7 +91,7 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
      * @param id      站内信实体 id
      * @param channel 频道信息
      * @param tag     ack 值
-     * @throws Exception 发送失败或确认 ack 错误时抛出。
+     * @throws IOException 发送失败或确认 ack 错误时抛出。
      */
     @RabbitListener(
             bindings = @QueueBinding(
@@ -100,23 +100,10 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
                     key = DEFAULT_QUEUE_NAME
             )
     )
-    public void sendSiteMessage(@Payload Integer id,
-                                Channel channel,
-                                @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws Exception {
-
-        SiteMessageEntity entity = sendSiteMessage(id);
-
-        if (Objects.isNull(entity)) {
-            channel.basicNack(tag, false, false);
-            return;
-        }
-
-        if (ExecuteStatus.Retrying.equals(entity.getExecuteStatus()) && entity.getRetryCount() < getMaxRetryCount()) {
-            throw new SystemException(entity.getException());
-        }
-
-        channel.basicAck(tag, false);
-
+    public void sendMessage(@Payload Integer id,
+                            Channel channel,
+                            @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+        super.sendMessage(id, channel, tag);
     }
 
     /**
@@ -124,8 +111,9 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
      *
      * @param id 站内信实体 id
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public SiteMessageEntity sendSiteMessage(Integer id) {
+    public SiteMessageEntity sendMessage(Integer id) {
 
         SiteMessageEntity entity = siteMessageService.get(id);
 

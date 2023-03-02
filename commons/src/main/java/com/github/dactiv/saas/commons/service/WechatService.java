@@ -79,9 +79,9 @@ public class WechatService implements InitializingBean {
                 }
         );
         log.info("获取 wechat access token 结果为:" + result.getBody());
-        if (isSuccess(result)) {
+        if (isSuccess(result) && Objects.requireNonNull(result.getBody()).containsKey("access_token")) {
             token = new AccessTokenMeta();
-            //noinspection ConstantConditions
+
             token.setToken(result.getBody().get("access_token").toString());
             token.setExpiresTime(TimeProperties.of(NumberUtils.toInt(result.getBody().get("expires_in").toString()), TimeUnit.SECONDS));
             bucket.setAsync(token, token.getExpiresTime().getValue(), token.getExpiresTime().getUnit());
@@ -214,8 +214,7 @@ public class WechatService implements InitializingBean {
                 }
         );
 
-        if (isSuccess(result)) {
-            //noinspection ConstantConditions
+        if (isSuccess(result) && Objects.requireNonNull(result.getBody()).containsKey("phone_info")) {
             return new PhoneInfoMeta(Casts.cast(result.getBody().get("phone_info")));
         } else {
             throwSystemExceptionIfError(result.getBody());

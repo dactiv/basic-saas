@@ -12,13 +12,11 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -64,7 +62,7 @@ public class LikeOrUnlikeService extends BasicService<LikeOrUnlikeDao, LikeOrUnl
     public int deleteByEntity(Collection<LikeOrUnlikeEntity> entities, boolean errorThrow) {
         int sum = entities.stream().mapToInt(this::deleteByEntity).sum();
         if (sum != entities.size() && errorThrow) {
-            String msg = "删除 id 为 [" + entities + "] 的 [" + getEntityClass() + "] 数据不成功";
+            String msg = "删除 id 为 [" + entities + "] 的 [点赞] 数据不成功";
             throw new SystemException(msg);
         }
         return sum;
@@ -82,7 +80,7 @@ public class LikeOrUnlikeService extends BasicService<LikeOrUnlikeDao, LikeOrUnl
                 .stream()
                 .filter(c -> c.isSupport(entity.getTargetType()))
                 .filter(c -> c.preDelete(entity))
-                .collect(Collectors.toList());
+                .toList();
 
         int result = super.deleteByEntity(entity);
 
@@ -112,18 +110,11 @@ public class LikeOrUnlikeService extends BasicService<LikeOrUnlikeDao, LikeOrUnl
                 .stream()
                 .filter(c -> c.isSupport(entity.getTargetType()))
                 .filter(c -> c.preSave(entity))
-                .collect(Collectors.toList());
+                .toList();
 
         int result = super.save(entity);
 
-        List<Map<String, Object>> mapList = resolvers.stream().map(r -> r.postSave(entity)).collect(Collectors.toList());
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                mapList.forEach(map -> MessageSender.sendAmqpMessage(amqpTemplate, map, entity.getId()));
-            }
-        });
+        MessageSender.postSaveAndSendAmqpMessage(amqpTemplate, new LinkedList<>(resolvers), entity);
 
         return result;
     }

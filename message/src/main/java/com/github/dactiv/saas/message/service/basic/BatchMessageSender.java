@@ -16,16 +16,19 @@ import com.github.dactiv.saas.message.domain.entity.BasicMessageEntity;
 import com.github.dactiv.saas.message.domain.entity.BatchMessageEntity;
 import com.github.dactiv.saas.message.enumerate.AttachmentTypeEnum;
 import com.github.dactiv.saas.message.service.BatchMessageService;
+import com.rabbitmq.client.Channel;
 import io.minio.GetObjectResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 批量消息发送的抽象实现，用于对需要创建 tb_batch_message 记录的消息做一个统一处理
@@ -224,6 +227,32 @@ public abstract class BatchMessageSender<T extends BasicMessageEntity, S extends
     protected void onBatchMessageComplete(BatchMessageEntity batchMessage) {
         attachmentCache.remove(batchMessage.getId());
     }
+
+    protected void sendMessage(Integer id,
+                                Channel channel,
+                                @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+        S entity = sendMessage(id);
+
+        if (Objects.isNull(entity)) {
+            channel.basicNack(tag, false, false);
+            return;
+        }
+
+        if (entity instanceof ExecuteStatus.Body body) {
+
+            if (ExecuteStatus.Failure.equals(body.getExecuteStatus())) {
+                throw new SystemException(body.getException());
+            }
+
+            if (entity instanceof Retryable retry && ExecuteStatus.Retrying.equals(body.getExecuteStatus()) && retry.getRetryCount() < getMaxRetryCount()) {
+                throw new SystemException(body.getException());
+            }
+        }
+
+        channel.basicAck(tag, false);
+    }
+
+    public abstract S sendMessage(Integer id);
 
     /**
      * 获取最大重试次数

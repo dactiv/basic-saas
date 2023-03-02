@@ -4,7 +4,6 @@ import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.enumerate.support.DisabledOrEnabled;
 import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
-import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.framework.commons.minio.Bucket;
 import com.github.dactiv.framework.commons.minio.FileObject;
 import com.github.dactiv.framework.idempotent.ConcurrentConfig;
@@ -46,6 +45,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -113,7 +113,7 @@ public class EmailMessageSender extends BatchMessageSender<EmailMessageBody, Ema
      * @param id      邮件实体 id
      * @param channel 频道信息
      * @param tag     ack 值
-     * @throws Exception 发送失败或确认 ack 错误时抛出。
+     * @throws IOException 发送失败或确认 ack 错误时抛出。
      */
     @RabbitListener(
             bindings = @QueueBinding(
@@ -122,22 +122,11 @@ public class EmailMessageSender extends BatchMessageSender<EmailMessageBody, Ema
                     key = DEFAULT_QUEUE_NAME
             )
     )
-    public void sendEmail(@Payload Integer id,
+    public void sendMessage(@Payload Integer id,
                           Channel channel,
-                          @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws Exception {
+                          @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
 
-        EmailMessageEntity entity = sendEmail(id);
-
-        if (Objects.isNull(entity)) {
-            channel.basicNack(tag, false, false);
-            return;
-        }
-
-        if (ExecuteStatus.Retrying.equals(entity.getExecuteStatus()) && entity.getRetryCount() < getMaxRetryCount()) {
-            throw new SystemException(entity.getException());
-        }
-
-        channel.basicAck(tag, false);
+        super.sendMessage(id, channel, tag);
     }
 
     /**
@@ -146,7 +135,7 @@ public class EmailMessageSender extends BatchMessageSender<EmailMessageBody, Ema
      * @param id 邮件实体 id
      */
     @Transactional(rollbackFor = Exception.class)
-    public EmailMessageEntity sendEmail(Integer id) {
+    public EmailMessageEntity sendMessage(Integer id) {
 
         EmailMessageEntity entity = emailMessageService.get(id);
 

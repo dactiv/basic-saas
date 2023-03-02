@@ -2,9 +2,14 @@ package com.github.dactiv.saas.message.service;
 
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
+import com.github.dactiv.framework.commons.id.BasicIdentification;
 import com.github.dactiv.saas.commons.SystemConstants;
+import com.github.dactiv.saas.message.resolver.PostMessageResolver;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,6 +35,17 @@ public interface MessageSender {
      * @return 类型
      */
     String getMessageType();
+
+    static <T extends BasicIdentification<Integer>>  void postSaveAndSendAmqpMessage(AmqpTemplate amqpTemplate, List<PostMessageResolver<T>> resolvers, T entity) {
+        List<Map<String, Object>> mapList = resolvers.stream().map(r -> r.postSave(entity)).toList();
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                mapList.forEach(map -> MessageSender.sendAmqpMessage(amqpTemplate, map, entity.getId()));
+            }
+        });
+    }
 
     /**
      * 发送消息队列

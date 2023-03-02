@@ -4,7 +4,6 @@ import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
 import com.github.dactiv.framework.commons.exception.ServiceException;
-import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.SystemConstants;
 import com.github.dactiv.saas.message.config.sms.SmsConfig;
@@ -29,6 +28,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,17 +84,11 @@ public class SmsMessageSender extends BatchMessageSender<SmsMessageBody, SmsMess
                     key = DEFAULT_QUEUE_NAME
             )
     )
-    public void sendSms(@Payload Integer id,
+    public void sendMessage(@Payload Integer id,
                         Channel channel,
-                        @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws Exception {
+                        @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
 
-        SmsMessageEntity entity = sendSms(id);
-
-        if (ExecuteStatus.Retrying.equals(entity.getExecuteStatus()) && entity.getRetryCount() < getMaxRetryCount()) {
-            throw new SystemException(entity.getException());
-        }
-
-        channel.basicAck(tag, false);
+        super.sendMessage(id, channel, tag);
     }
 
     /**
@@ -104,7 +98,7 @@ public class SmsMessageSender extends BatchMessageSender<SmsMessageBody, SmsMess
      * @param id 短信实体 id
      */
     @Transactional(rollbackFor = Exception.class)
-    public SmsMessageEntity sendSms(Integer id) {
+    public SmsMessageEntity sendMessage(Integer id) {
 
         SmsMessageEntity entity = smsMessageService.get(id);
 
