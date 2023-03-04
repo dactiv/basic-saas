@@ -2,7 +2,8 @@
 <configuration>
 
     <springProperty scope="context" name="logName" source="spring.application.name" defaultValue="localhost.log"/>
-    <springProperty scope="context" name="path" source="spring.application.logging.path" defaultValue="${user.home}/saas"/>
+    <springProperty scope="context" name="path" source="spring.application.logging.path"
+                    defaultValue="${user.home}/cmis"/>
 
     <!-- 控制台日志输出设置 -->
     <appender name="CONSOLE-APPENDER" class="ch.qos.logback.core.ConsoleAppender">
@@ -12,7 +13,7 @@
     </appender>
 
     <springProfile name="default">
-        <logger name="com.github.dactiv.saas.workflow" level="DEBUG"/>
+        <logger name="com.github.dactiv.saas.middleware" level="DEBUG"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE-APPENDER"/>
         </root>

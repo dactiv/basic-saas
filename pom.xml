@@ -120,6 +120,7 @@
         <module>message</module>
         <module>gateway</module>
         <module>workflow</module>
+        <module>middleware</module>
     </modules>
 
 </project>

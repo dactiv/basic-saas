@@ -4,6 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+
     <parent>
         <groupId>com.github.dactiv.saas</groupId>
         <artifactId>parent</artifactId>
@@ -11,13 +12,13 @@
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>workflow</artifactId>
-    <name>workflow</name>
-    <description>workflow jar</description>
+    <artifactId>middleware</artifactId>
+    <name>middleware</name>
+    <description>middleware jar</description>
     <packaging>jar</packaging>
 
     <properties>
-        <server.port>8084</server.port>
+        <server.port>8085</server.port>
         <spring.cloud.discovery.address>localhost:8848</spring.cloud.discovery.address>
     </properties>
 
@@ -39,18 +40,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.dactiv.framework</groupId>
-            <artifactId>mybatis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.dactiv.framework</groupId>
-            <artifactId>mybatis-plus</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
 
         <dependency>
@@ -59,8 +50,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
         </dependency>
 
         <dependency>
@@ -74,6 +65,53 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--jacob-->
+        <dependency>
+            <groupId>com.github.dactiv</groupId>
+            <artifactId>jacob</artifactId>
+            <version>1.20</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/jacob/jacob-1.20.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.26</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>fontbox</artifactId>
+            <version>2.0.26</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>1.5.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv</artifactId>
+            <version>1.5.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>openblas</artifactId>
+            <version>0.3.21-1.5.8</version>
+            <classifier>windows-x86_64</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>5.1.2-1.5.8</version>
+            <classifier>windows-x86_64</classifier>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -83,16 +121,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
             </plugin>
 
             <plugin>
@@ -115,7 +151,8 @@
                             <arg>--spring.cloud.nacos.discovery.server-addr=${SPRING_CLOUD_DISCOVERY_ADDRESS}</arg>
                         </args>
                         <environment>
-                            <SPRING_CLOUD_DISCOVERY_ADDRESS>${spring.cloud.discovery.address}
+                            <SPRING_CLOUD_DISCOVERY_ADDRESS>
+                                ${spring.cloud.discovery.address}
                             </SPRING_CLOUD_DISCOVERY_ADDRESS>
                         </environment>
                     </container>

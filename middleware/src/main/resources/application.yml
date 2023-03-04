@@ -1,0 +1,25 @@
+info:
+  version: @version@
+  name: @name@
+  artifact-id: ${spring.application.name}
+  group-id: @groupId@
+
+dactiv:
+  spring:
+    web:
+      mvc:
+        filter-view-base-packages: com.github.dactiv.saas.middleware.domain
+  idempotent:
+    ignore-classes: org.springframework.security.core.context.SecurityContext
+  authentication:
+    plugin:
+      base-packages: com.github.dactiv.saas.middleware.controller
+      generate-sources:
+        - "CONSOLE"
+        - "ALL"
+        - "SYSTEM"
+    permit-uri-ant-matchers:
+      - "/actuator/**"
+  enumerate:
+    base-packages:
+      - com.github.dactiv.saas.middleware.enumerate

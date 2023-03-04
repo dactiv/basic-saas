@@ -18,7 +18,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <server.port>8084</server.port>
+        <server.port>8083</server.port>
         <spring.cloud.discovery.address>localhost:8848</spring.cloud.discovery.address>
     </properties>
 
