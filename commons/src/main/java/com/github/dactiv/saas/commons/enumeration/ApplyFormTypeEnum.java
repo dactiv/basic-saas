@@ -25,31 +25,6 @@ public enum ApplyFormTypeEnum implements NameValueEnum<Integer> {
      * 系统默认表单
      */
     SYSTEM(15, "系统默认表单"),
-
-    /**
-     * 课程格式表单
-     */
-    CURRICULUM(20, "课程格式表单"),
-
-    /**
-     * 章节课时内容格式表单
-     */
-    CHAPTER_CLASS_HOUR_CONTENT(30, "章节课时内容格式表单"),
-
-    /**
-     * 课程考试内容格式表单
-     */
-    CURRICULUM_EXAMINATION(40, "课程考试内容格式表单"),
-
-    /**
-     * 章节测验内容格式表单
-     */
-    CHAPTER_TEST(50, "章节测验内容格式表单"),
-
-    /**
-     * 章节作业内容格式表单
-     */
-    CHAPTER_HOMEWORK(60, "章节作业内容格式表单"),
     ;
 
     private final Integer value;

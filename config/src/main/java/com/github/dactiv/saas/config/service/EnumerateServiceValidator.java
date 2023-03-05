@@ -90,7 +90,7 @@ public class EnumerateServiceValidator implements NacosServiceListenerValidator 
     /**
      * 清除异常服务内容
      */
-    @NacosCronScheduled(cron = "${cmis.admin.app.enumerate.clear.exception-services-cron:0 0/5 * * * ? }")
+    @NacosCronScheduled(cron = "${dactiv.saas.admin.app.enumerate.clear.exception-services-cron:0 0/5 * * * ? }")
     public void clearExceptionServices() {
         exceptionServices.clear();
     }

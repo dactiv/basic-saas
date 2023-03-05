@@ -18,9 +18,6 @@ import java.util.Objects;
  */
 public interface SecurityUserDetailsConstants {
 
-    /**
-     * spring security 用户附加信息的真实姓名字段
-     */
     String SECURITY_DETAILS_REAL_NAME_KEY = "realName";
 
     String SECURITY_DETAILS_USERNAME_KEY = "username";

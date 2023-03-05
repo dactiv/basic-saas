@@ -340,10 +340,10 @@ public class AuthorizationService {
                 .toList();
 
         // 构造用户的组资源
-        userResource = groups
+        groups
                 .stream()
                 .flatMap(g -> getResourcesStream(g.getResourceMap(), groupSources))
-                .toList();
+                .forEach(userResource::add);
 
         // 构造用户的独立资源
         userResource.addAll(getResourcesStream(user.getResourceMap(), groupSources).distinct().toList());

@@ -14,7 +14,6 @@ import com.github.dactiv.saas.authentication.service.DepartmentService;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,11 +40,14 @@ import java.util.List;
 )
 public class DepartmentController {
 
-    @Autowired
-    private DepartmentService departmentService;
+    private final DepartmentService departmentService;
 
-    @Autowired
-    private MybatisPlusQueryGenerator<?> queryGenerator;
+    private final MybatisPlusQueryGenerator<?> queryGenerator;
+
+    public DepartmentController(DepartmentService departmentService, MybatisPlusQueryGenerator<?> queryGenerator) {
+        this.departmentService = departmentService;
+        this.queryGenerator = queryGenerator;
+    }
 
     /**
      * 获取 table: tb_department 信息

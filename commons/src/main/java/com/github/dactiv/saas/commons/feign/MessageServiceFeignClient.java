@@ -82,7 +82,7 @@ public interface MessageServiceFeignClient {
 
             public static final String IS_PUSHABLE_FIELD = "pushable";
 
-            public static final String LINKE_META_FIELD = "link";
+            public static final String LINK_META_FIELD = "link";
 
         }
 

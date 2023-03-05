@@ -43,7 +43,7 @@ import java.util.*;
 @Transactional(rollbackFor = Exception.class)
 public class SendCompleteApplyMessageConsumer extends AbstractSendSiteMessageConsumer{
 
-    public static final String DEFAULT_QUEUE_NAME = "cmis.workflow.send.complete.apply.message";
+    public static final String DEFAULT_QUEUE_NAME = "dactiv.saas.workflow.send.complete.apply.message";
 
     private final ApplicationConfig applicationConfig;
 

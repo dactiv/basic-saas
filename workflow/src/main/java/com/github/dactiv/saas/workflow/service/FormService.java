@@ -53,7 +53,7 @@ public class FormService extends BasicService<FormDao, FormEntity> {
     }
 
     @Override
-    @Concurrent(value = "cmis:workflow:from:save:[#entity.id]", condition = "[#entity.id] != null")
+    @Concurrent(value = "dactiv:saas:workflow:from:save:[#entity.id]", condition = "[#entity.id] != null")
     public int save(FormEntity entity) {
         boolean isNew = Objects.isNull(entity.getId());
 
@@ -153,7 +153,7 @@ public class FormService extends BasicService<FormDao, FormEntity> {
     public int deleteById(Collection<? extends Serializable> ids, boolean errorThrow) {
         int result = 0;
         for (Serializable id : ids) {
-            result += concurrentInterceptor.invoke("cmis:workflow:from:delete-by-id:[#id]", () -> deleteById(id));
+            result += concurrentInterceptor.invoke("dactiv:saas:workflow:from:delete-by-id:[#id]", () -> deleteById(id));
         }
         return result;
     }

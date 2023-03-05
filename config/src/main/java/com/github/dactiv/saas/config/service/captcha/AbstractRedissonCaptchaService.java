@@ -34,7 +34,7 @@ import java.util.Objects;
  */
 @RefreshScope
 @SuppressWarnings("unchecked")
-public abstract class AbstractRedisCaptchaService<E, C extends ExpiredCaptcha> implements CaptchaService {
+public abstract class AbstractRedissonCaptchaService<E, C extends ExpiredCaptcha> implements CaptchaService {
 
     /**
      * 默认提交验证码的参数名称
@@ -57,9 +57,9 @@ public abstract class AbstractRedisCaptchaService<E, C extends ExpiredCaptcha> i
 
     private final CaptchaConfig captchaConfig;
 
-    public AbstractRedisCaptchaService(RedissonClient redissonClient,
-                                       CaptchaConfig captchaConfig,
-                                       Validator validator) {
+    public AbstractRedissonCaptchaService(RedissonClient redissonClient,
+                                          CaptchaConfig captchaConfig,
+                                          Validator validator) {
         this.redissonClient = redissonClient;
         this.captchaConfig = captchaConfig;
         this.validator = validator;

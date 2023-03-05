@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 @EqualsAndHashCode
 @NoArgsConstructor
-@ConfigurationProperties("cmis.workflow.app.schedule")
+@ConfigurationProperties("dactiv.saas.workflow.app.schedule")
 public class ScheduleConfig {
 
     /**

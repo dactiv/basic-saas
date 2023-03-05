@@ -3,6 +3,7 @@ package com.github.dactiv.saas.gateway.filter;
 import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.framework.crypto.access.AccessCrypto;
 import com.github.dactiv.saas.gateway.AccessCryptoResolver;
+import lombok.NonNull;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -59,7 +60,7 @@ public class ResponseEncryptFilter implements GlobalFilter, Ordered {
         return new ServerHttpResponseDecorator(exchange.getResponse()) {
 
             @Override
-            public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
+            public @NonNull Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
 
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
@@ -88,7 +89,7 @@ public class ResponseEncryptFilter implements GlobalFilter, Ordered {
             }
 
             @Override
-            public Mono<Void> writeAndFlushWith(Publisher<? extends Publisher<? extends DataBuffer>> body) {
+            public @NonNull Mono<Void> writeAndFlushWith(@NonNull Publisher<? extends Publisher<? extends DataBuffer>> body) {
                 return writeWith(Flux.from(body).flatMapSequential(p -> p));
             }
 

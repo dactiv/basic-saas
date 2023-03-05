@@ -6,7 +6,7 @@ import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
 import com.github.dactiv.saas.config.config.CaptchaConfig;
 import com.github.dactiv.saas.config.config.PictureCaptchaConfig;
 import com.github.dactiv.saas.config.domain.meta.captcha.PictureMeta;
-import com.github.dactiv.saas.config.service.captcha.AbstractRedisCaptchaService;
+import com.github.dactiv.saas.config.service.captcha.AbstractRedissonCaptchaService;
 import com.github.dactiv.saas.config.service.captcha.BuildToken;
 import com.github.dactiv.saas.config.service.captcha.ExpiredCaptcha;
 import com.github.dactiv.saas.config.service.captcha.GenerateCaptchaResult;
@@ -34,7 +34,7 @@ import java.util.Map;
  * @author maurice
  */
 @Component
-public class PictureCaptchaService extends AbstractRedisCaptchaService<PictureMeta, ExpiredCaptcha> {
+public class PictureCaptchaService extends AbstractRedissonCaptchaService<PictureMeta, ExpiredCaptcha> {
 
     /**
      * 默认的验证码服务类型名称

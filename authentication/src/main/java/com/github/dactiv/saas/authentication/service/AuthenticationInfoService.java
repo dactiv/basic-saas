@@ -87,7 +87,7 @@ public class AuthenticationInfoService extends BasicService<AuthenticationInfoDa
                 IdEntity.ID_FIELD_NAME, info.getId()
         );
         Map<String, Object> meta = new LinkedHashMap<>(info.getDevice());
-        meta.put(MessageServiceFeignClient.Constants.Site.LINKE_META_FIELD, link);
+        meta.put(MessageServiceFeignClient.Constants.Site.LINK_META_FIELD, link);
 
         Map<String, Object> param = MessageServiceFeignClient.createPushableSiteMessage(
                 Collections.singletonList(TypeIdNameMeta.ofUserDetails(info)),

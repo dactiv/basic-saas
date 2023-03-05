@@ -309,7 +309,7 @@ public class ApplyService extends BasicService<ApplyDao, ApplyEntity> {
      * @param userId 审批用户
      * @return 审批结果
      */
-    @Concurrent(value = "cmis:workflow:apply-update:[#id]", condition = "[#id] != null")
+    @Concurrent(value = "dactiv:saas:workflow:apply-update:[#id]", condition = "[#id] != null")
     public RestResult<Integer> approval(Integer id, Integer userId, Integer result, String remark) throws Exception {
         Assert.notNull(id, "参数 id 不能为空");
 
@@ -478,7 +478,7 @@ public class ApplyService extends BasicService<ApplyDao, ApplyEntity> {
      * @param user 用户 id
      */
     public void cancel(List<Integer> ids, BasicUserDetails<Integer> user) {
-        ids.stream().distinct().forEach(id -> concurrentInterceptor.invoke("cmis:workflow:apply-update:" + id, () -> cancel(id, user, true, true)));
+        ids.stream().distinct().forEach(id -> concurrentInterceptor.invoke("dactiv:saas:workflow:apply-update:" + id, () -> cancel(id, user, true, true)));
     }
 
     /**
@@ -487,7 +487,7 @@ public class ApplyService extends BasicService<ApplyDao, ApplyEntity> {
      * @param id 主键 id
      * @param user 基础用户明细
      */
-    @Concurrent(value = "cmis:workflow:apply-update:[#id]", condition = "[#id] != null")
+    @Concurrent(value = "dactiv:saas:workflow:apply-update:[#id]", condition = "[#id] != null")
     public RestResult<?> cancel(Integer id, TypeUserDetails<Integer> user, boolean throwError, boolean checkUser) {
         ApplyEntity entity = Objects.requireNonNull(get(id), "找不到 ID 为 [" + id + "] 的申请审批记录");
 

@@ -4,6 +4,7 @@ import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.framework.crypto.access.AccessCrypto;
 import com.github.dactiv.saas.gateway.AccessCryptoResolver;
+import lombok.NonNull;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
@@ -82,7 +83,7 @@ public class RequestDecryptFilter implements GlobalFilter, Ordered {
                                         CachedBodyOutputMessage outputMessage) {
         return new ServerHttpRequestDecorator(exchange.getRequest()) {
             @Override
-            public HttpHeaders getHeaders() {
+            public @NonNull HttpHeaders getHeaders() {
                 long contentLength = headers.getContentLength();
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.putAll(super.getHeaders());
@@ -96,7 +97,7 @@ public class RequestDecryptFilter implements GlobalFilter, Ordered {
             }
 
             @Override
-            public Flux<DataBuffer> getBody() {
+            public @NonNull Flux<DataBuffer> getBody() {
                 return outputMessage.getBody();
             }
         };

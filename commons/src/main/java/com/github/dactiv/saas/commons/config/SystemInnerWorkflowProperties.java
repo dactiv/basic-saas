@@ -16,17 +16,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(staticName = "of")
 public class SystemInnerWorkflowProperties {
 
+    /**
+     * 提交内容
+     */
     @NonNull
     private String submitContent;
 
+    /**
+     * 完成审核后要发送到的消息队列
+     */
     @NonNull
     private String completeAuditMessageQueueName;
 
+    /**
+     * 取消审核后要发送到的消息队列
+     */
     @NonNull
     private String cancelAuditMessageQueueName;
 
+    /**
+     * 自定义申请类型
+     */
     @NonNull
     private ApplyFormTypeEnum applyFormType;
 
+    /**
+     * 是否启用
+     */
     private Boolean enable = true;
 }

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @Component
 public class OfficeFileConvertConsumer extends BasicFileConvertConsumer{
 
-    public static final String DEFAULT_QUEUE_NAME = "cmis.middleware.office.file.convert";
+    public static final String DEFAULT_QUEUE_NAME = "dactiv.saas.middleware.office.file.convert";
 
     private final List<OfficeResolver> officeResolvers;
 

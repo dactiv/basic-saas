@@ -1,4 +1,4 @@
-package com.github.dactiv.saas.config.enumerate.dictionary;
+package com.github.dactiv.saas.config.enumerate;
 
 import com.github.dactiv.framework.commons.enumerate.NameValueEnum;
 import lombok.AccessLevel;

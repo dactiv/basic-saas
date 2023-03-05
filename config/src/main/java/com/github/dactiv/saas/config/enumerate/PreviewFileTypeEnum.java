@@ -1,4 +1,4 @@
-package com.github.dactiv.saas.authentication.enumerate;
+package com.github.dactiv.saas.config.enumerate;
 
 import com.github.dactiv.framework.commons.enumerate.NameValueEnum;
 import lombok.AccessLevel;
@@ -6,24 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 邀请方式
+ * 预览文件类型
  *
  * @author maurice.chen
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum InviteModeEnum implements NameValueEnum<Integer> {
+public enum PreviewFileTypeEnum implements NameValueEnum<Integer> {
 
     /**
-     * 链接邀请
+     * 用户上传资源文档
      */
-    URL(10, "链接邀请"),
-    /**
-     * 筛选邀请
-     */
-    SCREEN(20, "筛选邀请");
-
-    private final Integer value;
+    USER_FILE_DOC("用户上传资源文档", 10),
+    ;
 
     private final String name;
+
+    private final Integer value;
 }

@@ -7,6 +7,7 @@ import com.github.dactiv.saas.commons.SystemConstants;
 import feign.RequestInterceptor;
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
+import lombok.NonNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -117,6 +118,7 @@ public interface ConfigServiceFeignClient {
 
         @Bean
         public RequestInterceptor feignAuthRequestInterceptor(AuthenticationProperties properties) {
+
             return requestTemplate -> FeignAuthenticationConfiguration.initRequestTemplate(requestTemplate, properties);
         }
 
@@ -197,6 +199,7 @@ public interface ConfigServiceFeignClient {
 
 
         @Override
+        @NonNull
         public String getName() {
             return this.name;
         }
@@ -222,17 +225,18 @@ public interface ConfigServiceFeignClient {
         }
 
         @Override
-        public byte[] getBytes() {
+        public byte @NonNull [] getBytes() {
             return this.content;
         }
 
         @Override
+        @NonNull
         public InputStream getInputStream() {
             return new ByteArrayInputStream(this.content);
         }
 
         @Override
-        public void transferTo(File dest) throws IOException, IllegalStateException {
+        public void transferTo(@NonNull File dest) throws IOException, IllegalStateException {
             FileCopyUtils.copy(this.content, dest);
         }
     }

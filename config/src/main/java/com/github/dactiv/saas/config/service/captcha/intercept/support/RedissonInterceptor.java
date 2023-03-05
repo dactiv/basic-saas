@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 @Component
 @RefreshScope
-public class RedisInterceptor implements Interceptor {
+public class RedissonInterceptor implements Interceptor {
 
     private final RedissonClient redissonClient;
 
@@ -32,9 +32,9 @@ public class RedisInterceptor implements Interceptor {
 
     private final CaptchaConfig captchaConfig;
 
-    public RedisInterceptor(RedissonClient redissonClient,
-                            CaptchaConfig captchaConfig,
-                            DelegateCaptchaService delegateCaptchaService) {
+    public RedissonInterceptor(RedissonClient redissonClient,
+                               CaptchaConfig captchaConfig,
+                               DelegateCaptchaService delegateCaptchaService) {
         this.redissonClient = redissonClient;
         this.captchaConfig = captchaConfig;
         this.delegateCaptchaService = delegateCaptchaService;

@@ -19,7 +19,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableDiscoveryClient
 @EnableConfigurationProperties
 @EnableFeignClients("com.github.dactiv.saas.commons.feign")
-@EnableRedisHttpSession(redisNamespace = "cmis:spring:session")
+@EnableRedisHttpSession(redisNamespace = "dactiv:saas:spring:session")
 @EnableMethodSecurity(securedEnabled = true)
 @SpringBootApplication(scanBasePackages = "com.github.dactiv.saas.workflow")
 public class WorkflowMain {

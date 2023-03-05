@@ -35,7 +35,7 @@ import java.util.Objects;
 @Component
 public class SendCompleteApplyNoticeConsumer {
 
-    public static final String DEFAULT_QUEUE_NAME = "cmis.workflow.send.complete.apply.notice";
+    public static final String DEFAULT_QUEUE_NAME = "dactiv.saas.workflow.send.complete.apply.notice";
 
     private final AmqpTemplate amqpTemplate;
 

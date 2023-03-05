@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @NoArgsConstructor
-@ConfigurationProperties("cmis.workflow.app")
+@ConfigurationProperties("dactiv.saas.workflow.app")
 public class ApplicationConfig {
 
     /**
@@ -51,7 +51,7 @@ public class ApplicationConfig {
     private String aliYunAppCode;
 
     private CacheProperties holidayCache = CacheProperties.of(
-            "cmis:workflow:schedule:holiday",
+            "dactiv:saas:workflow:schedule:holiday",
             TimeProperties.ofDay(1)
     );
 }

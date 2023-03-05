@@ -33,7 +33,7 @@ import java.util.Map;
 @Component
 public class SendUrgentMessageConsumer extends AbstractSendSiteMessageConsumer{
 
-    public static final String DEFAULT_QUEUE_NAME = "cmis.workflow.send.urgent.message";
+    public static final String DEFAULT_QUEUE_NAME = "dactiv.saas.workflow.send.urgent.message";
 
     private final ApplicationConfig applicationConfig;
 

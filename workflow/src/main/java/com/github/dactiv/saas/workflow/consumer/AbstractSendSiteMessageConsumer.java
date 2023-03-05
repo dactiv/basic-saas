@@ -79,6 +79,6 @@ public abstract class AbstractSendSiteMessageConsumer {
                 IdEntity.ID_FIELD_NAME, entity.getId()
         );
 
-        return Map.of(MessageServiceFeignClient.Constants.Site.LINKE_META_FIELD, link);
+        return Map.of(MessageServiceFeignClient.Constants.Site.LINK_META_FIELD, link);
     }
 }

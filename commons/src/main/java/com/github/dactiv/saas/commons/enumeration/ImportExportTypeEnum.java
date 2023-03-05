@@ -15,10 +15,9 @@ import lombok.Getter;
 public enum ImportExportTypeEnum implements NameValueEnum<String> {
 
     /**
-     * 题库类型
+     * 后台系统用户
      */
-    QUESTION_BANK("question-bank", "题库类型"),
-
+    CONSOLE_USER("console_user", "后台系统用户"),
 
     ;
 

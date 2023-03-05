@@ -3,13 +3,21 @@ package com.github.dactiv.saas.config.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.dactiv.framework.commons.CacheProperties;
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
+import com.github.dactiv.framework.commons.enumerate.ValueEnumUtils;
 import com.github.dactiv.framework.idempotent.annotation.Idempotent;
+import com.github.dactiv.framework.minio.MinioTemplate;
 import com.github.dactiv.framework.security.enumerate.ResourceType;
 import com.github.dactiv.framework.security.plugin.Plugin;
+import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.framework.spring.web.query.Property;
+import com.github.dactiv.saas.commons.SystemConstants;
+import com.github.dactiv.saas.commons.domain.meta.ExportDataMeta;
 import com.github.dactiv.saas.commons.domain.meta.IdValueMeta;
+import com.github.dactiv.saas.commons.domain.meta.ImportDataMeta;
+import com.github.dactiv.saas.commons.enumeration.ImportExportTypeEnum;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import com.github.dactiv.saas.config.config.ApplicationConfig;
 import com.github.dactiv.saas.config.domain.entity.dictionary.DataDictionaryEntity;
@@ -22,14 +30,21 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.lookup.StringLookupFactory;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.transaction.interceptor.RuleBasedTransactionAttribute;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.*;
 
@@ -41,7 +56,7 @@ import java.util.*;
 @Slf4j
 @RefreshScope
 @RestController
-public class SystemController {
+public class SystemController implements InitializingBean {
 
     public static final String DEFAULT_EVN_URI = "actuator/env";
 
@@ -55,17 +70,25 @@ public class SystemController {
 
     private final RestTemplate restTemplate;
 
+    private final RedissonClient redissonClient;
+
+    private final MinioTemplate minioTemplate;
+
     public SystemController(DictionaryService dictionaryService,
                             EnumerateResourceService enumerateResourceService,
                             DiscoveryClient discoveryClient,
                             ApplicationConfig applicationConfig,
-                            RestTemplate restTemplate) {
+                            RestTemplate restTemplate,
+                            RedissonClient redissonClient,
+                            MinioTemplate minioTemplate) {
 
         this.dictionaryService = dictionaryService;
         this.enumerateResourceService = enumerateResourceService;
         this.discoveryClient = discoveryClient;
         this.applicationConfig = applicationConfig;
         this.restTemplate = restTemplate;
+        this.redissonClient = redissonClient;
+        this.minioTemplate = minioTemplate;
     }
 
     /**
@@ -416,6 +439,121 @@ public class SystemController {
         }
 
         return result;
+    }
+
+    /**
+     * 获取所有导出的文件内容
+     *
+     * @return 导出的文件内容
+     */
+    @GetMapping("exportList")
+    @PreAuthorize("hasAuthority('perms[resource_system:export_list]')")
+    @Plugin(name = "导出数据查询", id = "export", icon = "icon-export", parent = "resources", type = ResourceType.Menu, sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE, ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE})
+    public List<ExportDataMeta> exportList(@CurrentSecurityContext SecurityContext securityContext) {
+        SecurityUserDetails securityUserDetails = Casts.cast(securityContext.getAuthentication().getDetails());
+
+        String name = securityUserDetails.getId()
+                + RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE
+                + securityUserDetails.getType()
+                + CacheProperties.DEFAULT_SEPARATOR
+                + CorsConfiguration.ALL;
+
+        String pattern = applicationConfig.getUserExportCache().getName(name);
+        Iterable<String> iterable = redissonClient.getKeys().getKeysByPattern(pattern);
+
+        List<String> keys = new LinkedList<>();
+        CollectionUtils.addAll(keys, iterable);
+
+        Map<String, ExportDataMeta> meta = redissonClient.getBuckets().get(keys.toArray(new String[0]));
+        List<ExportDataMeta> result = new LinkedList<>(meta.values());
+        result.sort(Comparator.comparing(ExportDataMeta::getCreationTime).reversed());
+
+        return result;
+    }
+
+    @PostMapping("deleteExport")
+    @PreAuthorize("hasAuthority('perms[resource_system:delete_export]')")
+    @Plugin(name = "删除导出数据", parent = "resources", sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE, ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE})
+    public RestResult<?> deleteExport(@CurrentSecurityContext SecurityContext securityContext,
+                                      @RequestParam List<String> ids) {
+        SecurityUserDetails user = Casts.cast(securityContext.getAuthentication().getDetails());
+
+        redissonClient.getKeys().delete(
+                ids
+                        .stream()
+                        .map(s -> applicationConfig.getUserExportCache().getName(user.getId() + RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE + user.getType() + CacheProperties.DEFAULT_SEPARATOR + s)).toArray(String[]::new)
+        );
+        return RestResult.of("删除 " + ids.size() + "数据成功");
+    }
+
+    /**
+     * 查找导入数据
+     *
+     * @param securityContext spring 安全上下文
+     * @param type 导入数据类型
+     *
+     * @return 导入数据集合
+     */
+    @PostMapping("importList")
+    @PreAuthorize("isAuthenticated()")
+    public List<ImportDataMeta> importList(@CurrentSecurityContext SecurityContext securityContext, @RequestParam String type) {
+        ImportExportTypeEnum typeEnum = ValueEnumUtils.parse(type, ImportExportTypeEnum.class);
+        SecurityUserDetails userDetails = Casts.cast(securityContext.getAuthentication().getDetails());
+
+        String name = userDetails.getId()
+                + RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE
+                + userDetails.getType()
+                + CacheProperties.DEFAULT_SEPARATOR
+                + typeEnum.getValue()
+                + CacheProperties.DEFAULT_SEPARATOR
+                + CorsConfiguration.ALL;
+
+        String key = applicationConfig.getUserImportCache().getName(name);
+        Iterable<String> iterable = redissonClient.getKeys().getKeysByPattern(key);
+        List<String> keys = new LinkedList<>();
+        CollectionUtils.addAll(keys, iterable);
+
+        Map<String, ImportDataMeta> meta = redissonClient.getBuckets().get(keys.toArray(new String[0]));
+        List<ImportDataMeta> result = new LinkedList<>(meta.values());
+        result.sort(Comparator.comparing(ImportDataMeta::getCreationTime).reversed());
+
+        return result;
+    }
+
+    /**
+     * 获取导入数据信息
+     *
+     * @param securityContext spring 安全上下文
+     * @param type 导入类型
+     * @param id 主键 id
+     *
+     * @return 导入数据元数据
+     */
+    @GetMapping("getImport")
+    @PreAuthorize("isAuthenticated()")
+    public ImportDataMeta getImport(@CurrentSecurityContext SecurityContext securityContext,
+                                    @RequestParam String type,
+                                    @RequestParam String id) {
+
+        ImportExportTypeEnum typeEnum = ValueEnumUtils.parse(type, ImportExportTypeEnum.class);
+        SecurityUserDetails userDetails = Casts.cast(securityContext.getAuthentication().getDetails());
+
+        String name = userDetails.getId()
+                + RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE
+                + userDetails.getType()
+                + CacheProperties.DEFAULT_SEPARATOR
+                + typeEnum.getValue()
+                + CacheProperties.DEFAULT_SEPARATOR
+                + id;
+
+        String key = applicationConfig.getUserImportCache().getName(name);
+        RBucket<ImportDataMeta> bucket = redissonClient.getBucket(key);
+        return bucket.get();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        minioTemplate.makeBucketIfNotExists(SystemConstants.EXPORT_BUCKET);
     }
 
 }

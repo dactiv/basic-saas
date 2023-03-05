@@ -51,7 +51,7 @@ import java.util.Objects;
 @Component
 public class PdfFileConvertConsumer extends BasicFileConvertConsumer {
 
-    public static final String DEFAULT_QUEUE_NAME = "cmis.middleware.pdf.file.convert";
+    public static final String DEFAULT_QUEUE_NAME = "dactiv.saas.middleware.pdf.file.convert";
 
     public static final String ORDER_NAME = "order";
 

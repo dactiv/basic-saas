@@ -18,19 +18,10 @@ public enum MessageLinkTypeEnum implements NameValueEnum<String> {
      * 工作流申请
      */
     WORKFLOW_APPLY("工作流程申请", "workflow.apply"),
-    /**
-     * 课程章节作业
-     */
-    CURRICULUM_CHAPTER_HOMEWORK("章节作业", "resources.curriculum.chapter.homework"),
-    /**
-     * 课程章节测试
-     */
-    CURRICULUM_CHAPTER_TEST("章节测试", "resources.curriculum.chapter.test"),
-    /**
-     * 课程章节测试
-     */
-    CURRICULUM_EXAMINATION("章节考试", "resources.curriculum.examination"),
 
+    /**
+     * 认证信息
+     */
     AUTHENTICATION_INFO("认证信息", "authentication.info"),
     ;
 

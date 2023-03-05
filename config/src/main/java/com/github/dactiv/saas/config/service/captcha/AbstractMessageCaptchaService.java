@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Slf4j
 public abstract class AbstractMessageCaptchaService<T extends MessageType, C extends ExpiredCaptcha>
-        extends AbstractRedisCaptchaService<T, C> {
+        extends AbstractRedissonCaptchaService<T, C> {
 
     /**
      * 配置管理服务

@@ -33,6 +33,11 @@ dactiv:
           icon: "icon-enum-major-o"
           sources:
             - "CONSOLE"
+        resource:
+          name: "资源管理"
+          icon: "icon-database"
+          sources:
+            - "CONSOLE"
     permit-uri-ant-matchers:
       - "/actuator/**"
       - "/queryDataDictionaries/**"

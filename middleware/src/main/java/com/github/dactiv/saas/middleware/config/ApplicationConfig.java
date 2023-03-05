@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @Component
 @NoArgsConstructor
-@ConfigurationProperties("cmis.middleware.app")
+@ConfigurationProperties("dactiv.saas.middleware.app")
 public class ApplicationConfig {
 
     /**
@@ -43,7 +43,7 @@ public class ApplicationConfig {
     /**
      * 文件转换缓存配置
      */
-    private CacheProperties convertFileCache = CacheProperties.of("cmis:middleware:convert-file:");
+    private CacheProperties convertFileCache = CacheProperties.of("dactiv:saas:middleware:convert-file:");
 
     /**
      * pdf 渲染图片 dpi 值

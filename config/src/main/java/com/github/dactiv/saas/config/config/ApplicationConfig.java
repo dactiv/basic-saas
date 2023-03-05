@@ -22,15 +22,14 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @ConfigurationProperties("dactiv.saas.config.app")
 public class ApplicationConfig {
-
-
+    
     /**
      * 展示轮播图数量
      */
     private Integer carouselCount = 5;
 
     private CacheProperties accessCryptoCache = CacheProperties.of(
-            "cmis:access:crypto:all"
+            "dactiv:saas:access:crypto:all"
     );
 
     /**
@@ -65,4 +64,11 @@ public class ApplicationConfig {
      * 忽略环境变量的开头值
      */
     private List<String> ignoreEnvironmentStartWith = List.of("spring");
+
+    /**
+     * 用户导入数据缓存
+     */
+    private CacheProperties userImportCache = CacheProperties.of("dactiv:saas:resources:user:import", TimeProperties.of(7, TimeUnit.DAYS));
+
+    private CacheProperties userExportCache = CacheProperties.of("dactiv:saas:resources:user:export:", TimeProperties.of(7, TimeUnit.DAYS));
 }

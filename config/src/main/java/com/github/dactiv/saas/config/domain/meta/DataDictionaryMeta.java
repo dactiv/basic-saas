@@ -1,6 +1,6 @@
 package com.github.dactiv.saas.config.domain.meta;
 
-import com.github.dactiv.saas.config.enumerate.dictionary.ValueTypeEnum;
+import com.github.dactiv.saas.config.enumerate.ValueTypeEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -51,7 +51,7 @@ import java.util.Objects;
 @Component
 public class VideoFileConvertConsumer extends BasicFileConvertConsumer{
 
-    public static final String DEFAULT_QUEUE_NAME = "cmis.middleware.video.file.convert";
+    public static final String DEFAULT_QUEUE_NAME = "dactiv.saas.middleware.video.file.convert";
 
     private final ConfigServiceFeignClient configServiceFeignClient;
 
