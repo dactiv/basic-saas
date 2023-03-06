@@ -29,7 +29,7 @@ import java.util.List;
 @Plugin(
         name = "访问加解密",
         id = "access_crypto",
-        parent = "admin",
+        parent = "basic",
         icon = "icon-crypto-currency-bitcoin-imac",
         type = ResourceType.Menu,
         sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE

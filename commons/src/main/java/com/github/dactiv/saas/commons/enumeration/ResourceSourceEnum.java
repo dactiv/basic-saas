@@ -29,7 +29,7 @@ public enum ResourceSourceEnum implements NameValueEnum<List<String>> {
     /**
      * 会员用户
      */
-    MEMBER("会员用户", List.of(ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WAKE_UP_SOURCE_VALUE)),
+    MEMBER("会员用户", List.of(ResourceSourceEnum.MEMBER_SOURCE_VALUE, ResourceSourceEnum.APP_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE, ResourceSourceEnum.APP_WAKE_UP_SOURCE_VALUE)),
     /**
      * 系统
      */
@@ -68,7 +68,12 @@ public enum ResourceSourceEnum implements NameValueEnum<List<String>> {
     /**
      * 移动端教师应用来源值
      */
-    public static final String MOBILE_MEMBER_SOURCE_VALUE = "MOBILE_MEMBER";
+    public static final String MEMBER_SOURCE_VALUE = "MEMBER";
+
+    /**
+     * 移动端教师应用来源值
+     */
+    public static final String APP_MEMBER_SOURCE_VALUE = "MOBILE_MEMBER";
 
     /**
      * 微信端教师应用来源值
@@ -78,17 +83,7 @@ public enum ResourceSourceEnum implements NameValueEnum<List<String>> {
     /**
      * 呼醒应用来源值
      */
-    public static final String WAKE_UP_SOURCE_VALUE = "WAKE_UP";
-
-    /**
-     * 获取桶名称
-     *
-     * @param value 值
-     * @return 符合 minio 桶格式的名称
-     */
-    public static String getMinioBucket(String value) {
-        return RegExUtils.replaceAll(value, SimpleConditionParser.DEFAULT_FIELD_CONDITION_SEPARATORS, RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE);
-    }
+    public static final String APP_WAKE_UP_SOURCE_VALUE = "APP_WAKE_UP";
 
     public static ResourceSourceEnum of(String value) {
         for (ResourceSourceEnum resourceSource : ResourceSourceEnum.values()) {

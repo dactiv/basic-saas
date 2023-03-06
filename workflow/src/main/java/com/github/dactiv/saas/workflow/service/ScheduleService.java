@@ -171,7 +171,7 @@ public class ScheduleService extends BasicService<ScheduleDao, ScheduleEntity> {
         RestResult<List<Map<String, Object>>> result = RestResult.ofSuccess(null);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "APPCODE " + applicationConfig.getAliYunAppCode());
+        headers.add("Authorization", "APPCODE " + applicationConfig.getAliYunHolidayAppCode());
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(headers);
 
         try {

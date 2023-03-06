@@ -48,7 +48,7 @@ public class ApplicationConfig {
      */
     private String urgentContent = "{0}在{1}对{2}申请提出加急处理，请您尽快审批，点击查看详情。";
 
-    private String aliYunAppCode;
+    private String aliYunHolidayAppCode = "";
 
     private CacheProperties holidayCache = CacheProperties.of(
             "dactiv:saas:workflow:schedule:holiday",

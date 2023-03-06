@@ -18,6 +18,8 @@ spring:
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         file-extension: yml
+        group: SAAS
         shared-configs:
           - data-id: application.${spring.cloud.nacos.config.file-extension}
             refresh: true
+            group: SAAS

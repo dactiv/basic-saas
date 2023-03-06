@@ -218,6 +218,8 @@ public class AttachmentService implements InitializingBean {
         for (AttachmentTypeEnum type : AttachmentTypeEnum.values()) {
             minioTemplate.makeBucketIfNotExists(Bucket.of(attachmentConfig.getBucketName(type.getValue())));
         }
+
+        minioTemplate.makeBucketIfNotExists(SystemConstants.EXPORT_BUCKET);
     }
 
     public PreviewFileMeta getPreviewFile(Integer id, PreviewFileTypeEnum typeEnum, Map<String, Object> appendParam, TypeUserDetails<String> userDetails) {

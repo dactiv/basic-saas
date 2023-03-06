@@ -37,8 +37,7 @@ import java.util.List;
         type = ResourceType.Security,
         sources = {
                 ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                ResourceSourceEnum.MEMBER_SOURCE_VALUE
         }
 )
 public class GroupController {

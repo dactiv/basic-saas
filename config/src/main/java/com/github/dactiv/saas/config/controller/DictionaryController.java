@@ -34,7 +34,7 @@ import java.util.Objects;
 @Plugin(
         name = "数据字典管理",
         id = "dictionary",
-        parent = "admin",
+        parent = "basic",
         icon = "icon-dictionary",
         type = ResourceType.Menu,
         sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE

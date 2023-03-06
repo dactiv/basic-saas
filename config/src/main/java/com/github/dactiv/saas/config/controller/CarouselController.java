@@ -35,7 +35,7 @@ import java.util.List;
 @Plugin(
         name = "轮播图管理",
         id = "carousel",
-        parent = "admin",
+        parent = "basic",
         icon = "icon-carousel",
         type = ResourceType.Menu,
         sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE

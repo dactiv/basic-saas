@@ -98,7 +98,7 @@ public interface SystemConstants {
     /**
      * 导出的桶信息
      */
-    Bucket EXPORT_BUCKET = Bucket.of("config.data.export");
+    Bucket EXPORT_BUCKET = Bucket.of("dactiv.saas.resource.export");
 
     /**
      * 替换 HTML 标签正则表达式

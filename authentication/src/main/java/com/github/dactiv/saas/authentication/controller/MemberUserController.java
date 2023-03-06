@@ -36,7 +36,8 @@ import java.util.List;
 @Plugin(
     name = "会员用户表",
     id = "member_user",
-    parent = "system",
+    parent = "user",
+    icon = "icon-team",
     type = ResourceType.Menu,
     sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE
 )

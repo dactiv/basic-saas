@@ -8,12 +8,10 @@ import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.enumerate.ValueEnumUtils;
 import com.github.dactiv.framework.idempotent.annotation.Idempotent;
-import com.github.dactiv.framework.minio.MinioTemplate;
 import com.github.dactiv.framework.security.enumerate.ResourceType;
 import com.github.dactiv.framework.security.plugin.Plugin;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.framework.spring.web.query.Property;
-import com.github.dactiv.saas.commons.SystemConstants;
 import com.github.dactiv.saas.commons.domain.meta.ExportDataMeta;
 import com.github.dactiv.saas.commons.domain.meta.IdValueMeta;
 import com.github.dactiv.saas.commons.domain.meta.ImportDataMeta;
@@ -32,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.lookup.StringLookupFactory;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -56,7 +53,7 @@ import java.util.*;
 @Slf4j
 @RefreshScope
 @RestController
-public class SystemController implements InitializingBean {
+public class SystemController {
 
     public static final String DEFAULT_EVN_URI = "actuator/env";
 
@@ -72,15 +69,12 @@ public class SystemController implements InitializingBean {
 
     private final RedissonClient redissonClient;
 
-    private final MinioTemplate minioTemplate;
-
     public SystemController(DictionaryService dictionaryService,
                             EnumerateResourceService enumerateResourceService,
                             DiscoveryClient discoveryClient,
                             ApplicationConfig applicationConfig,
                             RestTemplate restTemplate,
-                            RedissonClient redissonClient,
-                            MinioTemplate minioTemplate) {
+                            RedissonClient redissonClient) {
 
         this.dictionaryService = dictionaryService;
         this.enumerateResourceService = enumerateResourceService;
@@ -88,7 +82,6 @@ public class SystemController implements InitializingBean {
         this.applicationConfig = applicationConfig;
         this.restTemplate = restTemplate;
         this.redissonClient = redissonClient;
-        this.minioTemplate = minioTemplate;
     }
 
     /**
@@ -203,18 +196,6 @@ public class SystemController implements InitializingBean {
     }
 
     /**
-     * 获取服务枚举
-     *
-     * @return 服务枚举信息
-     */
-    @GetMapping("enumerate")
-    @PreAuthorize("isAuthenticated()")
-    @Plugin(name = "系统枚举查询", id = "enumerate", parent = "admin", icon = "icon-file-common", type = ResourceType.Menu, sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE)
-    public Map<String, Map<String, Map<String, Object>>> enumerate() {
-        return enumerateResourceService.getServiceEnumerate();
-    }
-
-    /**
      * 同步所有枚举
      *
      * @return 所有服务枚举信息
@@ -234,9 +215,21 @@ public class SystemController implements InitializingBean {
      *
      * @return 服务枚举信息
      */
+    @GetMapping("enumerate")
+    @PreAuthorize("isAuthenticated()")
+    @Plugin(name = "系统枚举查询", id = "enumerate", parent = "basic", icon = "icon-file-common", type = ResourceType.Menu, sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE)
+    public Map<String, Map<String, Map<String, Object>>> enumerate() {
+        return enumerateResourceService.getServiceEnumerate();
+    }
+
+    /**
+     * 获取服务枚举
+     *
+     * @return 服务枚举信息
+     */
     @GetMapping("environment")
     @PreAuthorize("isAuthenticated()")
-    @Plugin(name = "环境变量查询", id = "environment", parent = "admin", icon = "icon-variable", type = ResourceType.Menu, sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE)
+    @Plugin(name = "环境变量查询", id = "environment", parent = "basic", icon = "icon-variable", type = ResourceType.Menu, sources = ResourceSourceEnum.CONSOLE_SOURCE_VALUE)
     public Map<String, Object> environment() {
 
         Map<String, Object> result = new LinkedHashMap<>();
@@ -446,10 +439,10 @@ public class SystemController implements InitializingBean {
      *
      * @return 导出的文件内容
      */
-    @GetMapping("exportList")
-    @PreAuthorize("hasAuthority('perms[resource_system:export_list]')")
-    @Plugin(name = "导出数据查询", id = "export", icon = "icon-export", parent = "resources", type = ResourceType.Menu, sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE, ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE})
-    public List<ExportDataMeta> exportList(@CurrentSecurityContext SecurityContext securityContext) {
+    @GetMapping("export")
+    @PreAuthorize("hasAuthority('perms[resource:export]')")
+    @Plugin(name = "导出数据查询", id = "export", icon = "icon-export", parent = "resource", type = ResourceType.Menu, sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE, ResourceSourceEnum.MEMBER_SOURCE_VALUE})
+    public List<ExportDataMeta> export(@CurrentSecurityContext SecurityContext securityContext) {
         SecurityUserDetails securityUserDetails = Casts.cast(securityContext.getAuthentication().getDetails());
 
         String name = securityUserDetails.getId()
@@ -472,8 +465,8 @@ public class SystemController implements InitializingBean {
     }
 
     @PostMapping("deleteExport")
-    @PreAuthorize("hasAuthority('perms[resource_system:delete_export]')")
-    @Plugin(name = "删除导出数据", parent = "resources", sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE, ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE, ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE})
+    @PreAuthorize("hasAuthority('perms[resource:delete_export]')")
+    @Plugin(name = "删除导出数据", parent = "resource", sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE, ResourceSourceEnum.MEMBER_SOURCE_VALUE})
     public RestResult<?> deleteExport(@CurrentSecurityContext SecurityContext securityContext,
                                       @RequestParam List<String> ids) {
         SecurityUserDetails user = Casts.cast(securityContext.getAuthentication().getDetails());
@@ -549,11 +542,6 @@ public class SystemController implements InitializingBean {
         String key = applicationConfig.getUserImportCache().getName(name);
         RBucket<ImportDataMeta> bucket = redissonClient.getBucket(key);
         return bucket.get();
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        minioTemplate.makeBucketIfNotExists(SystemConstants.EXPORT_BUCKET);
     }
 
 }

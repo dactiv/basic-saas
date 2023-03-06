@@ -37,7 +37,7 @@ public class AttachmentConfig {
     /**
      * 桶前缀
      */
-    private String bucketPrefix = "dactiv.saas.config.attachment.";
+    private String bucketPrefix = "dactiv.saas.resource.";
 
     /**
      * 响应结果集配置

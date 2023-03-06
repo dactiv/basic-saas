@@ -28,8 +28,7 @@ dactiv:
       base-packages: com.github.dactiv.saas.workflow.controller
       generate-sources:
         - "CONSOLE"
-        - "MOBILE_MEMBER"
-        - "WECHAT_MEMBER"
+        - "MOBILE"
         - "SYSTEM"
       parent:
         workflow:
@@ -37,8 +36,7 @@ dactiv:
           icon: "icon-survey"
           sources:
             - "CONSOLE"
-            - "MOBILE_MEMBER"
-            - "WECHAT_MEMBER"
+            - "MEMBER"
     permit-uri-ant-matchers:
       - "/prepare/**"
       - "/login/**"

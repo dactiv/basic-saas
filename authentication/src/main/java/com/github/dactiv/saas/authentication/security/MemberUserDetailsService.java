@@ -70,7 +70,7 @@ public class MemberUserDetailsService extends MobileUserDetailService {
 
     @Override
     public List<String> getMobileType() {
-        return List.of(ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE);
+        return List.of(ResourceSourceEnum.APP_MEMBER_SOURCE_VALUE);
     }
 
     @Override

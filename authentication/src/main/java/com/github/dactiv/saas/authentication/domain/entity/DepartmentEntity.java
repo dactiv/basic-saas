@@ -52,7 +52,7 @@ public class DepartmentEntity extends IntegerVersionEntity<Integer> implements T
     /**
      * 部门类型
      */
-    private DepartmentTypeEnum type = DepartmentTypeEnum.TEACHER;
+    private DepartmentTypeEnum type = DepartmentTypeEnum.CONSOLE_USER;
 
     /**
      * 备注

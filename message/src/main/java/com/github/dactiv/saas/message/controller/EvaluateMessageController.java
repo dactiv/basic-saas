@@ -55,8 +55,7 @@ import java.util.Objects;
         icon = "icon-excellent",
         sources = {
                 ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                ResourceSourceEnum.MEMBER_SOURCE_VALUE
         }
 )
 public class EvaluateMessageController {

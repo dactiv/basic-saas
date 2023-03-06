@@ -65,8 +65,7 @@ public class WorkController {
             parent = "workflow",
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                    ResourceSourceEnum.MEMBER_SOURCE_VALUE
             }
     )
     public WorkEntity get(@RequestParam Integer id) {
@@ -90,8 +89,7 @@ public class WorkController {
             icon = "icon-history",
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                    ResourceSourceEnum.MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[apply:my_create]')")
@@ -130,8 +128,7 @@ public class WorkController {
             type = ResourceType.Menu,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                    ResourceSourceEnum.MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:my_submit]')")
@@ -160,8 +157,7 @@ public class WorkController {
             type = ResourceType.Menu,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                    ResourceSourceEnum.MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:copy_me]')")
@@ -188,8 +184,7 @@ public class WorkController {
             sort = 99,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                    ResourceSourceEnum.MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:my_pending]')")
@@ -237,8 +232,7 @@ public class WorkController {
             sort = 98,
             sources = {
                     ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-                    ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
-                    ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE
+                    ResourceSourceEnum.MEMBER_SOURCE_VALUE
             }
     )
     @PreAuthorize("hasAuthority('perms[work:my_processed]')")

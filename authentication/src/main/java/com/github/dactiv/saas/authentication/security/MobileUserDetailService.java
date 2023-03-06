@@ -177,7 +177,7 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
                                    SecurityUserDetails userDetails) {
 
         String type = token.getHttpServletRequest().getHeader(AuthenticationProperties.SECURITY_FORM_TYPE_HEADER_NAME);
-        if (ResourceSourceEnum.WAKE_UP_SOURCE_VALUE.equals(type)) {
+        if (ResourceSourceEnum.APP_WAKE_UP_SOURCE_VALUE.equals(type)) {
             ByteSource byteSource = deviceIdContextRepository
                     .getCipherAlgorithmService()
                     .getCipherService(CipherAlgorithmService.AES_ALGORITHM)
@@ -226,7 +226,7 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
     @Override
     public List<String> getType() {
         List<String> result = new LinkedList<>();
-        result.add(ResourceSourceEnum.WAKE_UP_SOURCE_VALUE);
+        result.add(ResourceSourceEnum.APP_WAKE_UP_SOURCE_VALUE);
 
         if (CollectionUtils.isNotEmpty(getMobileType())) {
             CollectionUtils.addAll(result, getMobileType());

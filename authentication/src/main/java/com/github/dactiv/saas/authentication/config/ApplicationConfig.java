@@ -31,8 +31,7 @@ public class ApplicationConfig {
 
     public static final List<String> DEFAULT_CAPTCHA_AUTHENTICATION_TYPES = Arrays.asList(
             ResourceSourceEnum.CONSOLE_SOURCE_VALUE,
-            ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE,
-            ResourceSourceEnum.MOBILE_MEMBER_SOURCE_VALUE,
+            ResourceSourceEnum.MEMBER_SOURCE_VALUE,
             DefaultUserDetailsService.DEFAULT_TYPES
     );
 

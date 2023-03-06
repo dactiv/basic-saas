@@ -58,12 +58,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("attachment")
 @Plugin(
-        name = "附件管理",
+        name = "上传内容管理",
         id = "attachment",
-        parent = "resources",
+        parent = "resource",
         icon = "icon-upload",
         type = ResourceType.Menu,
-        sources = {ResourceSourceEnum.SYSTEM_SOURCE_VALUE}
+        sources = {ResourceSourceEnum.CONSOLE_SOURCE_VALUE}
 )
 public class AttachmentController {
 
