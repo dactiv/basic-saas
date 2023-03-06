@@ -31,4 +31,20 @@ public class MemberUserRegisterConfig {
      * 随机密码位数
      */
     private int randomPasswordCount = 16;
+
+    /**
+     * 验证码验证名称
+     */
+    private String captchaParamName = "_smsCaptcha";
+
+    /**
+     * 对应验证码类型的 token 参数名称
+     */
+    private String captchaTokenParamName = "_smsCaptchaToken";
+
+    /**
+     * 登陆账户的参数名
+     */
+    private String captchaUsernameParamName = "phoneNumber";
+
 }

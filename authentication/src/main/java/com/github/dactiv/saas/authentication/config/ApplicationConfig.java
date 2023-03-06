@@ -106,6 +106,8 @@ public class ApplicationConfig {
      */
     private String wakeUpParamName = "token";
 
+
+
     /**
      * 缓存配置
      */

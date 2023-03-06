@@ -19,33 +19,23 @@ import com.github.dactiv.framework.spring.web.device.DeviceUtils;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
 import com.github.dactiv.saas.authentication.security.handler.CaptchaAuthenticationSuccessResponse;
-import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
-import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
-import com.github.dactiv.saas.commons.domain.meta.wechat.PhoneInfoMeta;
-import com.github.dactiv.saas.commons.domain.meta.wechat.SimpleWechatUserDetailsMeta;
-import com.github.dactiv.saas.commons.domain.meta.wechat.WechatAccountMeta;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
-import com.github.dactiv.saas.commons.service.WechatService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import nl.basjes.parse.useragent.UserAgent;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBucket;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
 import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,15 +46,15 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public abstract class MobileUserDetailService extends AbstractUserDetailsService<SystemUserEntity> {
 
-    private final ApplicationConfig applicationConfig;
+    public static final String IS_MOBILE_PATTERN_STRING = "^[1](([3|5|8][\\d])|([4][4,5,6,7,8,9])|([6][2,5,6,7])|([7][^9])|([9][1,8,9]))[\\d]{8}$";
 
-    private final PasswordEncoder passwordEncoder;
+    protected final ApplicationConfig applicationConfig;
+
+    protected final PasswordEncoder passwordEncoder;
 
     private final AuthorizationService authorizationService;
 
     private final AuthenticationProperties authenticationProperties;
-
-    private final WechatService wechatService;
 
     private final DeviceIdContextRepository deviceIdContextRepository;
 
@@ -72,64 +62,16 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
                                    PasswordEncoder passwordEncoder,
                                    AuthorizationService authorizationService,
                                    AuthenticationProperties authenticationProperties,
-                                   DeviceIdContextRepository deviceIdContextRepository,
-                                   WechatService wechatService) {
+                                   DeviceIdContextRepository deviceIdContextRepository) {
         super(authenticationProperties);
         this.applicationConfig = applicationConfig;
         this.passwordEncoder = passwordEncoder;
         this.authorizationService = authorizationService;
         this.authenticationProperties = authenticationProperties;
         this.deviceIdContextRepository = deviceIdContextRepository;
-        this.wechatService = wechatService;
     }
 
     public abstract List<String> getMobileType();
-
-    public abstract List<String> getWechatType();
-
-    @Override
-    public Authentication createToken(HttpServletRequest request, HttpServletResponse response, String type) {
-
-        if (getWechatType().contains(type)) {
-            String username = obtainUsername(request);
-            username = StringUtils.defaultString(username, StringUtils.EMPTY).trim();
-            SimpleWechatUserDetailsMeta meta = wechatAppletLogin(wechatService.getWechatProperties().getApplet(), username);
-            WechatAuthenticationToken result = new WechatAuthenticationToken(request, response, type, meta);
-            String phoneNumberCode = request.getParameter(wechatService.getWechatProperties().getPhoneNumberCodeParamName());
-
-            if (StringUtils.isNotBlank(phoneNumberCode)) {
-                PhoneInfoMeta phoneInfo = wechatService.getAppletPhoneNumber(phoneNumberCode);
-                result.setPhoneInfo(phoneInfo);
-            }
-
-            return result;
-        } else {
-            return super.createToken(request, response, type);
-        }
-    }
-
-    @Override
-    public PrincipalAuthenticationToken createSuccessAuthentication(SecurityUserDetails userDetails, PrincipalAuthenticationToken token, Collection<? extends GrantedAuthority> grantedAuthorities) {
-
-        if (WechatAuthenticationToken.class.isAssignableFrom(token.getClass())) {
-            WechatAuthenticationToken wechatAuthenticationToken = Casts.cast(token);
-            updateWechatSessionKey(userDetails, wechatAuthenticationToken);
-
-            userDetails.getMeta().put(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_KEY, wechatAuthenticationToken.getUserDetails());
-            userDetails.getMeta().put(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_PHONE_KEY, wechatAuthenticationToken.getPhoneInfo());
-        }
-
-        ResourceSourceEnum sourceEnum = ResourceSourceEnum.of(token.getType());
-        Assert.isTrue(Objects.nonNull(sourceEnum), "找不到枚举值为 [" + token.getType() + "] 的资源来源类型");
-
-        return new PrincipalAuthenticationToken(
-                new UsernamePasswordAuthenticationToken(token.getPrincipal(), token.getCredentials()),
-                sourceEnum.toString(),
-                userDetails,
-                grantedAuthorities,
-                false
-        );
-    }
 
     @Override
     public boolean preAuthenticationCache(PrincipalAuthenticationToken token, SecurityUserDetails userDetails, CacheProperties authenticationCache) {
@@ -164,21 +106,6 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
     }
 
     @Override
-    public void onSuccessAuthentication(PrincipalAuthenticationToken result, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String code = request.getParameter(wechatService.getWechatProperties().getSuccessAuthenticationBuildParamName());
-
-        if (StringUtils.isNotBlank(code)) {
-            SimpleWechatUserDetailsMeta meta = wechatAppletLogin(wechatService.getWechatProperties().getApplet(), code);
-            buildWechatUserDetailsMeta(meta, result);
-        }
-
-    }
-
-    protected abstract void buildWechatUserDetailsMeta(SimpleWechatUserDetailsMeta meta, PrincipalAuthenticationToken result);
-
-    protected abstract void updateWechatSessionKey(SecurityUserDetails userDetails, WechatAuthenticationToken token);
-
-    @Override
     public SecurityUserDetails getAuthenticationUserDetails(RequestAuthenticationToken token) throws AuthenticationException {
         String type = token.getHttpServletRequest().getHeader(authenticationProperties.getTypeHeaderName());
 
@@ -193,47 +120,31 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
 
         if (getMobileType().contains(type)) {
 
-            user = getBasicAuthenticationSystemUser(token);
+            user = getMobileTypeSystemUser(token);
             if (Objects.isNull(user)) {
-                throw new UsernameNotFoundException("用户名或密码错误");
+                throw new BadCredentialsException("登陆账号于密码不正确");
             }
             password = user.getPassword();
 
-        } else if (getWechatType().contains(type)) {
-
-            WechatAuthenticationToken wechatAuthenticationToken = Casts.cast(token);
-
-            user = getWechatTypeSystemUser(wechatAuthenticationToken);
-
-            if (Objects.isNull(user)) {
-                throw new AuthenticationCredentialsNotFoundException("通过微信信息找不到用户数据，请重新使用用户名密码登陆。");
-            }
         } else {
-            throw new InsufficientAuthenticationException("MobileUserDetailService 认证不支持 [" + type + "] 的认证过程。");
+            user = getWakeUpTypeSystemUser(token);
+            if (Objects.isNull(user)) {
+                throw new BadCredentialsException("登陆账号于密码不正确");
+            }
         }
 
         if (UserStatus.Disabled.equals(user.getStatus())) {
             throw new DisabledException("您的账号已被禁用。");
         }
 
-        SecurityUserDetails details;
-        if (getMobileType().contains(type) || getWechatType().contains(type)) {
-            UserAgent device = DeviceUtils.getRequiredCurrentDevice(token.getHttpServletRequest());
-            details = new MobileUserDetails(
-                    user.getId(),
-                    user.getUsername(),
-                    password,
-                    deviceId,
-                    device
-            );
-        } else {
-            details = new SecurityUserDetails(
-                    user.getId(),
-                    user.getUsername(),
-                    password,
-                    user.getStatus()
-            );
-        }
+        UserAgent device = DeviceUtils.getRequiredCurrentDevice(token.getHttpServletRequest());
+        MobileUserDetails details = new MobileUserDetails(
+                user.getId(),
+                user.getUsername(),
+                password,
+                deviceId,
+                device
+        );
 
         ResourceSourceEnum source = Objects.requireNonNull(ResourceSourceEnum.of(token.getType()), "找不单类型为 [" + token.getType() + "] 的资源枚举");
         RoleAuthority role = new RoleAuthority(source.getName(), source.toString());
@@ -250,28 +161,7 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
         return details;
     }
 
-    @SuppressWarnings("unchecked")
-    public SimpleWechatUserDetailsMeta wechatAppletLogin(WechatAccountMeta wechatAccountMeta, String code) {
-        String url = MessageFormat.format("https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code", wechatAccountMeta.getAppId(), wechatAccountMeta.getSecret(), code);
-        ResponseEntity<String> result = wechatService.getRestTemplate().getForEntity(url, String.class);
-
-        String bodyString = StringUtils.defaultString(result.getBody(), StringUtils.EMPTY);
-        if (StringUtils.isEmpty(bodyString)) {
-            wechatService.throwSystemExceptionIfError(new LinkedHashMap<>());
-        }
-
-        Map<String, Object> body = Casts.readValue(result.getBody(), Map.class);
-        if (log.isDebugEnabled()) {
-            log.debug("微信小程序登陆，响应结果为:" + body);
-        }
-        if (wechatService.isSuccess(new ResponseEntity<>(body, result.getHeaders(), result.getStatusCode()))) {
-            return SimpleWechatUserDetailsMeta.of(body);
-        } else {
-            wechatService.throwSystemExceptionIfError(body);
-        }
-
-        return null;
-    }
+    protected abstract SystemUserEntity getWakeUpTypeSystemUser(RequestAuthenticationToken token);
 
     /**
      * 获取基础的认证用户明细
@@ -279,15 +169,7 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
      * @param token 请求认证 token
      * @return 系统用户
      */
-    protected abstract SystemUserEntity getBasicAuthenticationSystemUser(RequestAuthenticationToken token);
-
-    /**
-     * 获取微信来源类型的系统用户
-     *
-     * @param token 请求认证 token
-     * @return 系统用户
-     */
-    protected abstract SystemUserEntity getWechatTypeSystemUser(RequestAuthenticationToken token);
+    protected abstract SystemUserEntity getMobileTypeSystemUser(RequestAuthenticationToken token);
 
     @Override
     public boolean matchesPassword(String presentedPassword,
@@ -295,9 +177,7 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
                                    SecurityUserDetails userDetails) {
 
         String type = token.getHttpServletRequest().getHeader(AuthenticationProperties.SECURITY_FORM_TYPE_HEADER_NAME);
-        if (getWechatType().contains(type)) {
-            return true;
-        } else if (ResourceSourceEnum.WAKE_UP_SOURCE_VALUE.equals(type)) {
+        if (ResourceSourceEnum.WAKE_UP_SOURCE_VALUE.equals(type)) {
             ByteSource byteSource = deviceIdContextRepository
                     .getCipherAlgorithmService()
                     .getCipherService(CipherAlgorithmService.AES_ALGORITHM)
@@ -347,10 +227,6 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
     public List<String> getType() {
         List<String> result = new LinkedList<>();
         result.add(ResourceSourceEnum.WAKE_UP_SOURCE_VALUE);
-
-        if (CollectionUtils.isNotEmpty(getWechatType())) {
-            CollectionUtils.addAll(result, getWechatType());
-        }
 
         if (CollectionUtils.isNotEmpty(getMobileType())) {
             CollectionUtils.addAll(result, getMobileType());

@@ -4,7 +4,6 @@ import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.enumerate.support.DisabledOrEnabled;
 import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
-import com.github.dactiv.framework.commons.minio.Bucket;
 import com.github.dactiv.framework.commons.minio.FileObject;
 import com.github.dactiv.framework.idempotent.ConcurrentConfig;
 import com.github.dactiv.framework.idempotent.advisor.concurrent.ConcurrentInterceptor;
@@ -18,13 +17,11 @@ import com.github.dactiv.saas.message.domain.entity.EmailMessageEntity;
 import com.github.dactiv.saas.message.service.EmailMessageService;
 import com.github.dactiv.saas.message.service.basic.BatchMessageSender;
 import com.rabbitmq.client.Channel;
-import io.minio.GetObjectResponse;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.Exchange;
@@ -172,9 +169,10 @@ public class EmailMessageSender extends BatchMessageSender<EmailMessageBody, Ema
                                 attachmentConfig.getBucketName(DEFAULT_TYPE),
                                 a.getName()
                         );
-                        GetObjectResponse response = minioTemplate.getObject(fileObject);
+                        byte[] file = configServiceFeignClient.getFile(fileObject.getBucketName(), fileObject.getObjectName());
 
-                        iss = new ByteArrayResource(IOUtils.toByteArray(response));
+
+                        iss = new ByteArrayResource(file);
                     }
 
                     helper.addAttachment(a.getName(), iss);
@@ -268,9 +266,8 @@ public class EmailMessageSender extends BatchMessageSender<EmailMessageBody, Ema
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         config.getAccounts().entrySet().forEach(this::generateMailSender);
-        minioTemplate.makeBucketIfNotExists(Bucket.of(attachmentConfig.getBucketName(getMessageType())));
     }
 
     /**

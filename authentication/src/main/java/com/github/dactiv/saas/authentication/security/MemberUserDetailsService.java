@@ -1,6 +1,7 @@
 package com.github.dactiv.saas.authentication.security;
 
 import com.github.dactiv.framework.commons.Casts;
+import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.exception.ServiceException;
 import com.github.dactiv.framework.security.entity.TypeUserDetails;
 import com.github.dactiv.framework.security.enumerate.UserStatus;
@@ -14,22 +15,23 @@ import com.github.dactiv.saas.authentication.config.MemberUserRegisterConfig;
 import com.github.dactiv.saas.authentication.domain.entity.MemberUserEntity;
 import com.github.dactiv.saas.authentication.domain.entity.SystemUserEntity;
 import com.github.dactiv.saas.authentication.domain.meta.MemberUserInitializationMeta;
-import com.github.dactiv.saas.authentication.security.token.WechatAuthenticationToken;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.authentication.service.MemberUserService;
-import com.github.dactiv.saas.commons.domain.meta.wechat.SimpleWechatUserDetailsMeta;
+import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
-import com.github.dactiv.saas.commons.service.WechatService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.github.dactiv.saas.commons.feign.ConfigServiceFeignClient;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 会员用户明细认证授权服务实现
@@ -43,25 +45,27 @@ public class MemberUserDetailsService extends MobileUserDetailService {
 
     private final MemberUserRegisterConfig memberUserRegisterConfig;
 
+    private final ConfigServiceFeignClient configServiceFeignClient;
+
     public MemberUserDetailsService(ApplicationConfig applicationConfig,
                                     MemberUserRegisterConfig memberUserRegisterConfig,
                                     PasswordEncoder passwordEncoder,
                                     AuthorizationService authorizationService,
                                     AuthenticationProperties authenticationProperties,
                                     DeviceIdContextRepository deviceIdContextRepository,
-                                    WechatService wechatService,
-                                    MemberUserService memberUserService) {
+                                    MemberUserService memberUserService,
+                                    ConfigServiceFeignClient configServiceFeignClient) {
         super(
                 applicationConfig,
                 passwordEncoder,
                 authorizationService,
                 authenticationProperties,
-                deviceIdContextRepository,
-                wechatService
+                deviceIdContextRepository
         );
 
         this.memberUserRegisterConfig = memberUserRegisterConfig;
         this.memberUserService = memberUserService;
+        this.configServiceFeignClient = configServiceFeignClient;
     }
 
     @Override
@@ -70,39 +74,24 @@ public class MemberUserDetailsService extends MobileUserDetailService {
     }
 
     @Override
-    public List<String> getWechatType() {
-        return List.of(ResourceSourceEnum.WECHAT_MEMBER_SOURCE_VALUE);
+    protected SystemUserEntity getWakeUpTypeSystemUser(RequestAuthenticationToken token) {
+        return memberUserService.getByUsername(token.getPrincipal().toString());
     }
 
     @Override
-    protected void buildWechatUserDetailsMeta(SimpleWechatUserDetailsMeta meta, PrincipalAuthenticationToken result) {
+    protected SystemUserEntity getMobileTypeSystemUser(RequestAuthenticationToken token) {
+        SystemUserEntity result = memberUserService.getByUsername(token.getPrincipal().toString());
 
-        if (!SecurityUserDetails.class.isAssignableFrom(result.getDetails().getClass())) {
-            return ;
-        }
-        SecurityUserDetails userDetails = Casts.cast(result.getDetails());
-        MemberUserEntity entity = memberUserService.get(Casts.cast(userDetails.getId(), Integer.class));
-        memberUserService.buildWechatUserDetails(meta, entity);
-    }
+        if (Objects.isNull(result)) {
+            String phone = token.getPrincipal().toString();
 
-    @Override
-    protected void updateWechatSessionKey(SecurityUserDetails userDetails, WechatAuthenticationToken token) {
-        MemberUserEntity entity = memberUserService.get(Casts.cast(userDetails.getId(), Integer.class));
-        if (StringUtils.isEmpty(entity.getOpenId())) {
-            entity.setOpenId(token.getUserDetails().getOpenId());
-        }
-        memberUserService.updateWechatSessionKey(entity, token.getUserDetails().getSessionKey());
-    }
-
-    @Override
-    protected SystemUserEntity getBasicAuthenticationSystemUser(RequestAuthenticationToken token) {
-        MemberUserEntity user = memberUserService.getByUsername(token.getPrincipal().toString());
-
-        if (Objects.isNull(user)) {
-            user = createMemberUser(token.getPrincipal().toString());
+            if (!StringUtils.isNumeric(phone) || !Pattern.compile(IS_MOBILE_PATTERN_STRING).matcher(phone).matches()) {
+                throw new BadCredentialsException("手机号码不正确");
+            }
+            result = createMemberUser(phone);
         }
 
-        return user;
+        return result;
     }
 
     private MemberUserEntity createMemberUser(String phoneNumber) {
@@ -115,25 +104,12 @@ public class MemberUserDetailsService extends MobileUserDetailService {
         user.setStatus(UserStatus.Enabled);
         user.setInitializationMeta(new MemberUserInitializationMeta());
 
-        memberUserService.insert(user);
-
         return user;
     }
 
     private String generateRandomPassword() {
         String key = RandomStringUtils.randomAlphanumeric(memberUserRegisterConfig.getRandomUsernameCount()) + System.currentTimeMillis();
         return DigestUtils.md5DigestAsHex(key.getBytes());
-    }
-
-    @Override
-    protected SystemUserEntity getWechatTypeSystemUser(RequestAuthenticationToken token) {
-        WechatAuthenticationToken wechatAuthenticationToken = Casts.cast(token);
-        MemberUserEntity user = memberUserService.getByWechatAuthenticationToken(wechatAuthenticationToken);
-        if (Objects.isNull(user)) {
-            user = createMemberUser(wechatAuthenticationToken.getPrincipal().toString());
-        }
-
-        return user;
     }
 
     @Override
@@ -144,6 +120,37 @@ public class MemberUserDetailsService extends MobileUserDetailService {
     @Override
     public SystemUserEntity convertTargetUser(TypeUserDetails<?> userDetails) {
         return memberUserService.get(Casts.cast(userDetails.getUserId(), Integer.class));
+    }
+
+    @Override
+    public boolean matchesPassword(String presentedPassword, RequestAuthenticationToken token, SecurityUserDetails userDetails) {
+        String type = token.getHttpServletRequest().getHeader(AuthenticationProperties.SECURITY_FORM_TYPE_HEADER_NAME);
+        if (getMobileType().contains(type)) {
+            Map<String, Object> params = new LinkedHashMap<>();
+
+            String tokenValue = token.getHttpServletRequest().getParameter(
+                    memberUserRegisterConfig.getCaptchaTokenParamName()
+            );
+
+            params.put(memberUserRegisterConfig.getCaptchaTokenParamName(), tokenValue);
+            params.put(memberUserRegisterConfig.getCaptchaParamName(), presentedPassword);
+            params.put(memberUserRegisterConfig.getCaptchaUsernameParamName(), token.getPrincipal().toString());
+
+            try {
+
+                RestResult<Map<String, Object>> result = configServiceFeignClient.verifyCaptcha(params);
+
+                if (result.getStatus() == HttpStatus.OK.value()) {
+                    return true;
+                } else {
+                    throw new BadCredentialsException(result.getMessage());
+                }
+
+            } catch (Exception e) {
+                throw new AuthenticationServiceException("调用验证码服务出现异常", e);
+            }
+        }
+        return super.matchesPassword(presentedPassword, token, userDetails);
     }
 
     @Override
@@ -159,19 +166,14 @@ public class MemberUserDetailsService extends MobileUserDetailService {
     }
 
     @Override
-    public void onSuccessAuthentication(PrincipalAuthenticationToken result, HttpServletRequest request, HttpServletResponse response) {
-
-        if (!WechatAuthenticationToken.class.isAssignableFrom(result.getClass())) {
-            return ;
-        }
-        WechatAuthenticationToken token = Casts.cast(result);
-        MemberUserEntity entity = Casts.cast(token.getDetails());
-
-        if (entity.getSessionKey().equals(token.getUserDetails().getSessionKey())) {
-            return ;
+    public PrincipalAuthenticationToken createSuccessAuthentication(SecurityUserDetails userDetails, PrincipalAuthenticationToken token, Collection<? extends GrantedAuthority> grantedAuthorities) {
+        if (Objects.nonNull(userDetails.getId())) {
+            MemberUserEntity newOne = MemberUserEntity.of(userDetails);
+            memberUserService.insert(newOne);
+            userDetails.setId(newOne.getId());
+            userDetails.getMeta().put(SecurityUserDetailsConstants.SECURITY_DETAILS_NEW_USER_KEY, true);
         }
 
-        entity.setSessionKey(token.getUserDetails().getSessionKey());
-        memberUserService.updateById(entity);
+        return super.createSuccessAuthentication(userDetails, token, grantedAuthorities);
     }
 }

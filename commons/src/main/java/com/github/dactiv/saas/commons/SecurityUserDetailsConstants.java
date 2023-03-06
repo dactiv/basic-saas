@@ -26,13 +26,17 @@ public interface SecurityUserDetailsConstants {
 
     String SECURITY_DETAILS_PHONE_NUMBER_KEY = "phoneNumber";
 
-    String SECURITY_DETAILS_DEPARTMENT_KEY = "departmentsInfo";
+    String SECURITY_DETAILS_ID_CARD_NUMBER_KEY = "idCardNumber";
+
+    String SECURITY_DETAILS_INITIALIZATION_META_KEY = "initializationMeta";
+
+    String SECURITY_DETAILS_DEPARTMENT_KEY = "departmentMetas";
 
     String SECURITY_DETAILS_GENDER_KEY = "gender";
 
-    String SECURITY_DETAILS_WECHAT_KEY = "wechatDetails";
+    String SECURITY_DETAILS_WECHAT_META_KEY = "wechatMeta";
 
-    String SECURITY_DETAILS_WECHAT_PHONE_KEY = "wechatPhoneInfo";
+    String SECURITY_DETAILS_NEW_USER_KEY = "isNew";
 
     String USER_ID_TABLE_FIELD = "user_id";
 

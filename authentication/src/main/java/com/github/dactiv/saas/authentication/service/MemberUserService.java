@@ -20,17 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class MemberUserService extends BasicService<MemberUserDao, MemberUserEntity> implements WechatAuthenticationService<MemberUserEntity> {
-
-    @Override
-    public MemberUserEntity getByPhoneNumber(String phoneNumber) {
-        return lambdaQuery().eq(MemberUserEntity::getPhoneNumber, phoneNumber).one();
-    }
-
-    @Override
-    public MemberUserEntity getByWechatOpenId(String openId) {
-        return lambdaQuery().eq(MemberUserEntity::getOpenId, openId).one();
-    }
+public class MemberUserService extends BasicService<MemberUserDao, MemberUserEntity>  {
 
     /**
      * 通过登陆账户获取教师信息

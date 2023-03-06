@@ -53,7 +53,7 @@ public class ConsoleUserDepartmentResolver implements DepartmentResolver {
     public void postDelete(DepartmentEntity entity) {
         find(entity, null)
                 .stream()
-                .peek(t -> t.getDepartmentsInfo().removeIf(d -> entity.getId().equals(d.getId())))
+                .peek(t -> t.getDepartmentsMetas().removeIf(d -> entity.getId().equals(d.getId())))
                 .forEach(consoleUserService::save);
     }
 
@@ -61,7 +61,7 @@ public class ConsoleUserDepartmentResolver implements DepartmentResolver {
     public void removeUser(DepartmentEntity entity, List<Integer> userIds) {
         find(entity, userIds)
                 .stream()
-                .peek(c -> c.getDepartmentsInfo().removeIf(d -> d.getId().equals(entity.getId())))
+                .peek(c -> c.getDepartmentsMetas().removeIf(d -> d.getId().equals(entity.getId())))
                 .forEach(consoleUserService::save);
     }
 

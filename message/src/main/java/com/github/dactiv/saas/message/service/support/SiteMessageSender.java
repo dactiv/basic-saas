@@ -6,7 +6,6 @@ import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.commons.enumerate.support.DisabledOrEnabled;
 import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
 import com.github.dactiv.framework.commons.id.IdEntity;
-import com.github.dactiv.framework.commons.minio.Bucket;
 import com.github.dactiv.framework.idempotent.ConcurrentConfig;
 import com.github.dactiv.framework.idempotent.advisor.concurrent.ConcurrentInterceptor;
 import com.github.dactiv.framework.spring.web.mvc.SpringMvcUtils;
@@ -32,7 +31,6 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -50,7 +48,7 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @Component
-public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteMessageEntity> implements InitializingBean {
+public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteMessageEntity>  {
 
     public static final String DEFAULT_QUEUE_NAME = "dactiv.saas.message.site.queue";
 
@@ -271,10 +269,5 @@ public class SiteMessageSender extends BatchMessageSender<SiteMessageBody, SiteM
     @Override
     protected List<SiteMessageEntity> getBatchMessageBodyContent(List<SiteMessageBody> result) {
         return result.stream().flatMap(this::createSiteMessage).toList();
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        minioTemplate.makeBucketIfNotExists(Bucket.of(attachmentConfig.getBucketName(getMessageType())));
     }
 }

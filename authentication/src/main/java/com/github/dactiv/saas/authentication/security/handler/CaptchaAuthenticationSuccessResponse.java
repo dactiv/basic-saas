@@ -103,8 +103,7 @@ public class CaptchaAuthenticationSuccessResponse implements JsonAuthenticationS
 
         if (MapUtils.isNotEmpty(userDetails.getMeta())) {
             Map<String, Object> meta = new LinkedHashMap<>(userDetails.getMeta());
-            meta.remove(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_PHONE_KEY);
-            meta.remove(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_KEY);
+            meta.remove(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_META_KEY);
             userDetails.setMeta(meta);
         }
     }

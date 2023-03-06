@@ -94,18 +94,18 @@ public class ConsoleUserService extends BasicService<ConsoleUserDao, ConsoleUser
                     .getPasswordEncoder();
 
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-            syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
+            syncDepartments.addAll(entity.getDepartmentsMetas().stream().map(IdEntity::getId).toList());
         } else {
             ConsoleUserEntity ormEntity = Objects.requireNonNull(get(entity.getId()), "找不到 ID 为 [" + entity.getId() + "] 的后台用户信息");
-            if (CollectionUtils.isNotEmpty(ormEntity.getDepartmentsInfo())) {
+            if (CollectionUtils.isNotEmpty(ormEntity.getDepartmentsMetas())) {
                 ormEntity
-                        .getDepartmentsInfo()
+                        .getDepartmentsMetas()
                         .stream()
-                        .filter(s -> entity.getDepartmentsInfo().stream().noneMatch(n -> n.getId().equals(s.getId())))
+                        .filter(s -> entity.getDepartmentsMetas().stream().noneMatch(n -> n.getId().equals(s.getId())))
                         .map(IdEntity::getId)
                         .forEach(syncDepartments::add);
-            } else if (CollectionUtils.isNotEmpty(entity.getDepartmentsInfo())) {
-                syncDepartments.addAll(entity.getDepartmentsInfo().stream().map(IdEntity::getId).toList());
+            } else if (CollectionUtils.isNotEmpty(entity.getDepartmentsMetas())) {
+                syncDepartments.addAll(entity.getDepartmentsMetas().stream().map(IdEntity::getId).toList());
             }
         }
 

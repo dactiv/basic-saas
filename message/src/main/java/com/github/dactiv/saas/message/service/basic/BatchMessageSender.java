@@ -7,9 +7,9 @@ import com.github.dactiv.framework.commons.enumerate.support.ExecuteStatus;
 import com.github.dactiv.framework.commons.exception.SystemException;
 import com.github.dactiv.framework.commons.minio.FileObject;
 import com.github.dactiv.framework.commons.retry.Retryable;
-import com.github.dactiv.framework.minio.MinioTemplate;
 import com.github.dactiv.saas.commons.domain.meta.AttachmentMeta;
 import com.github.dactiv.saas.commons.feign.AuthenticationServiceFeignClient;
+import com.github.dactiv.saas.commons.feign.ConfigServiceFeignClient;
 import com.github.dactiv.saas.message.config.AttachmentConfig;
 import com.github.dactiv.saas.message.domain.AttachmentMessage;
 import com.github.dactiv.saas.message.domain.entity.BasicMessageEntity;
@@ -17,9 +17,7 @@ import com.github.dactiv.saas.message.domain.entity.BatchMessageEntity;
 import com.github.dactiv.saas.message.enumerate.AttachmentTypeEnum;
 import com.github.dactiv.saas.message.service.BatchMessageService;
 import com.rabbitmq.client.Channel;
-import io.minio.GetObjectResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
@@ -50,7 +48,7 @@ public abstract class BatchMessageSender<T extends BasicMessageEntity, S extends
     /**
      * 文件管理服务
      */
-    protected MinioTemplate minioTemplate;
+    protected ConfigServiceFeignClient configServiceFeignClient;
 
     /**
      * 附件配置信息
@@ -211,8 +209,8 @@ public abstract class BatchMessageSender<T extends BasicMessageEntity, S extends
         for (AttachmentMeta a : attachments) {
             FileObject fileObject = FileObject.of(attachmentConfig.getBucketName(getMessageType()), a.getName());
             try {
-                GetObjectResponse response = minioTemplate.getObject(fileObject);
-                map.put(a.getName(), IOUtils.toByteArray(response));
+                byte[] file = configServiceFeignClient.getFile(fileObject.getBucketName(), fileObject.getObjectName());
+                map.put(a.getName(), file);
             } catch (Exception e) {
                 log.error("读取 [" + a.getName() + "] 附件信息出现", e);
             }
@@ -268,11 +266,6 @@ public abstract class BatchMessageSender<T extends BasicMessageEntity, S extends
     @Autowired
     public void setBatchMessageService(BatchMessageService batchMessageService) {
         this.batchMessageService = batchMessageService;
-    }
-
-    @Autowired
-    public void setMinioTemplate(MinioTemplate minioTemplate) {
-        this.minioTemplate = minioTemplate;
     }
 
     @Autowired

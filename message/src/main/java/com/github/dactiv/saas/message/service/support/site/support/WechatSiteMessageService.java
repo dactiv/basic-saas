@@ -66,7 +66,7 @@ public class WechatSiteMessageService implements SiteMessageChannelSender {
 
         Map<String, Object> map = authenticationServiceFeignClient.getSystemUser(userDetails);
 
-        if (!map.containsKey(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_KEY)) {
+        if (!map.containsKey(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_META_KEY)) {
             return RestResult.of(
                     "ID 为 [" + message.getUserId() + "] 类型为 [" + message.getUserType() + "] 的用户未绑定微信，无需推送消息。",
                     HttpStatus.NOT_FOUND.value(),
@@ -89,7 +89,7 @@ public class WechatSiteMessageService implements SiteMessageChannelSender {
             );
         }
 
-        WechatUserDetails wechatUserDetails = Casts.convertValue(map.get(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_KEY), SimpleWechatUserDetailsMeta.class);
+        WechatUserDetails wechatUserDetails = Casts.convertValue(map.get(SecurityUserDetailsConstants.SECURITY_DETAILS_WECHAT_META_KEY), SimpleWechatUserDetailsMeta.class);
         List<WechatMessageTemplateSender> senders = messageTemplateSenders
                 .stream()
                 .filter(s -> ids.stream().anyMatch(id -> s.isSupport(id.toString())))

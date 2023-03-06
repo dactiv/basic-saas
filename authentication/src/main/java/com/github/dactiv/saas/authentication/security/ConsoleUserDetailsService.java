@@ -37,8 +37,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ConsoleUserDetailsService extends AbstractUserDetailsService<ConsoleUserEntity> {
 
-    public static final String IS_MOBILE_PATTERN_STRING = "^[1](([3|5|8][\\d])|([4][4,5,6,7,8,9])|([6][2,5,6,7])|([7][^9])|([9][1,8,9]))[\\d]{8}$";
-
     private final AuthorizationService authorizationService;
 
     private final ConsoleUserService consoleUserService;

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.dactiv.framework.commons.annotation.JsonCollectionGenericType;
 import com.github.dactiv.framework.mybatis.handler.JacksonJsonTypeHandler;
 import com.github.dactiv.saas.authentication.domain.PhoneNumberUserDetails;
-import com.github.dactiv.saas.authentication.security.ConsoleUserDetailsService;
+import com.github.dactiv.saas.authentication.security.MobileUserDetailService;
 import com.github.dactiv.saas.commons.SecurityUserDetailsConstants;
 import com.github.dactiv.saas.commons.domain.meta.IdNameMeta;
 import jakarta.validation.constraints.NotEmpty;
@@ -52,7 +52,7 @@ public class ConsoleUserEntity extends SystemUserEntity implements PhoneNumberUs
      * 联系电话
      */
     @Length(max = 32)
-    @Pattern(regexp = ConsoleUserDetailsService.IS_MOBILE_PATTERN_STRING)
+    @Pattern(regexp = MobileUserDetailService.IS_MOBILE_PATTERN_STRING)
     private String phoneNumber;
 
     /**
@@ -60,7 +60,7 @@ public class ConsoleUserEntity extends SystemUserEntity implements PhoneNumberUs
      */
     @JsonCollectionGenericType(IdNameMeta.class)
     @TableField(typeHandler = JacksonJsonTypeHandler.class)
-    private List<IdNameMeta> departmentsInfo;
+    private List<IdNameMeta> departmentsMetas;
 
     /**
      * 备注
@@ -79,8 +79,8 @@ public class ConsoleUserEntity extends SystemUserEntity implements PhoneNumberUs
             result.put(SecurityUserDetailsConstants.SECURITY_DETAILS_REAL_NAME_KEY, realName);
         }
 
-        if (CollectionUtils.isNotEmpty(departmentsInfo)) {
-            result.put(SecurityUserDetailsConstants.SECURITY_DETAILS_DEPARTMENT_KEY, departmentsInfo);
+        if (CollectionUtils.isNotEmpty(departmentsMetas)) {
+            result.put(SecurityUserDetailsConstants.SECURITY_DETAILS_DEPARTMENT_KEY, departmentsMetas);
         }
         return result;
     }
