@@ -12,11 +12,12 @@ spring:
         event:
           enabled: true
         server-addr: @spring.cloud.discovery.address@
+        group: SAAS
         metadata:
           version: ${info.version}
           name: ${info.name}
           artifact-id: ${info.artifact-id}
-          group-id: ${info.group-id}、
+          group-id: ${info.group-id}
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         file-extension: yml

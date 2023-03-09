@@ -28,6 +28,11 @@ public class PluginInstance extends Instance {
     private Version version;
 
     /**
+     * 分组信息
+     */
+    private String group;
+
+    /**
      * info 信息
      */
     private Map<String, Object> info;

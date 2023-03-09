@@ -10,6 +10,7 @@ spring:
     nacos:
       discovery:
         server-addr: @spring.cloud.discovery.address@
+        group: SAAS
         metadata:
           version: ${info.version}
           name: ${info.name}

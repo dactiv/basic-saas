@@ -145,7 +145,7 @@ public class PluginResourceService {
         Optional<Instance> optional = instances.stream().max(this::comparingInstanceVersion);
 
         if (optional.isEmpty()) {
-            log.warn("找不到服务为 [" + serviceName + "] 的最多版本实例");
+            log.warn("找不到服务为 [" + groupName + "][" + serviceName + "] 的最多版本实例");
             return;
         }
 
@@ -156,6 +156,7 @@ public class PluginResourceService {
         PluginInstance pluginInstance = Casts.of(instance, PluginInstance.class);
         pluginInstance.setServiceName(serviceName);
         pluginInstance.setVersion(version);
+        pluginInstance.setGroup(groupName);
 
         List<PluginInstance> cache = instanceCache.computeIfAbsent(groupName, k -> new LinkedList<>());
 
@@ -199,7 +200,7 @@ public class PluginResourceService {
         String applicationName = instance.getServiceName();
 
         if (log.isDebugEnabled()) {
-            log.debug("开始绑定[" + applicationName + "]资源信息，当前版本为:" + instance.getVersion());
+            log.debug("开始绑定组为 [" + instance.getGroup() + "] 的 [" + applicationName + " " + instance.getVersion() + "] 应用资源信息");
         }
 
         List<PluginInfo> pluginList = createPluginInfoListFromInfo(instance.getInfo());
@@ -215,7 +216,7 @@ public class PluginResourceService {
         resources.addAll(unmergeResourceList);
 
         if (log.isDebugEnabled()) {
-            log.debug("绑定 [" + applicationName + "] 资源信息完成");
+            log.debug("绑定组为 [" + instance.getGroup() + "] 的 [" + applicationName + " " + instance.getVersion() + "] 应用资源信息完成");
         }
 
         if (CollectionUtils.isNotEmpty(pluginResourceInterceptor)) {
@@ -376,7 +377,7 @@ public class PluginResourceService {
     }
 
     /**
-     * 监听nasoc 服务变化事件
+     * 监听 nasoc 服务变化事件
      *
      * @param event 事件原型
      */

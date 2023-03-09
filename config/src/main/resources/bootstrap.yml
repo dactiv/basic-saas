@@ -22,6 +22,7 @@ spring:
         event:
           enabled: true
         server-addr: @spring.cloud.discovery.address@
+        group: SAAS
         metadata:
           version: ${info.version}
           name: ${info.name}

@@ -209,6 +209,7 @@ public interface ConfigServiceFeignClient {
             return this.originalFilename;
         }
 
+        @Nullable
         @Override
         public String getContentType() {
             return this.contentType;
