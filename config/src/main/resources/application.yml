@@ -46,6 +46,8 @@ dactiv:
       - "/getServiceEnumerate/**"
       - "/getServiceEnumerates/**"
       - "/carousel/findByFrontEnd/**"
+      - "/avatar/get/**"
+      - "/avatar/getPrincipal/**"
   enumerate:
     base-packages:
       - com.github.dactiv.saas.config.enumerate
