@@ -51,4 +51,4 @@ dactiv:
       - com.github.dactiv.saas.config.enumerate
       - com.github.dactiv.framework.commons.enumerate
       - com.github.dactiv.framework.security.enumerate
-      - com.github.dactiv.saas.config.commons.enumeration
+      - com.github.dactiv.saas.commons.enumeration

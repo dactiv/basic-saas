@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  *
  * @author maurice.chen
  */
+@EnableScheduling
 @EnableWebSecurity
 @EnableDiscoveryClient
 @EnableConfigurationProperties

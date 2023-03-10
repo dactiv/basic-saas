@@ -9,6 +9,7 @@ import com.github.dactiv.framework.spring.security.authentication.DeviceIdContex
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
 import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
 import com.github.dactiv.framework.spring.security.authentication.token.RequestAuthenticationToken;
+import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.saas.authentication.config.ApplicationConfig;
 import com.github.dactiv.saas.authentication.config.MemberUserRegisterConfig;
@@ -166,7 +167,7 @@ public class MemberUserDetailsService extends MobileUserDetailService {
     }
 
     @Override
-    public PrincipalAuthenticationToken createSuccessAuthentication(SecurityUserDetails userDetails, PrincipalAuthenticationToken token, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    public PrincipalAuthenticationToken createSuccessAuthentication(SecurityUserDetails userDetails, SimpleAuthenticationToken token, Collection<? extends GrantedAuthority> grantedAuthorities) {
         if (Objects.nonNull(userDetails.getId())) {
             MemberUserEntity newOne = MemberUserEntity.of(userDetails);
             memberUserService.insert(newOne);

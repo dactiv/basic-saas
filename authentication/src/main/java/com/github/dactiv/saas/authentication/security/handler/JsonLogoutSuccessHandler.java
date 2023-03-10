@@ -7,6 +7,7 @@ import com.github.dactiv.framework.spring.security.authentication.UserDetailsSer
 import com.github.dactiv.framework.spring.security.authentication.config.RememberMeProperties;
 import com.github.dactiv.framework.spring.security.authentication.rememberme.CookieRememberService;
 import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
+import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.AnonymousUser;
 import com.github.dactiv.framework.spring.security.entity.MobileUserDetails;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
@@ -159,7 +160,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
 
         userDetailsServices.forEach(uds -> uds.getType()
                 .stream()
-                .map(t -> new PrincipalAuthenticationToken(token, t, false))
+                .map(t -> new SimpleAuthenticationToken(token, t, false))
                 .forEach(p -> authorizationService.deleteAuthenticationCache(uds, p)));
     }
 

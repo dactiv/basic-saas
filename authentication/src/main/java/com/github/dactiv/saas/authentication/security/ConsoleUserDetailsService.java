@@ -1,22 +1,21 @@
 package com.github.dactiv.saas.authentication.security;
 
-import com.github.dactiv.framework.commons.CacheProperties;
 import com.github.dactiv.framework.commons.Casts;
-import com.github.dactiv.framework.commons.TimeProperties;
 import com.github.dactiv.framework.commons.exception.ServiceException;
 import com.github.dactiv.framework.security.entity.TypeUserDetails;
 import com.github.dactiv.framework.security.enumerate.UserStatus;
 import com.github.dactiv.framework.spring.security.authentication.AbstractUserDetailsService;
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
 import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
+import com.github.dactiv.framework.spring.security.authentication.token.RememberMeAuthenticationToken;
 import com.github.dactiv.framework.spring.security.authentication.token.RequestAuthenticationToken;
+import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.saas.authentication.domain.entity.ConsoleUserEntity;
 import com.github.dactiv.saas.authentication.service.AuthorizationService;
 import com.github.dactiv.saas.authentication.service.ConsoleUserService;
 import com.github.dactiv.saas.commons.enumeration.ResourceSourceEnum;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +26,6 @@ import org.springframework.util.Assert;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 系统用户明细认证授权服务实现
@@ -67,6 +65,10 @@ public class ConsoleUserDetailsService extends AbstractUserDetailsService<Consol
             throw new DisabledException("您的账号已被禁用。");
         }
 
+        return createUserDetails(user);
+    }
+
+    private SecurityUserDetails createUserDetails(ConsoleUserEntity user) {
         SecurityUserDetails userDetails = new SecurityUserDetails(
                 user.getId(),
                 user.getUsername(),
@@ -82,39 +84,17 @@ public class ConsoleUserDetailsService extends AbstractUserDetailsService<Consol
     }
 
     @Override
-    public CacheProperties getAuthorizationCache(PrincipalAuthenticationToken token) {
-        return CacheProperties.of(
-                "dactiv:saas:" + DEFAULT_AUTHORIZATION_KEY_NAME + token.getType() + ":" + token.getPrincipal(),
-                TimeProperties.of(7, TimeUnit.DAYS)
-        );
-    }
-
-    @Override
-    public CacheProperties getAuthenticationCache(PrincipalAuthenticationToken token) {
-        return CacheProperties.of(
-                "dactiv:saas:" + DEFAULT_AUTHENTICATION_KEY_NAME + token.getType() + ":" + token.getPrincipal(),
-                new TimeProperties(7, TimeUnit.DAYS)
-        );
-    }
-
-    @Override
     public List<String> getType() {
         return List.of(ResourceSourceEnum.CONSOLE_SOURCE_VALUE);
     }
 
     @Override
-    public PrincipalAuthenticationToken createSuccessAuthentication(SecurityUserDetails userDetails, PrincipalAuthenticationToken token, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    public PrincipalAuthenticationToken createSuccessAuthentication(SecurityUserDetails userDetails, SimpleAuthenticationToken token, Collection<? extends GrantedAuthority> grantedAuthorities) {
 
         ResourceSourceEnum sourceEnum = ResourceSourceEnum.of(token.getType());
         Assert.isTrue(Objects.nonNull(sourceEnum), "找不到枚举值为 [" + token.getType() + "] 的资源来源类型");
 
-        return new PrincipalAuthenticationToken(
-                new UsernamePasswordAuthenticationToken(token.getPrincipal(), token.getCredentials()),
-                sourceEnum.toString(),
-                userDetails,
-                grantedAuthorities,
-                false
-        );
+        return super.createSuccessAuthentication(userDetails,token, grantedAuthorities);
     }
 
     @Override
@@ -142,5 +122,11 @@ public class ConsoleUserDetailsService extends AbstractUserDetailsService<Consol
         ConsoleUserEntity user = consoleUser.ofIdData();
         user.setPassword(passwordEncoder.encode(newPassword));
         consoleUserService.updateById(user);
+    }
+
+    @Override
+    public SecurityUserDetails getRememberMeUserDetails(RememberMeAuthenticationToken token) {
+        ConsoleUserEntity user = consoleUserService.get(Casts.cast(token.getId(), Integer.class));
+        return createUserDetails(user);
     }
 }

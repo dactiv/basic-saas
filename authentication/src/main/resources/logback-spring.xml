@@ -13,6 +13,7 @@
 
     <springProfile name="default">
         <logger name="com.github.dactiv.saas.authentication" level="DEBUG"/>
+        <logger name="com.github.dactiv.framework.nacos" level="DEBUG" />
         <root level="INFO">
             <appender-ref ref="CONSOLE-APPENDER"/>
         </root>

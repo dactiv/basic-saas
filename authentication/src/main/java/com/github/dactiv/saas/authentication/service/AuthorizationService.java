@@ -7,7 +7,8 @@ import com.github.dactiv.framework.commons.exception.ServiceException;
 import com.github.dactiv.framework.security.entity.ResourceAuthority;
 import com.github.dactiv.framework.security.enumerate.ResourceType;
 import com.github.dactiv.framework.spring.security.authentication.UserDetailsService;
-import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
+import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
+import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.saas.authentication.domain.PhoneNumberUserDetails;
 import com.github.dactiv.saas.authentication.domain.entity.GroupEntity;
@@ -55,16 +56,19 @@ public class AuthorizationService {
 
     private final SpringSessionBackedSessionRegistry<? extends Session> sessionBackedSessionRegistry;
 
+    private final AuthenticationProperties authenticationProperties;
 
     public AuthorizationService(ObjectProvider<UserDetailsService<?>> userDetailsServices,
                                 RedissonClient redissonClient,
                                 PluginResourceService pluginResourceService,
                                 GroupService groupService,
+                                AuthenticationProperties authenticationProperties,
                                 SpringSessionBackedSessionRegistry<? extends Session> sessionBackedSessionRegistry) {
         this.userDetailsServices = userDetailsServices.stream().toList();
         this.redissonClient = redissonClient;
         this.pluginResourceService = pluginResourceService;
         this.groupService = groupService;
+        this.authenticationProperties = authenticationProperties;
         this.sessionBackedSessionRegistry = sessionBackedSessionRegistry;
     }
 
@@ -88,13 +92,13 @@ public class AuthorizationService {
      * @param user 后台用户实体
      * @return 授权 token 流
      */
-    private Stream<PrincipalAuthenticationToken> createPrincipalAuthenticationTokenStream(SystemUserEntity user) {
-        List<PrincipalAuthenticationToken> result = new LinkedList<>();
-        result.add(new PrincipalAuthenticationToken(user.getUsername(), ResourceSourceEnum.CONSOLE.toString(), false));
-        result.add(new PrincipalAuthenticationToken(user.getEmail(), ResourceSourceEnum.CONSOLE.toString(), false));
+    private Stream<SimpleAuthenticationToken> createPrincipalAuthenticationTokenStream(SystemUserEntity user) {
+        List<SimpleAuthenticationToken> result = new LinkedList<>();
+        result.add(new SimpleAuthenticationToken(user.getUsername(), ResourceSourceEnum.CONSOLE.toString(), false));
+        result.add(new SimpleAuthenticationToken(user.getEmail(), ResourceSourceEnum.CONSOLE.toString(), false));
         if (PhoneNumberUserDetails.class.isAssignableFrom(user.getClass())) {
             PhoneNumberUserDetails userDetails = Casts.cast(user);
-            result.add(new PrincipalAuthenticationToken(userDetails.getPhoneNumber(), ResourceSourceEnum.CONSOLE.toString(), false));
+            result.add(new SimpleAuthenticationToken(userDetails.getPhoneNumber(), ResourceSourceEnum.CONSOLE.toString(), false));
         }
         return result.stream();
     }
@@ -164,14 +168,14 @@ public class AuthorizationService {
      * @param sources 资源来源枚举
      */
     public void deleteAuthorizationCache(List<ResourceSourceEnum> sources) {
-        List<PrincipalAuthenticationToken> tokens = sources
+        List<SimpleAuthenticationToken> tokens = sources
                 .stream()
-                .map(s -> new PrincipalAuthenticationToken("*", s.toString(), false))
+                .map(s -> new SimpleAuthenticationToken("*", s.toString(), false))
                 .toList();
 
-        for (PrincipalAuthenticationToken token : tokens) {
+        for (SimpleAuthenticationToken token : tokens) {
             UserDetailsService<?> userDetailsService = getUserDetailsService(ResourceSourceEnum.CONSOLE);
-            CacheProperties cache = userDetailsService.getAuthorizationCache(token);
+            CacheProperties cache = userDetailsService.getAuthorizationCache(token, authenticationProperties.getAuthorizationCache());
             redissonClient.getBucket(cache.getName()).deleteAsync();
         }
     }
@@ -208,7 +212,7 @@ public class AuthorizationService {
      *
      * @param token 认证 token
      */
-    private void deleteAuthenticationCache(PrincipalAuthenticationToken token) {
+    private void deleteAuthenticationCache(SimpleAuthenticationToken token) {
 
         UserDetailsService<?> userDetailsService = getUserDetailsService(ResourceSourceEnum.valueOf(token.getType()));
 
@@ -221,15 +225,15 @@ public class AuthorizationService {
      * @param userDetailsService 用户明细服务
      * @param token              认证 token
      */
-    public void deleteAuthenticationCache(UserDetailsService<?> userDetailsService, PrincipalAuthenticationToken token) {
-        CacheProperties authenticationCache = userDetailsService.getAuthenticationCache(token);
+    public void deleteAuthenticationCache(UserDetailsService<?> userDetailsService, SimpleAuthenticationToken token) {
+        CacheProperties authenticationCache = userDetailsService.getAuthenticationCache(token, authenticationProperties.getAuthenticationCache());
 
         if (Objects.nonNull(authenticationCache)) {
 
             redissonClient.getBucket(authenticationCache.getName()).deleteAsync();
         }
 
-        CacheProperties authorizationCache = userDetailsService.getAuthorizationCache(token);
+        CacheProperties authorizationCache = userDetailsService.getAuthorizationCache(token, authenticationProperties.getAuthorizationCache());
 
         if (Objects.nonNull(authorizationCache)) {
 

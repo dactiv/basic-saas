@@ -90,7 +90,7 @@ public class EnumerateResourceService {
     }
 
     /**
-     * 监听 nasoc 服务变化事件，自动同步枚举数据
+     * 监听 nacos 服务变化事件，自动同步枚举数据
      *
      * @param event 事件原型
      */

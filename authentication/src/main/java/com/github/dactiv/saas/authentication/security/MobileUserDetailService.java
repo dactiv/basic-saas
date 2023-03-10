@@ -2,7 +2,6 @@ package com.github.dactiv.saas.authentication.security;
 
 import com.github.dactiv.framework.commons.CacheProperties;
 import com.github.dactiv.framework.commons.Casts;
-import com.github.dactiv.framework.commons.TimeProperties;
 import com.github.dactiv.framework.crypto.CipherAlgorithmService;
 import com.github.dactiv.framework.crypto.algorithm.Base64;
 import com.github.dactiv.framework.crypto.algorithm.ByteSource;
@@ -11,8 +10,8 @@ import com.github.dactiv.framework.security.enumerate.UserStatus;
 import com.github.dactiv.framework.spring.security.authentication.AbstractUserDetailsService;
 import com.github.dactiv.framework.spring.security.authentication.DeviceIdContextRepository;
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
-import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
 import com.github.dactiv.framework.spring.security.authentication.token.RequestAuthenticationToken;
+import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.MobileUserDetails;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.framework.spring.web.device.DeviceUtils;
@@ -30,13 +29,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.Assert;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 移动端认证授权服务
@@ -74,7 +71,7 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
     public abstract List<String> getMobileType();
 
     @Override
-    public boolean preAuthenticationCache(PrincipalAuthenticationToken token, SecurityUserDetails userDetails, CacheProperties authenticationCache) {
+    public boolean preAuthenticationCache(SimpleAuthenticationToken token, SecurityUserDetails userDetails, CacheProperties authenticationCache) {
 
         if (!RequestAuthenticationToken.class.isAssignableFrom(token.getClass())) {
             return true;
@@ -196,26 +193,6 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
         } else {
             return super.matchesPassword(presentedPassword, token, userDetails);
         }
-    }
-
-    @Override
-    public CacheProperties getAuthorizationCache(PrincipalAuthenticationToken token) {
-        ResourceSourceEnum sourceEnum = ResourceSourceEnum.of(token.getType());
-        Assert.isTrue(Objects.nonNull(sourceEnum), "找不到枚举值为 [" + token.getType() + "] 的资源来源类型");
-        return CacheProperties.of(
-                "dactiv:saas:" + DEFAULT_AUTHORIZATION_KEY_NAME + token + CacheProperties.DEFAULT_SEPARATOR + token.getPrincipal(),
-                TimeProperties.of(7, TimeUnit.DAYS)
-        );
-    }
-
-    @Override
-    public CacheProperties getAuthenticationCache(PrincipalAuthenticationToken token) {
-        ResourceSourceEnum sourceEnum = ResourceSourceEnum.of(token.getType());
-        Assert.isTrue(Objects.nonNull(sourceEnum), "找不到枚举值为 [" + token.getType() + "] 的资源来源类型");
-        return CacheProperties.of(
-                "dactiv:saas:" + DEFAULT_AUTHENTICATION_KEY_NAME + sourceEnum + CacheProperties.DEFAULT_SEPARATOR + token.getPrincipal(),
-                new TimeProperties(7, TimeUnit.DAYS)
-        );
     }
 
     @Override
