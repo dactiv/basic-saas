@@ -3,9 +3,9 @@ package com.github.dactiv.saas.authentication.security.handler;
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.RestResult;
 import com.github.dactiv.framework.spring.security.authentication.DeviceIdContextRepository;
-import com.github.dactiv.framework.spring.security.authentication.UserDetailsService;
 import com.github.dactiv.framework.spring.security.authentication.config.RememberMeProperties;
 import com.github.dactiv.framework.spring.security.authentication.rememberme.CookieRememberService;
+import com.github.dactiv.framework.spring.security.authentication.rememberme.RememberMeToken;
 import com.github.dactiv.framework.spring.security.authentication.token.PrincipalAuthenticationToken;
 import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.AnonymousUser;
@@ -25,7 +25,6 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -33,7 +32,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -71,8 +69,6 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final AuthorizationService authorizationService;
 
-    private final List<UserDetailsService<?>> userDetailsServices;
-
     private final CookieRememberService cookieRememberService;
 
     private final DeviceIdContextRepository deviceIdContextRepository;
@@ -84,7 +80,6 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
     public JsonLogoutSuccessHandler(ApplicationConfig applicationConfig,
                                     CaptchaAuthenticationFailureResponse failureHandler,
                                     AuthorizationService authorizationService,
-                                    List<UserDetailsService<?>> userDetailsServices,
                                     CookieRememberService cookieRememberService,
                                     DeviceIdContextRepository deviceIdContextRepository,
                                     DiscoveryClient discoveryClient,
@@ -92,7 +87,6 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
         this.applicationConfig = applicationConfig;
         this.failureHandler = failureHandler;
         this.authorizationService = authorizationService;
-        this.userDetailsServices = userDetailsServices;
         this.cookieRememberService = cookieRememberService;
         this.deviceIdContextRepository = deviceIdContextRepository;
         this.discoveryClient = discoveryClient;
@@ -108,7 +102,9 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
 
         if (authentication != null && SecurityUserDetails.class.isAssignableFrom(authentication.getDetails().getClass())) {
             SecurityUserDetails userDetails = Casts.cast(authentication.getDetails(), SecurityUserDetails.class);
-            clearAllCache(userDetails, authentication.getPrincipal().toString());
+            clearAllCache(userDetails);
+            RBucket<RememberMeToken> rememberMeToken = cookieRememberService.getRememberMeTokenBucket(userDetails.toBasicUserDetails());
+            rememberMeToken.deleteAsync();
         }
 
         cookieRememberService.loginFail(request, response);
@@ -126,17 +122,11 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
      * 清除所有缓存
      *
      * @param userDetails 用户信息
-     * @param principal   当前登陆账户
      */
-    private void clearAllCache(SecurityUserDetails userDetails, String principal) {
+    private void clearAllCache(SecurityUserDetails userDetails) {
 
         // 清除 username 的缓存，有可能是手机号码
-        clearPrincipalCache(userDetails.getUsername());
-
-        // 如果两个不相等，在清除一次 principal 换粗，这个可能是登陆账户 username
-        if (!principal.equals(userDetails.getUsername())) {
-            clearPrincipalCache(principal);
-        }
+        clearPrincipalCache(userDetails);
 
         if (MobileUserDetails.class.isAssignableFrom(userDetails.getClass())) {
             MobileUserDetails mobileUserDetails = Casts.cast(userDetails);
@@ -152,16 +142,18 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
     /**
      * 清除以登陆账户的缓存信息
      *
-     * @param principal 登陆账户
+     * @param userDetails 当前用户明细
      */
-    private void clearPrincipalCache(String principal) {
+    private void clearPrincipalCache(SecurityUserDetails userDetails) {
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null);
+        SimpleAuthenticationToken token = new SimpleAuthenticationToken(
+                userDetails.getUsername(),
+                userDetails.getType(),
+                false
+        );
+        authorizationService.deleteSecurityUserDetailsCache(token);
+        authorizationService.deleteRememberMeCache(token);
 
-        userDetailsServices.forEach(uds -> uds.getType()
-                .stream()
-                .map(t -> new SimpleAuthenticationToken(token, t, false))
-                .forEach(p -> authorizationService.deleteAuthenticationCache(uds, p)));
     }
 
     /**
@@ -266,7 +258,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
 
             String token = buildToken.get(DEFAULT_TOKEN_NAME).toString();
 
-            String captchaType = applicationConfig.getMobileFailureCaptchaType();
+            String captchaType = applicationConfig.getAppLoginFailureCaptchaType();
 
             Map<String, Object> interceptToken = failureHandler
                     .getConfigServiceFeignClient()
@@ -280,7 +272,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
             result.getData().putAll(interceptToken);
 
         } else {
-            String captchaType = applicationConfig.getUsernameFailureCaptchaType();
+            String captchaType = applicationConfig.getFormLoginFailureCaptchaType();
 
             Map<String, Object> buildToken = failureHandler
                     .getConfigServiceFeignClient()

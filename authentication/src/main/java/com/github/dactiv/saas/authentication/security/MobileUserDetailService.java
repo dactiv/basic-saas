@@ -1,7 +1,6 @@
 package com.github.dactiv.saas.authentication.security;
 
 import com.github.dactiv.framework.commons.CacheProperties;
-import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.crypto.CipherAlgorithmService;
 import com.github.dactiv.framework.crypto.algorithm.Base64;
 import com.github.dactiv.framework.crypto.algorithm.ByteSource;
@@ -11,7 +10,6 @@ import com.github.dactiv.framework.spring.security.authentication.AbstractUserDe
 import com.github.dactiv.framework.spring.security.authentication.DeviceIdContextRepository;
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
 import com.github.dactiv.framework.spring.security.authentication.token.RequestAuthenticationToken;
-import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.MobileUserDetails;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.framework.spring.web.device.DeviceUtils;
@@ -69,38 +67,6 @@ public abstract class MobileUserDetailService extends AbstractUserDetailsService
     }
 
     public abstract List<String> getMobileType();
-
-    @Override
-    public boolean preAuthenticationCache(SimpleAuthenticationToken token, SecurityUserDetails userDetails, CacheProperties authenticationCache) {
-
-        if (!RequestAuthenticationToken.class.isAssignableFrom(token.getClass())) {
-            return true;
-        }
-
-        RequestAuthenticationToken requestAuthenticationToken = Casts.cast(token);
-        if (!MobileUserDetails.class.isAssignableFrom(userDetails.getClass())) {
-            return true;
-        }
-
-        String deviceId = requestAuthenticationToken
-                .getHttpServletRequest()
-                .getHeader(DeviceUtils.REQUEST_DEVICE_IDENTIFIED_HEADER_NAME);
-
-        MobileUserDetails mobileUserDetails = Casts.cast(userDetails);
-        if (!StringUtils.equals(mobileUserDetails.getDeviceIdentified(), deviceId)) {
-
-            deviceIdContextRepository.deleteByMobileUserDetails(mobileUserDetails);
-
-            RBucket<MobileUserDetails> mobileUserDetailsBucket = authorizationService
-                    .getRedissonClient()
-                    .getBucket(applicationConfig.getWakeUpCache().getName(mobileUserDetails.getDeviceIdentified()));
-            mobileUserDetailsBucket.deleteAsync();
-
-            mobileUserDetails.setDeviceIdentified(deviceId);
-        }
-
-        return super.preAuthenticationCache(token, userDetails, authenticationCache);
-    }
 
     @Override
     public SecurityUserDetails getAuthenticationUserDetails(RequestAuthenticationToken token) throws AuthenticationException {

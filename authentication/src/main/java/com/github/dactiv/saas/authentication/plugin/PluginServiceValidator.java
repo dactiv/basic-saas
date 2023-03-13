@@ -43,6 +43,10 @@ public class PluginServiceValidator implements NacosServiceListenerValidator {
     @Override
     public boolean subscribeValid(NacosService nacosService) {
 
+        if (pluginResourceService.getApplicationConfig().getIgnorePluginService().contains(nacosService.getName())) {
+            return false;
+        }
+
         if (exceptionServices.contains(nacosService.getName())) {
             return false;
         }

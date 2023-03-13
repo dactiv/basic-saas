@@ -4,6 +4,7 @@ import com.github.dactiv.framework.commons.CacheProperties;
 import com.github.dactiv.framework.commons.TimeProperties;
 import com.github.dactiv.framework.crypto.AlgorithmProperties;
 import com.github.dactiv.framework.crypto.RsaProperties;
+import com.github.dactiv.saas.commons.SystemConstants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -64,6 +65,11 @@ public class ApplicationConfig {
      * 忽略环境变量的开头值
      */
     private List<String> ignoreEnvironmentStartWith = List.of("spring");
+
+    /**
+     * 忽略的枚举服务集合
+     */
+    private List<String> ignoreEnumerateService = List.of(SystemConstants.SYS_GATEWAY_NAME);
 
     /**
      * 用户导入数据缓存

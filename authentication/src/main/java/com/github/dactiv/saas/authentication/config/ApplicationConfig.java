@@ -46,14 +46,14 @@ public class ApplicationConfig {
     private Integer allowableFailureNumber = 3;
 
     /**
-     * 用户名密码登录错误使用的验证码类型
+     * 表单登录错误使用的验证码类型
      */
-    private String usernameFailureCaptchaType = "picture";
+    private String formLoginFailureCaptchaType = "picture";
 
     /**
-     * 手机号码认证错误使用的验证码类型
+     * app 登陆错误使用的验证码类型
      */
-    private String mobileFailureCaptchaType = "picture";
+    private String appLoginFailureCaptchaType = "picture";
 
     /**
      * 短信 token 参数名称，用于手机号码认证错误时，
@@ -104,8 +104,6 @@ public class ApplicationConfig {
      * token 名称
      */
     private String wakeUpParamName = "token";
-
-
 
     /**
      * 缓存配置

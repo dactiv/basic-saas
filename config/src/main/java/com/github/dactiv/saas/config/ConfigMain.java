@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
  * 服务启动类
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableConfigurationProperties
 @EnableMethodSecurity(securedEnabled = true)
 @EnableFeignClients("com.github.dactiv.saas.commons.feign")
+@EnableRedisHttpSession(redisNamespace = "dactiv:saas:spring:session")
 @SpringBootApplication(scanBasePackages = "com.github.dactiv.saas.config")
 public class ConfigMain {
 

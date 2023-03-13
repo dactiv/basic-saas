@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.basjes.parse.useragent.UserAgent;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -91,6 +92,13 @@ public class CaptchaAuthenticationSuccessResponse implements JsonAuthenticationS
 
         if (MobileUserDetails.class.isAssignableFrom(details.getClass())) {
             MobileUserDetails mobileUserDetails = Casts.cast(details);
+
+            String deviceId = request.getHeader(DeviceUtils.REQUEST_DEVICE_IDENTIFIED_HEADER_NAME);
+
+            if (!StringUtils.equals(mobileUserDetails.getDeviceIdentified(), deviceId)) {
+                deviceIdContextRepository.deleteByDeviceId(deviceId);
+            }
+
             Map<String, Object> data = createMobileAuthenticationResult(mobileUserDetails);
             result.setData(data);
         }

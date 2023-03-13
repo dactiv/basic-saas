@@ -92,7 +92,7 @@ public class CaptchaAuthenticationFailureResponse implements JsonAuthenticationF
             if (StringUtils.isNotBlank(token)) {
                 Map<String, Object> buildToken = configServiceFeignClient.createGenerateCaptchaIntercept(
                         token,
-                        applicationConfig.getMobileFailureCaptchaType(),
+                        applicationConfig.getAppLoginFailureCaptchaType(),
                         DEFAULT_MOBILE_CAPTCHA_TYPE
                 );
 
@@ -101,7 +101,7 @@ public class CaptchaAuthenticationFailureResponse implements JsonAuthenticationF
 
         } else {
             Map<String, Object> buildToken = configServiceFeignClient.generateToken(
-                    applicationConfig.getUsernameFailureCaptchaType(),
+                    applicationConfig.getFormLoginFailureCaptchaType(),
                     identified
             );
             data.putAll(buildToken);

@@ -7,6 +7,7 @@ import com.github.dactiv.framework.nacos.event.NacosService;
 import com.github.dactiv.framework.nacos.event.NacosServiceListenerValidator;
 import com.github.dactiv.framework.nacos.task.annotation.NacosCronScheduled;
 import com.github.dactiv.framework.spring.web.endpoint.EnumerateEndpoint;
+import com.github.dactiv.saas.config.config.ApplicationConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.context.annotation.Lazy;
@@ -29,10 +30,14 @@ public class EnumerateServiceValidator implements NacosServiceListenerValidator 
 
     private final EnumerateResourceService enumerateResourceService;
 
+    private final ApplicationConfig applicationConfig;
+
     private final List<String> exceptionServices = new LinkedList<>();
 
-    public EnumerateServiceValidator(@Lazy EnumerateResourceService enumerateResourceService) {
+    public EnumerateServiceValidator(@Lazy EnumerateResourceService enumerateResourceService,
+                                     ApplicationConfig applicationConfig) {
         this.enumerateResourceService = enumerateResourceService;
+        this.applicationConfig = applicationConfig;
     }
 
     @Override
@@ -42,6 +47,10 @@ public class EnumerateServiceValidator implements NacosServiceListenerValidator 
 
     @Override
     public boolean subscribeValid(NacosService nacosService) {
+
+        if (applicationConfig.getIgnoreEnumerateService().contains(nacosService.getName())) {
+            return false;
+        }
 
         if (exceptionServices.contains(nacosService.getName())) {
             return false;

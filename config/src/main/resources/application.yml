@@ -48,6 +48,9 @@ dactiv:
       - "/carousel/findByFrontEnd/**"
       - "/avatar/get/**"
       - "/avatar/getPrincipal/**"
+      - "/captcha/generateToken/**"
+      - "/captcha/generateCaptcha/**"
+      - "/captcha/verifyCaptcha/**"
   enumerate:
     base-packages:
       - com.github.dactiv.saas.config.enumerate

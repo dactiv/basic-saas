@@ -1,13 +1,13 @@
 package com.github.dactiv.saas.authentication.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.dactiv.framework.commons.CacheProperties;
 import com.github.dactiv.framework.commons.Casts;
 import com.github.dactiv.framework.commons.exception.ServiceException;
 import com.github.dactiv.framework.security.entity.ResourceAuthority;
 import com.github.dactiv.framework.security.enumerate.ResourceType;
 import com.github.dactiv.framework.spring.security.authentication.UserDetailsService;
 import com.github.dactiv.framework.spring.security.authentication.config.AuthenticationProperties;
+import com.github.dactiv.framework.spring.security.authentication.rememberme.RememberMeToken;
 import com.github.dactiv.framework.spring.security.authentication.token.SimpleAuthenticationToken;
 import com.github.dactiv.framework.spring.security.entity.SecurityUserDetails;
 import com.github.dactiv.saas.authentication.domain.PhoneNumberUserDetails;
@@ -22,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -56,6 +57,7 @@ public class AuthorizationService {
 
     private final SpringSessionBackedSessionRegistry<? extends Session> sessionBackedSessionRegistry;
 
+    @Getter
     private final AuthenticationProperties authenticationProperties;
 
     public AuthorizationService(ObjectProvider<UserDetailsService<?>> userDetailsServices,
@@ -114,6 +116,7 @@ public class AuthorizationService {
         UserDetailsService<?> userDetailsService = getUserDetailsService(ResourceSourceEnum.valueOf(userDetails.getType()));
         Object target = userDetailsService.convertTargetUser(userDetails);
         userDetailsService.updatePassword(Casts.cast(target), oldPassword, newPassword);
+        deleteSecurityUserDetailsCache(new SimpleAuthenticationToken(userDetails.getUsername(), userDetails.getType(), false));
     }
 
     /**
@@ -174,9 +177,8 @@ public class AuthorizationService {
                 .toList();
 
         for (SimpleAuthenticationToken token : tokens) {
-            UserDetailsService<?> userDetailsService = getUserDetailsService(ResourceSourceEnum.CONSOLE);
-            CacheProperties cache = userDetailsService.getAuthorizationCache(token, authenticationProperties.getAuthorizationCache());
-            redissonClient.getBucket(cache.getName()).deleteAsync();
+            String key = authenticationProperties.getAuthorizationCache().getName(token.getName());
+            redissonClient.getBucket(key).deleteAsync();
         }
     }
 
@@ -204,41 +206,20 @@ public class AuthorizationService {
     }
 
     public void deleteSystemUserAuthenticationCache(SystemUserEntity entity) {
-        createPrincipalAuthenticationTokenStream(entity).forEach(this::deleteAuthenticationCache);
+        createPrincipalAuthenticationTokenStream(entity).forEach(this::deleteSecurityUserDetailsCache);
     }
 
     /**
      * 删除系统用户的认证缓存
      *
-     * @param token 认证 token
-     */
-    private void deleteAuthenticationCache(SimpleAuthenticationToken token) {
-
-        UserDetailsService<?> userDetailsService = getUserDetailsService(ResourceSourceEnum.valueOf(token.getType()));
-
-        deleteAuthenticationCache(userDetailsService, token);
-    }
-
-    /**
-     * 删除系统用户的认证缓存
-     *
-     * @param userDetailsService 用户明细服务
      * @param token              认证 token
      */
-    public void deleteAuthenticationCache(UserDetailsService<?> userDetailsService, SimpleAuthenticationToken token) {
-        CacheProperties authenticationCache = userDetailsService.getAuthenticationCache(token, authenticationProperties.getAuthenticationCache());
+    public void deleteSecurityUserDetailsCache(SimpleAuthenticationToken token) {
+        String authenticationKey = authenticationProperties.getAuthenticationCache().getName(token.getName());
+        redissonClient.getBucket(authenticationKey).deleteAsync();
 
-        if (Objects.nonNull(authenticationCache)) {
-
-            redissonClient.getBucket(authenticationCache.getName()).deleteAsync();
-        }
-
-        CacheProperties authorizationCache = userDetailsService.getAuthorizationCache(token, authenticationProperties.getAuthorizationCache());
-
-        if (Objects.nonNull(authorizationCache)) {
-
-            redissonClient.getBucket(authorizationCache.getName()).deleteAsync();
-        }
+        String authorizationKey = authenticationProperties.getAuthorizationCache().getName(token.getName());
+        redissonClient.getBucket(authorizationKey).deleteAsync();
     }
 
     // -------------------------------- 资源管理 -------------------------------- //
@@ -397,5 +378,19 @@ public class AuthorizationService {
                 .stream(permissions)
                 .map(ResourceAuthority::getPermissionValue)
                 .map(p -> new ResourceAuthority(p, resource.getName(), resource.getValue()));
+    }
+
+    public void deleteRememberMeCache(SimpleAuthenticationToken token) {
+
+        String key = authenticationProperties
+                .getRememberMe()
+                .getCache()
+                .getName(token.getName());
+
+        RBucket<RememberMeToken> bucket = redissonClient.getBucket(key);
+
+        if (bucket.isExists()) {
+            bucket.deleteAsync();
+        }
     }
 }

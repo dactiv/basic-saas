@@ -16,9 +16,9 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  */
 @EnableWebSecurity
 @EnableDiscoveryClient
+@EnableMethodSecurity(securedEnabled = true)
 @EnableFeignClients("com.github.dactiv.saas.commons.feign")
 @EnableRedisHttpSession(redisNamespace = "dactiv:saas:spring:session")
-@EnableMethodSecurity(securedEnabled = true)
 @SpringBootApplication(scanBasePackages = "com.github.dactiv.saas.middleware")
 public class MiddlewareMain {
 
